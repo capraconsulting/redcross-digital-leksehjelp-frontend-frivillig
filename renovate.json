@@ -1,0 +1,15 @@
+{
+  "extends": ["config:base"],
+  "automerge": true,
+  "automergeType": "branch",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "major": {
+    "automerge": false
+  },
+  "pin": {
+    "automerge": true
+  },
+  "schedule": "every weekend"
+}
