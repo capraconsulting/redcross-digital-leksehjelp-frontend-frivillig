@@ -73,6 +73,7 @@ module.exports = env => {
     output: {
       filename: '[name].[contentHash].js',
       path: path.resolve(__dirname, 'build'),
+      publicPath: '/',
     },
     optimization: {
       splitChunks: {
@@ -85,6 +86,7 @@ module.exports = env => {
       new HtmlWebpackPlugin({
         template: './src/index.html',
         favicon: './src/dist/favicon.ico',
+
       }),
       outputConfig('config.json', configLocalJson),
       outputConfig('config/qa.json', configQaJson),
@@ -107,6 +109,7 @@ module.exports = env => {
     devServer: {
       contentBase: './build',
       port: 3000,
+      historyApiFallback: true,
     },
   };
 };
