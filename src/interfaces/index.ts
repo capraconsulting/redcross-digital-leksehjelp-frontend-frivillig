@@ -1,3 +1,1 @@
-import { IQuestion } from './IQuestion';
-
-export { IQuestion };
+export * from './IQuestion';
