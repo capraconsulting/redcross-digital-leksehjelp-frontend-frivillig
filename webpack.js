@@ -47,32 +47,18 @@ module.exports = env => {
           use: 'url-loader',
         },
         {
-          test: /(?<!\.module)\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader'],
-        },
-        {
-          test: /\.module\.css$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true,
-                localIdentName: '[name]__[local]__[hash:base64:5]',
-              },
-            },
-            'postcss-loader',
-          ],
+          test: /(?<!\.module)\.(css|less)$/,
+          use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
         },
       ],
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less'],
     },
     output: {
       filename: '[name].[contentHash].js',
       path: path.resolve(__dirname, 'build'),
+      publicPath: '/',
     },
     optimization: {
       splitChunks: {
@@ -84,6 +70,8 @@ module.exports = env => {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/index.html',
+        favicon: './src/dist/favicon.ico',
+
       }),
       outputConfig('config.json', configLocalJson),
       outputConfig('config/qa.json', configQaJson),
@@ -106,6 +94,7 @@ module.exports = env => {
     devServer: {
       contentBase: './build',
       port: 3000,
+      historyApiFallback: true,
     },
   };
 };

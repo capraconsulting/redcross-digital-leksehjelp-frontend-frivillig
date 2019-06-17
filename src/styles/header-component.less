@@ -1,0 +1,25 @@
+.header {
+  &--list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    &-item a {
+      color: black;
+      text-decoration: none;
+    }
+  }
+}
+
+.active a {
+  color: @link-color;
+  text-decoration: underline;
+}
+
+.header--component {
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  padding-bottom: 10px;
+}

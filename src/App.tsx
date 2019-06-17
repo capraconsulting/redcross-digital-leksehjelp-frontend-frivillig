@@ -1,7 +1,12 @@
-import * as React from 'react';
+import React from 'react';
+import Routes from './router';
 
-import getHelloWorldMessage from './services/hello-world-service';
+import './styles/base';
 
-const App = () => <h1>{getHelloWorldMessage('some-app', 'some-version')}</h1>;
+const App = () => (
+  <div>
+    <Routes />
+  </div>
+);
 
 export default App;
