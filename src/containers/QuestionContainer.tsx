@@ -4,33 +4,51 @@ import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
 
 interface IQuestionContainer {
-  questions: IQuestion[];
+  answeredQuestions: IQuestion[];
+  unansweredQuestions: IQuestion[];
 }
 
 class QuestionContainer extends Component<{}, IQuestionContainer> {
   state = {
-    questions: [] as IQuestion[],
+    answeredQuestions: [] as IQuestion[],
+    unansweredQuestions: [] as IQuestion[],
   };
 
   componentDidMount() {
     get('questions?answered=true').then(res => {
-      this.setState({ questions: res });
+      this.setState({ answeredQuestions: res });
+    });
+    get('questions?answered=false').then(res => {
+      this.setState({ unansweredQuestions: res });
     });
   }
 
   render() {
-    const { questions } = this.state;
+    const { answeredQuestions, unansweredQuestions } = this.state;
     return (
       <div>
-        <h3>Spørsmål</h3>
-        {questions.length > 0 ? (
+        <div className="question--header">
+          <h3>Spørsmål</h3>
+        </div>
+        <h3>Spørsmål som kan besvares</h3>
+        {answeredQuestions.length > 0 ? (
           <div className="question--list">
-            {questions.map(({ question }, id) => (
+            {answeredQuestions.map(({ question }, id) => (
               <QuestionComponent key={id} question={question} />
             ))}
           </div>
         ) : (
           <p>Det er ingen nye spørsmål som kan besvares</p>
+        )}
+        <h3>Besvarte spørsmål</h3>
+        {unansweredQuestions.length > 0 ? (
+          <div className="question--list">
+            {unansweredQuestions.map(({ question }, id) => (
+              <QuestionComponent key={id} question={question} />
+            ))}
+          </div>
+        ) : (
+          <p>Det finnes ingen spørsmål som er besvart</p>
         )}
       </div>
     );
