@@ -13,7 +13,7 @@ class QuestionContainer extends Component<{}, IQuestionContainer> {
   };
 
   componentDidMount() {
-    get('questions?answerd=True').then(res => {
+    get('questions?answered=true').then(res => {
       this.setState({ questions: res });
     });
   }
