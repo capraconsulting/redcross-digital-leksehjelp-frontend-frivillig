@@ -1,25 +1,46 @@
 import React from 'react';
 import { get } from '../services/api-service';
 
-const renderQuestionList = (): any => {
-  get('questions').then(res => {
-    console.log(res);
-    if ('data' in res) {
-      return res.data.map(question => <div>question.title</div>);
-    }
-    return <h1>Det er ingen nye spørsmål å besvare</h1>;
-  });
-};
+interface IQuestion {
+  title: string;
+  id: string;
+  question: string;
+}
 
-const QuestionContainer = () => (
-  <div>
-    <h1>Spørsmål</h1>
-    {renderQuestionList()}
-  </div>
-);
+interface IQuestionContainer {
+  questions: IQuestion[];
+}
+
+class QuestionContainer extends React.Component<{}, IQuestionContainer> {
+  state = {
+    questions: [] as IQuestion[],
+  };
+
+  componentDidMount() {
+    get('questions').then(res => {
+      if ('data' in res) {
+        this.setState({ questions: res.data });
+      }
+    });
+  }
+
+  render() {
+    const { questions } = this.state;
+    return (
+      <div>
+        <h1>Spørsmål</h1>
+        {questions.length > 0 ? (
+          <ul>
+            {questions.map(({ title }, id) => (
+              <li key={id}>{title}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>Det er ingen nye spørsmål som kan besvares</p>
+        )}
+      </div>
+    );
+  }
+}
 
 export default QuestionContainer;
-
-/*
-
-*/
