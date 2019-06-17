@@ -14,7 +14,6 @@ class QuestionContainer extends React.Component<{}, IQuestionContainer> {
 
   componentDidMount() {
     get('questions').then(res => {
-      console.log(res);
       this.setState({ questions: res });
     });
   }
@@ -26,9 +25,11 @@ class QuestionContainer extends React.Component<{}, IQuestionContainer> {
         <h3>Spørsmål</h3>
         {questions.length > 0 ? (
           <div className="question--list">
-            {questions.map(({ question }, id) => (
-              <QuestionComponent key={id} question={question} />
-            ))}
+            {questions
+              .filter(({ answer }) => answer.length > 1)
+              .map(({ question }, id) => (
+                <QuestionComponent key={id} question={question} />
+              ))}
           </div>
         ) : (
           <p>Det er ingen nye spørsmål som kan besvares</p>
