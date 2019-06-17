@@ -5,7 +5,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 const HeaderComponent = (props: RouteComponentProps) => {
   const { pathname } = props.location;
   return (
-    <div>
+    <div className="header--component">
       <ul className="header--list">
         <li className={`header--list-item ${pathname === '/kø' && 'active'}`}>
           <Link to="/">Elever i kø</Link>
