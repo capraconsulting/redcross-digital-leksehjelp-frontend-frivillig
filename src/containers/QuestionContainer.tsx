@@ -1,11 +1,7 @@
 import React from 'react';
 import { get } from '../services/api-service';
-
-interface IQuestion {
-  title: string;
-  id: string;
-  question: string;
-}
+import { QuestionComponent } from '../components';
+import { IQuestion } from '../interfaces/IQuestion';
 
 interface IQuestionContainer {
   questions: IQuestion[];
@@ -18,9 +14,8 @@ class QuestionContainer extends React.Component<{}, IQuestionContainer> {
 
   componentDidMount() {
     get('questions').then(res => {
-      if ('data' in res) {
-        this.setState({ questions: res.data });
-      }
+      console.log(res);
+      this.setState({ questions: res });
     });
   }
 
@@ -28,13 +23,13 @@ class QuestionContainer extends React.Component<{}, IQuestionContainer> {
     const { questions } = this.state;
     return (
       <div>
-        <h1>Spørsmål</h1>
+        <h3>Spørsmål</h3>
         {questions.length > 0 ? (
-          <ul>
-            {questions.map(({ title }, id) => (
-              <li key={id}>{title}</li>
+          <div className="question--list">
+            {questions.map(({ question }, id) => (
+              <QuestionComponent key={id} question={question} />
             ))}
-          </ul>
+          </div>
         ) : (
           <p>Det er ingen nye spørsmål som kan besvares</p>
         )}
