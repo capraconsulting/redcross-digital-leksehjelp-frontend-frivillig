@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { get } from '../services/api-service';
 import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
@@ -7,7 +7,7 @@ interface IQuestionContainer {
   questions: IQuestion[];
 }
 
-class QuestionContainer extends React.Component<{}, IQuestionContainer> {
+class QuestionContainer extends Component<{}, IQuestionContainer> {
   state = {
     questions: [] as IQuestion[],
   };
