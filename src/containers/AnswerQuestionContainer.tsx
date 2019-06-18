@@ -1,40 +1,70 @@
 import React from 'react';
-import { get } from '../services/api-service';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { getQuestion, postAnswer } from '../services/api-service';
 import { IQuestion } from '../interfaces';
 
-const AnswerQuestionContainer = ({ id }) => {
+const AnswerQuestionContainer = props => {
   const [questionObj, setQuestionObj] = React.useState({} as IQuestion);
 
   React.useEffect(() => {
-    get(`questions${id}`).then(res => setQuestionObj(res[0]));
+    getQuestion(`questions/${props.id}`).then(setQuestionObj);
   }, []);
 
-  console.log(questionObj);
+  const onSend = event => {
+    console.log(props);
+    const { id, answer } = questionObj;
+    const body = {
+      id,
+      answer,
+    };
+    postAnswer(body).then(() => props.history.push('/'));
+    event.preventDefault();
+  };
+
   const { question, title, answer } = questionObj;
   return (
     <div className="question-answer">
       <div className="question-answer--container">
         <h3>Spørsmål og svar</h3>
-        <form className="question-answer--container-form">
-          <label>
+        <form className="question-form">
+          <label className="question-form--item">
             Tittel
-            <input value={title} type="text" name="title" />
+            <input
+              className="question-form--input"
+              value={title}
+              type="text"
+              name="title"
+            />
           </label>
-          <label>
+          <label className="question-form--item">
             Spørsmål
-            <input value={question} type="text" name="question" />
+            <textarea
+              className="question-form--question"
+              value={question}
+              name="question"
+            />
           </label>
-          <label>
+          <label className="question-form--item">
             Svar
-            <input value={answer} type="text" name="answer" />
+            <textarea
+              className="question-form--answer"
+              value={answer}
+              name="answer"
+              onChange={e =>
+                setQuestionObj({ ...questionObj, answer: e.target.value })
+              }
+            />
           </label>
+          <div className="question-form--button">
+            <button onClick={e => onSend(e)}>Send</button>
+          </div>
         </form>
       </div>
-      <div className="question-answer--list">
+      <div className="question-answer--container">
         <h3>Tilbakemeldinger</h3>
       </div>
     </div>
   );
 };
 
-export default AnswerQuestionContainer;
+export default withRouter(AnswerQuestionContainer);

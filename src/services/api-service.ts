@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion } from '../interfaces/IQuestion';
+import { IQuestion, IAnswer } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -8,6 +8,20 @@ const api = axios.create({
 });
 
 export function get(url: string): Promise<IQuestion[]> {
+  return api
+    .get(`${url}`)
+    .then(res => res.data)
+    .catch(err => err);
+}
+
+export function getQuestion(url: string): Promise<IQuestion> {
+  return api
+    .get(`${url}`)
+    .then(res => res.data)
+    .catch(err => err);
+}
+
+export function getQuestionList(url: string): Promise<IQuestion[]> {
   return api
     .get(`${url}`)
     .then(res => res.data)
@@ -24,6 +38,13 @@ export function put(url: string, data: any): Promise<any> {
 export function post(url: string, body: any): Promise<any> {
   return api
     .post(`${url}`, body)
+    .then(res => res)
+    .catch(err => err.response);
+}
+
+export function postAnswer(body: IAnswer): Promise<IQuestion> {
+  return api
+    .post(`answers`, body)
     .then(res => res)
     .catch(err => err.response);
 }

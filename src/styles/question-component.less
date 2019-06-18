@@ -25,14 +25,28 @@
   padding: 1rem;
   &--container {
     width: 50%;
-    &-form {
-      display: flex;
-      flex-direction: column;
-      background-color: @form-background-color;
-    }
+    margin: 1rem;
   }
+}
 
-  &--list {
-    width: 50%;
+.question-form {
+  display: flex;
+  flex-direction: column;
+  background-color: @form-background-color;
+  padding: 1rem;
+  &--item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    font-weight: 100;
+    word-wrap: normal;
+  }
+  &--answer {
+    padding: 0.5rem;
+    height: 15rem;
+  }
+  &--question {
+    padding: 0.5rem;
+    height: 5rem;
   }
 }
