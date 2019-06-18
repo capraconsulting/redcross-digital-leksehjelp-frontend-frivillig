@@ -2,8 +2,9 @@
   display: grid;
   grid-gap: 10px;
   &-item {
-    background-color: @question-item-bg-color;
+    background-color: @form-background-color;
     padding: 10px;
+    cursor: pointer;
   }
 }
 
@@ -17,5 +18,36 @@
   h3 {
     font-weight: normal;
     margin-bottom: 5px;
+  }
+}
+
+.question-answer {
+  display: flex;
+  padding: 1rem;
+  &--container {
+    width: 50%;
+    margin: 1rem;
+  }
+}
+
+.question-form {
+  display: flex;
+  flex-direction: column;
+  background-color: @form-background-color;
+  padding: 1rem;
+  &--item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    font-weight: 100;
+    word-wrap: normal;
+  }
+  &--answer {
+    padding: 0.5rem;
+    height: 15rem;
+  }
+  &--question {
+    padding: 0.5rem;
+    height: 5rem;
   }
 }

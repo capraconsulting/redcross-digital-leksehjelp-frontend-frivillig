@@ -1,15 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { HomeComponent, HeaderComponent as Header } from './components';
-import { QuestionContainer } from './containers';
+import { QuestionContainer, AnswerQuestionContainer } from './containers';
 
 const Routes = () => {
   return (
     <Router>
       <Header />
       <Switch>
-        <Route path="/" exact component={HomeComponent} />
-        <Route path="/spørsmål" component={QuestionContainer} />
+        <Route exact path="/" component={HomeComponent} />
+        <Route exact path="/questions" component={QuestionContainer} />
+        <Route
+          path="/questions/:id"
+          render={({ match }) => (
+            <AnswerQuestionContainer id={match.params.id} />
+          )}
+        />
       </Switch>
     </Router>
   );
