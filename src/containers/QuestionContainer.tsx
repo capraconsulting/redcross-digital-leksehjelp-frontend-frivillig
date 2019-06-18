@@ -1,5 +1,5 @@
 import React from 'react';
-import { get } from '../services/api-service';
+import { getQuestionList } from '../services/api-service';
 import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
 
@@ -12,8 +12,8 @@ const QuestionContainer = () => {
   );
 
   React.useEffect(() => {
-    get('questions?answered=true').then(setAnsweredQuestions);
-    get('questions?answered=false').then(setUnansweredQuestions);
+    getQuestionList(true).then(setAnsweredQuestions);
+    getQuestionList(false).then(setUnansweredQuestions);
   }, []);
 
   return (
@@ -24,8 +24,8 @@ const QuestionContainer = () => {
       <h3>Spørsmål som kan besvares</h3>
       {answeredQuestions.length > 0 ? (
         <div className="question--list">
-          {answeredQuestions.map((res, id) => (
-            <QuestionComponent key={id} questionObj={res} />
+          {answeredQuestions.map((question, index) => (
+            <QuestionComponent key={index} questionObj={question} />
           ))}
         </div>
       ) : (
@@ -34,8 +34,8 @@ const QuestionContainer = () => {
       <h3>Besvarte spørsmål</h3>
       {unansweredQuestions.length > 0 ? (
         <div className="question--list">
-          {unansweredQuestions.map((res, id) => (
-            <QuestionComponent key={id} questionObj={res} />
+          {unansweredQuestions.map((question, index) => (
+            <QuestionComponent key={index} questionObj={question} />
           ))}
         </div>
       ) : (

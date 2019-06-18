@@ -14,16 +14,18 @@ export function get(url: string): Promise<IQuestion[]> {
     .catch(err => err);
 }
 
-export function getQuestion(url: string): Promise<IQuestion> {
+export function getQuestion(id: string): Promise<IQuestion> {
   return api
-    .get(`${url}`)
+    .get(`questions/${id}`)
     .then(res => res.data)
     .catch(err => err);
 }
 
-export function getQuestionList(url: string): Promise<IQuestion[]> {
+export function getQuestionList(answered?: boolean): Promise<IQuestion[]> {
   return api
-    .get(`${url}`)
+    .get(
+      answered !== undefined ? `questions?answered=${answered}` : 'questions',
+    )
     .then(res => res.data)
     .catch(err => err);
 }

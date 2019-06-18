@@ -19,7 +19,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   });
 
   React.useEffect(() => {
-    getQuestion(`questions/${props.id}`).then(setQuestionObj);
+    getQuestion(props.id).then(setQuestionObj);
   }, []);
 
   const onSend = event => {
