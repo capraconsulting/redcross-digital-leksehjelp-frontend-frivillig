@@ -3,7 +3,7 @@ import { get } from '../services/api-service';
 import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
 
-const QuestionContainer = props => {
+const QuestionContainer = () => {
   const [answeredQuestions, setAnsweredQuestions] = React.useState(
     [] as IQuestion[],
   );

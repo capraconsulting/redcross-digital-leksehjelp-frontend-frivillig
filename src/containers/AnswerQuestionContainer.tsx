@@ -8,7 +8,15 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
-  const [questionObj, setQuestionObj] = React.useState({} as IQuestion);
+  const [questionObj, setQuestionObj] = React.useState<IQuestion>({
+    id: '',
+    title: '',
+    question: '',
+    answer: '',
+    class: '',
+    date: '',
+    course: '',
+  });
 
   React.useEffect(() => {
     getQuestion(`questions/${props.id}`).then(setQuestionObj);
