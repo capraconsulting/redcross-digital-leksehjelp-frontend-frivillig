@@ -5,7 +5,7 @@
 
 buildConfig([
   slack: [
-    channel: '#rødekors-dev',
+    channel: '#rødekors-standup',
     teamDomain: 'cals-capra',
   ],
 ]) {
