@@ -1,8 +1,13 @@
 import React from 'react';
 import { getQuestion, postAnswer } from '../services/api-service';
 import { IQuestion } from '../interfaces';
+import { withRouter, RouteComponentProps } from 'react-router';
 
-const AnswerQuestionContainer = props => {
+interface IProps {
+  id: string;
+}
+
+const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [questionObj, setQuestionObj] = React.useState({} as IQuestion);
 
   React.useEffect(() => {
@@ -10,7 +15,6 @@ const AnswerQuestionContainer = props => {
   }, []);
 
   const onSend = event => {
-    console.log(props);
     const { id, answer } = questionObj;
     const body = {
       id,
@@ -66,4 +70,4 @@ const AnswerQuestionContainer = props => {
   );
 };
 
-export default AnswerQuestionContainer;
+export default withRouter(AnswerQuestionContainer);
