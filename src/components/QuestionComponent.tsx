@@ -1,6 +1,10 @@
 import React from 'react';
 
-const QuestionComponent = ({ question }) => (
+interface IProps {
+  question: string;
+}
+
+const QuestionComponent = ({ question }: IProps) => (
   <div className="question--list-item">{question}</div>
 );
 

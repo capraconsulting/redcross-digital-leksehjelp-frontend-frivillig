@@ -1,40 +1,48 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { get } from '../services/api-service';
 import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
 
-interface IQuestionContainer {
-  questions: IQuestion[];
-}
+const QuestionContainer = () => {
+  const [answeredQuestions, setAnsweredQuestions] = React.useState(
+    [] as IQuestion[],
+  );
+  const [unansweredQuestions, setUnansweredQuestions] = React.useState(
+    [] as IQuestion[],
+  );
 
-class QuestionContainer extends Component<{}, IQuestionContainer> {
-  state = {
-    questions: [] as IQuestion[],
-  };
+  React.useEffect(() => {
+    get('questions?answered=true').then(setAnsweredQuestions);
+    get('questions?answered=false').then(setUnansweredQuestions);
+  }, []);
 
-  componentDidMount() {
-    get('questions?answered=true').then(res => {
-      this.setState({ questions: res });
-    });
-  }
-
-  render() {
-    const { questions } = this.state;
-    return (
-      <div>
+  return (
+    <div>
+      <div className="question--header">
         <h3>Spørsmål</h3>
-        {questions.length > 0 ? (
-          <div className="question--list">
-            {questions.map(({ question }, id) => (
-              <QuestionComponent key={id} question={question} />
-            ))}
-          </div>
-        ) : (
-          <p>Det er ingen nye spørsmål som kan besvares</p>
-        )}
       </div>
-    );
-  }
-}
+      <h3>Spørsmål som kan besvares</h3>
+      {answeredQuestions.length > 0 ? (
+        <div className="question--list">
+          {answeredQuestions.map(({ question }, id) => (
+            <QuestionComponent key={id} question={question} />
+          ))}
+        </div>
+      ) : (
+        <p>Det er ingen nye spørsmål som kan besvares</p>
+      )}
+      <h3>Besvarte spørsmål</h3>
+      {unansweredQuestions.length > 0 ? (
+        <div className="question--list">
+          {unansweredQuestions.map(({ question }, id) => (
+            <QuestionComponent key={id} question={question} />
+          ))}
+        </div>
+      ) : (
+        <p>Det finnes ingen spørsmål som er besvart</p>
+      )}
+    </div>
+  );
+};
 
 export default QuestionContainer;

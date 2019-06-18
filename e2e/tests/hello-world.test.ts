@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 
-fixture`Example app`.page('http://localhost:3000');
+fixture`Frivillig`.page('http://localhost:3000');
 
 class LandingPage {
   public headline: Selector;
@@ -17,5 +17,5 @@ const landingPage = new LandingPage();
 test('Check welcome message', async t => {
   await t
     .expect(landingPage.getHeadlineText())
-    .match(new RegExp('some-app-some-version'));
+    .match(new RegExp('Velkommen som frivillig'));
 });
