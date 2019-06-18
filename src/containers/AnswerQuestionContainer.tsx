@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { getQuestion, postAnswer } from '../services/api-service';
 import { IQuestion } from '../interfaces';
 
@@ -67,4 +66,4 @@ const AnswerQuestionContainer = props => {
   );
 };
 
-export default withRouter(AnswerQuestionContainer);
+export default AnswerQuestionContainer;

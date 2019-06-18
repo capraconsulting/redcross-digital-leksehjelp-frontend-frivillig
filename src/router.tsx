@@ -9,9 +9,9 @@ const Routes = () => {
       <Header />
       <Switch>
         <Route exact path="/" component={HomeComponent} />
-        <Route exact path="/spørsmål" component={QuestionContainer} />
+        <Route exact path="/questions" component={QuestionContainer} />
         <Route
-          path="/spørsmål/:id"
+          path="/questions/:id"
           render={({ match }) => (
             <AnswerQuestionContainer id={match.params.id} />
           )}
