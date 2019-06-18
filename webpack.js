@@ -70,8 +70,6 @@ module.exports = env => {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/index.html',
-        favicon: './src/dist/favicon.ico',
-
       }),
       outputConfig('config.json', configLocalJson),
       outputConfig('config/qa.json', configQaJson),
