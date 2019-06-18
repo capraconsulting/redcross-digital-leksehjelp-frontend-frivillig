@@ -3,7 +3,7 @@ import { get } from '../services/api-service';
 import { QuestionComponent } from '../components';
 import { IQuestion } from '../interfaces/IQuestion';
 
-const QuestionContainer = () => {
+const QuestionContainer = props => {
   const [answeredQuestions, setAnsweredQuestions] = React.useState(
     [] as IQuestion[],
   );
@@ -24,8 +24,8 @@ const QuestionContainer = () => {
       <h3>Spørsmål som kan besvares</h3>
       {answeredQuestions.length > 0 ? (
         <div className="question--list">
-          {answeredQuestions.map(({ question }, id) => (
-            <QuestionComponent key={id} question={question} />
+          {answeredQuestions.map((res, id) => (
+            <QuestionComponent key={id} questionObj={res} />
           ))}
         </div>
       ) : (
@@ -34,8 +34,8 @@ const QuestionContainer = () => {
       <h3>Besvarte spørsmål</h3>
       {unansweredQuestions.length > 0 ? (
         <div className="question--list">
-          {unansweredQuestions.map(({ question }, id) => (
-            <QuestionComponent key={id} question={question} />
+          {unansweredQuestions.map((res, id) => (
+            <QuestionComponent key={id} questionObj={res} />
           ))}
         </div>
       ) : (

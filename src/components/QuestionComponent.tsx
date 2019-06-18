@@ -1,11 +1,21 @@
 import React from 'react';
+import { IQuestion } from '../interfaces';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 interface IProps {
-  question: string;
+  questionObj: IQuestion;
 }
+const QuestionComponent = (props: IProps & RouteComponentProps) => {
+  const { question, id } = props.questionObj;
 
-const QuestionComponent = ({ question }: IProps) => (
-  <div className="question--list-item">{question}</div>
-);
+  return (
+    <div
+      onClick={() => props.history.push(`questions/${id}`)}
+      className="question--list-item"
+    >
+      {question}
+    </div>
+  );
+};
 
-export default QuestionComponent;
+export default withRouter(QuestionComponent);
