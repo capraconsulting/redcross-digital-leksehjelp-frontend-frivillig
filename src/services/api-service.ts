@@ -21,9 +21,24 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export async function getQuestionList<T>(url?: string): Promise<T> {
+export async function getQuestionList<T>(parameter?: string): Promise<T> {
+  let url = '';
+  switch (parameter) {
+    case 'inbox':
+      url = 'answer';
+      break;
+    case 'started':
+      url = 'edit';
+      break;
+    case 'approval':
+      url = 'approve';
+      break;
+    default:
+      url = '';
+      break;
+  }
   return await api
-    .get(url !== undefined ? `questions/${url}` : 'questions')
+    .get(parameter !== undefined ? `questions/${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
 }
