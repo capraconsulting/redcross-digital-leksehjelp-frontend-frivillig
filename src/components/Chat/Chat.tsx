@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import openSocket from 'socket.io-client';
-import { ChatBody, ChatHeader } from '../../ui/components';
+import ChatBody from './Sections/ChatBody';
 import IMessage from '../../interfaces/IMessage';
 import '../../styles/Chat.less';
 

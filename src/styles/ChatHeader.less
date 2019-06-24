@@ -1,0 +1,24 @@
+@import "colors";
+.ch {
+  padding: 1rem 1rem;
+  border-bottom: 1px @black solid;
+  background-color: @primary-color;
+  &--left {
+    float: left;
+  }
+  &--right {
+    float: right;
+  }
+  &--text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &--left, &--right {
+      padding: 0;
+      margin: 0;
+      font-size: 1rem;
+      color: white;
+      font-family: "GT America", Arial, sans-serif;
+    }
+  }
+}

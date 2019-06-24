@@ -1,0 +1,34 @@
+@import 'colors';
+
+.cm {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  &--message {
+    margin: 0;
+    font-size: 1rem;
+    padding: .3rem;
+    overflow-wrap: break-spaces;
+  }
+
+  &--self {
+    background-color: gray;
+    color: white;
+    margin-left: 10%;
+  }
+  &--other {
+    background-color: @primary-color--light;
+    margin-right: 10%;
+  }
+  &--author-self {
+    text-align: right;
+  }
+  &--author-other {
+    text-align: left;
+  }
+  &--author-self, &--author-other {
+    margin: 0;
+    font-weight: lighter;
+    color: @label-color;
+  }
+}
