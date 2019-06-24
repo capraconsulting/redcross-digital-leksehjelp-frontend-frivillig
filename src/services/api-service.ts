@@ -42,9 +42,10 @@ export function post(url: string, body: any): Promise<any> {
     .catch(err => err.response);
 }
 
-export function postAnswer(body: IAnswer): Promise<IQuestion> {
-  return api
-    .post(`answers`, body)
+export async function postAnswer(body: IAnswer): Promise<IQuestion> {
+  const { questionId } = body;
+  return await api
+    .put(`questions/${questionId}/edit`, body)
     .then(res => res)
     .catch(err => err.response);
 }

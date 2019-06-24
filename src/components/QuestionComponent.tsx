@@ -4,10 +4,9 @@ import { withRouter, RouteComponentProps } from 'react-router';
 
 interface IProps {
   questionList: IQuestionMeta[];
-  type: string;
 }
 const QuestionComponent = (props: IProps & RouteComponentProps) => {
-  const { questionList, type } = props;
+  const { questionList } = props;
 
   if (questionList.length < 1) {
     return <p>Denne listen er tom for øyeblikket</p>;
@@ -22,14 +21,7 @@ const QuestionComponent = (props: IProps & RouteComponentProps) => {
             <p>Klasse: {studentGrade}</p>
             <p>Sendt inn: {questionDate}</p>
             <div className="question--list-button">
-              <button
-                onClick={() =>
-                  props.history.push({
-                    pathname: `questions/${id}`,
-                    state: { type },
-                  })
-                }
-              >
+              <button onClick={() => props.history.push(`questions/${id}`)}>
                 {' '}
                 Se spørsmål
               </button>

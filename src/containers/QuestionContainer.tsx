@@ -30,22 +30,19 @@ const QuestionContainer = () => {
       <div className="question--container">
         <div className="question--container-inbox">
           <h5>Innboks</h5>
-          <QuestionComponent questionList={inboxQuestions} type={'inbox'} />
+          <QuestionComponent questionList={inboxQuestions} />
         </div>
         <div className="question--container-started">
           <h5>Påbegynt</h5>
-          <QuestionComponent questionList={startedQuestions} type={'started'} />
+          <QuestionComponent questionList={startedQuestions} />
         </div>
         <div className="question--container-aproval">
           <h5>Til godkjenning</h5>
-          <QuestionComponent
-            questionList={approvalQuestions}
-            type={'approval'}
-          />
+          <QuestionComponent questionList={approvalQuestions} />
         </div>
         <div className="question--container-feedback">
           <h5>Tilbakemeldinger</h5>
-          <QuestionComponent questionList={[]} type={'feedback'} />
+          <QuestionComponent questionList={[]} />
         </div>
       </div>
     </div>
