@@ -1,10 +1,44 @@
+.question--container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 1rem;
+
+  h5 {
+    font-weight: 100;
+  }
+}
+
 .question--list {
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 1rem;
+
   &-item {
-    background-color: @form-background-color;
     padding: 10px;
     cursor: pointer;
+    border-style: solid;
+    border-width: thin;
+    border-color: @input-border-color;
+
+    h4 {
+      margin: 0rem;
+    }
+  }
+
+  &-button {
+    border-top: thin solid @input-border-color;
+    padding-top: 0.5rem;
+    button {
+      background-color: @secondary-color;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      width: 100%;
+      cursor: pointer;
+    }
   }
 }
 

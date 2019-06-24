@@ -21,26 +21,24 @@ const QuestionContainer = () => {
       <div className="question--header">
         <h3>Spørsmål</h3>
       </div>
-      <h3>Spørsmål som kan besvares</h3>
-      {answeredQuestions.length > 0 ? (
-        <div className="question--list">
-          {answeredQuestions.map((question, index) => (
-            <QuestionComponent key={index} questionObj={question} />
-          ))}
+      <div className="question--container">
+        <div className="question--container-inbox">
+          <h5>Innboks</h5>
+          <QuestionComponent questionList={unansweredQuestions} />
         </div>
-      ) : (
-        <p>Det er ingen nye spørsmål som kan besvares</p>
-      )}
-      <h3>Besvarte spørsmål</h3>
-      {unansweredQuestions.length > 0 ? (
-        <div className="question--list">
-          {unansweredQuestions.map((question, index) => (
-            <QuestionComponent key={index} questionObj={question} />
-          ))}
+        <div className="question--container-started">
+          <h5>Påbegynt</h5>
+          <QuestionComponent questionList={answeredQuestions} />
         </div>
-      ) : (
-        <p>Det finnes ingen spørsmål som er besvart</p>
-      )}
+        <div className="question--container-aproval">
+          <h5>Til godkjenning</h5>
+          <QuestionComponent questionList={answeredQuestions} />
+        </div>
+        <div className="question--container-feedback">
+          <h5>Tilbakemeldinger</h5>
+          <QuestionComponent questionList={answeredQuestions} />
+        </div>
+      </div>
     </div>
   );
 };
