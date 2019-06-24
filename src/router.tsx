@@ -11,7 +11,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
-        <Route exact path="/meldinger" component={Chat}/>
+        <Route exact path="/meldinger" component={Chat} />
         <Route
           path="/questions/:id"
           render={({ match }) => (

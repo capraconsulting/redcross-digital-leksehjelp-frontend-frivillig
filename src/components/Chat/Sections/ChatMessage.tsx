@@ -9,9 +9,7 @@ interface IProps {
 const ChatMessage = (props: IProps) => {
   const authorType = props.message.author === 'Deg' ? 'self' : 'other';
   return (
-    <div
-      className={`cm`}
-    >
+    <div className={`cm`}>
       <p className={`cm--author-${authorType}`}>{props.message.author}</p>
       <p className={`cm--message cm--${authorType}`}>{props.message.message}</p>
     </div>

@@ -12,7 +12,7 @@ const ChatBody = (props: IProps) => {
   const [message, setMessage] = useState({
     author: 'Deg',
     message: '',
-  } as IMessage);
+  });
 
   const mapMessages = () => {
     return props.messages.map((message, index) => {
