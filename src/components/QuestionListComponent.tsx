@@ -1,11 +1,12 @@
 import React from 'react';
 import { IQuestionMeta } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { dateFormat } from '../services/date-service';
 
 interface IProps {
   questionList: IQuestionMeta[];
 }
-const QuestionComponent = (props: IProps & RouteComponentProps) => {
+const QuestionListComponent = (props: IProps & RouteComponentProps) => {
   const { questionList } = props;
 
   if (questionList.length < 1) {
@@ -19,7 +20,7 @@ const QuestionComponent = (props: IProps & RouteComponentProps) => {
           <div key={index} className="question--list-item">
             <h4>{subject}</h4>
             <p>Klasse: {studentGrade}</p>
-            <p>Sendt inn: {questionDate}</p>
+            <p>Sendt inn: {dateFormat(questionDate)}</p>
             <div className="question--list-button">
               <button onClick={() => props.history.push(`questions/${id}`)}>
                 {' '}
@@ -33,4 +34,4 @@ const QuestionComponent = (props: IProps & RouteComponentProps) => {
   );
 };
 
-export default withRouter(QuestionComponent);
+export default withRouter(QuestionListComponent);

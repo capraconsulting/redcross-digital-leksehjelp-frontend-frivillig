@@ -1,6 +1,6 @@
 import React from 'react';
 import { getQuestionList } from '../services/api-service';
-import { QuestionComponent } from '../components';
+import { QuestionListComponent } from '../components';
 import { IQuestionMeta } from '../interfaces';
 
 const QuestionContainer = () => {
@@ -30,19 +30,19 @@ const QuestionContainer = () => {
       <div className="question--container">
         <div className="question--container-inbox">
           <h5>Innboks</h5>
-          <QuestionComponent questionList={inboxQuestions} />
+          <QuestionListComponent questionList={inboxQuestions} />
         </div>
         <div className="question--container-started">
           <h5>Påbegynt</h5>
-          <QuestionComponent questionList={startedQuestions} />
+          <QuestionListComponent questionList={startedQuestions} />
         </div>
         <div className="question--container-aproval">
           <h5>Til godkjenning</h5>
-          <QuestionComponent questionList={approvalQuestions} />
+          <QuestionListComponent questionList={approvalQuestions} />
         </div>
         <div className="question--container-feedback">
           <h5>Tilbakemeldinger</h5>
-          <QuestionComponent questionList={[]} />
+          <QuestionListComponent questionList={[]} />
         </div>
       </div>
     </div>
