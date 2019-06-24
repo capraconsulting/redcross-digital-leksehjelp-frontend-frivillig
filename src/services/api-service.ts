@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer } from '../interfaces';
+import { IQuestion, IAnswer, IQuestionMeta } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -21,11 +21,9 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export function getQuestionList(answered?: boolean): Promise<IQuestion[]> {
-  return api
-    .get(
-      answered !== undefined ? `questions?answered=${answered}` : 'questions',
-    )
+export async function getQuestionList<T>(url?: string): Promise<T> {
+  return await api
+    .get(url !== undefined ? `questions/${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
 }

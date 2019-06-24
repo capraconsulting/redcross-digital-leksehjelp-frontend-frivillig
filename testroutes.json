@@ -1,0 +1,9 @@
+{
+  "/questions/inbox": "/inbox",
+  "/questions/started": "/started",
+  "/questions/approval": "/approval",
+  "/answers/:id/feedback": "/feedback?answerId=:id",
+  "/questions/:id/unaswered": "/inbox/:id",
+  "/questions/:id/editing": "/started/:id",
+  "/questions/:id/approval": "/approval/:id"
+}

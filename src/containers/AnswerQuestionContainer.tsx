@@ -11,11 +11,11 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [questionObj, setQuestionObj] = React.useState<IQuestion>({
     id: '',
     title: '',
-    question: '',
+    questionText: '',
     answer: '',
-    class: '',
-    date: '',
-    course: '',
+    studentGrade: '',
+    questionDate: '',
+    subject: '',
   });
 
   React.useEffect(() => {
@@ -32,7 +32,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     event.preventDefault();
   };
 
-  const { question, title, answer } = questionObj;
+  const { questionText, title, answer } = questionObj;
   return (
     <div className="question-answer">
       <div className="question-answer--container">
@@ -51,7 +51,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             Spørsmål
             <textarea
               className="question-form--question"
-              value={question}
+              value={questionText}
               name="question"
             />
           </label>
