@@ -1,4 +1,3 @@
-/*
 import React, { useState, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 
@@ -41,4 +40,3 @@ const ChatSocket = () => {
 };
 
 export default ChatSocket;
-*/
