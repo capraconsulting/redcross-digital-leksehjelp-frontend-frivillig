@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, IQuestionMeta } from '../interfaces';
+import { IQuestion, IAnswer } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,

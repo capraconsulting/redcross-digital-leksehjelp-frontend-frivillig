@@ -18,8 +18,8 @@ const QuestionContainer = () => {
 
   React.useEffect(() => {
     getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions);
-    getQuestionList('started').then(setStartedQuestions);
-    getQuestionList('approval').then(setAnsweredQuestions);
+    getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions);
+    getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions);
   }, []);
 
   return (
