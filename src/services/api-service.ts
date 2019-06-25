@@ -25,7 +25,7 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   let url = '';
   switch (parameter) {
     case 'inbox':
-      url = 'answer';
+      url = 'unanswered';
       break;
     case 'started':
       url = 'edit';
