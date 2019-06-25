@@ -57,10 +57,28 @@ export function post(url: string, body: any): Promise<any> {
     .catch(err => err.response);
 }
 
-export async function postAnswer(body: IAnswer): Promise<IQuestion> {
+export async function postAnswer(
+  body: IAnswer,
+  type: string,
+): Promise<IQuestion> {
   const { questionId } = body;
+  let url = '';
+  switch (type) {
+    case '/inbox':
+      url = 'answer';
+      break;
+    case 'started':
+      url = '/edit';
+      break;
+    case 'approval':
+      url = '/approve';
+      break;
+    default:
+      url = '';
+      break;
+  }
   return await api
-    .put(`questions/${questionId}/edit`, body)
+    .put(`questions/${questionId}${url}`, body)
     .then(res => res)
     .catch(err => err.response);
 }

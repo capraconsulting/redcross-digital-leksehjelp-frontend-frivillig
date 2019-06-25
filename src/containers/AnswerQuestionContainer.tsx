@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 
 interface IProps {
   id: string;
+  type: string;
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
@@ -28,7 +29,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       questionId: id,
       answerText: answer,
     };
-    postAnswer(body).then(() => props.history.push('/'));
+    postAnswer(body, props.type).then(() => props.history.push('/'));
     event.preventDefault();
   };
 
