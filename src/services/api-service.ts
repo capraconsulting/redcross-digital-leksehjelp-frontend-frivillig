@@ -61,14 +61,14 @@ export async function postAnswer(
   body: IAnswer,
   type?: string,
 ): Promise<IQuestion> {
-  const { questionId } = body;
+  const { questionId, answerText } = body;
   let url = '';
   switch (type) {
     case 'inbox':
-      url = '/answer';
+      url = '/edit';
       break;
     case 'started':
-      url = '/edit';
+      url = '/answer';
       break;
     case 'approval':
       url = '/approve';
@@ -78,7 +78,7 @@ export async function postAnswer(
       break;
   }
   return await api
-    .put(`questions/${questionId}${url}`, body)
+    .post(`questions/${questionId}${url}`, { answerText })
     .then(res => res.data)
     .catch(err => err.response);
 }
