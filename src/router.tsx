@@ -12,8 +12,11 @@ const Routes = () => {
         <Route exact path="/questions" component={QuestionContainer} />
         <Route
           path="/questions/:id"
-          render={({ match }) => (
-            <AnswerQuestionContainer id={match.params.id} />
+          render={({ match, location }) => (
+            <AnswerQuestionContainer
+              id={match.params.id}
+              type={location.state}
+            />
           )}
         />
       </Switch>

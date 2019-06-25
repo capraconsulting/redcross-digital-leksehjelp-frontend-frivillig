@@ -29,7 +29,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       questionId: id,
       answerText: answer,
     };
-    postAnswer(body, props.type).then(() => props.history.push('/'));
+    postAnswer(body, props.type).then(() => props.history.goBack());
     event.preventDefault();
   };
 

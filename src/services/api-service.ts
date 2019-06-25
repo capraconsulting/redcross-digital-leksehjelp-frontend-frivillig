@@ -43,7 +43,7 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     .catch(err => err);
 }
 
-export function put(url: string, data: any): Promise<any> {
+function put(url: string, data: any): Promise<any> {
   return api
     .put(`${url}`, data)
     .then(res => res.data)
@@ -59,13 +59,13 @@ export function post(url: string, body: any): Promise<any> {
 
 export async function postAnswer(
   body: IAnswer,
-  type: string,
+  type?: string,
 ): Promise<IQuestion> {
   const { questionId } = body;
   let url = '';
   switch (type) {
-    case '/inbox':
-      url = 'answer';
+    case 'inbox':
+      url = '/answer';
       break;
     case 'started':
       url = '/edit';
@@ -79,7 +79,7 @@ export async function postAnswer(
   }
   return await api
     .put(`questions/${questionId}${url}`, body)
-    .then(res => res)
+    .then(res => res.data)
     .catch(err => err.response);
 }
 

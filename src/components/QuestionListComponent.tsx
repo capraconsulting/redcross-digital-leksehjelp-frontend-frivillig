@@ -27,7 +27,7 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
                 onClick={() =>
                   props.history.push({
                     pathname: `questions/${id}`,
-                    state: { type: props.type },
+                    state: props.type,
                   })
                 }
               >
