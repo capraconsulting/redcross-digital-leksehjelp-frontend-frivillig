@@ -7,13 +7,6 @@ const api = axios.create({
   headers: HEADERS,
 });
 
-export function get(url: string): Promise<IQuestion[]> {
-  return api
-    .get(`${url}`)
-    .then(res => res.data)
-    .catch(err => err);
-}
-
 export function getQuestion(id: string): Promise<IQuestion> {
   return api
     .get(`questions/${id}`)
@@ -43,25 +36,11 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     .catch(err => err);
 }
 
-function put(url: string, data: any): Promise<any> {
-  return api
-    .put(`${url}`, data)
-    .then(res => res.data)
-    .catch(err => err.response);
-}
-
-export function post(url: string, body: any): Promise<any> {
-  return api
-    .post(`${url}`, body)
-    .then(res => res)
-    .catch(err => err.response);
-}
-
 export async function postAnswer(
-  body: IAnswer,
+  data: IAnswer,
   type?: string,
 ): Promise<IQuestion> {
-  const { questionId, answerText } = body;
+  const { questionId, answerText } = data;
   let url = '';
   switch (type) {
     case 'inbox':
@@ -78,14 +57,7 @@ export async function postAnswer(
       break;
   }
   return await api
-    .post(`questions/${questionId}${url}`, { answerText })
+    .post(`questions/${questionId}${url}`, { answerText: answerText })
     .then(res => res.data)
-    .catch(err => err.response);
-}
-
-export function remove(url: string): Promise<any> {
-  return api
-    .delete(`${url}`)
-    .then(res => res)
     .catch(err => err.response);
 }

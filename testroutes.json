@@ -1,5 +1,5 @@
 {
-  "/questions/answer": "/inbox",
+  "/questions/unanswered": "/inbox",
   "/questions/edit": "/started",
   "/questions/approve": "/approval",
   "/answers/:id/feedback": "/feedback?answerId=:id",

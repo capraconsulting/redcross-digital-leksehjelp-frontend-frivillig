@@ -1,7 +1,7 @@
 export interface IQuestion extends IQuestionMeta {
   title: string;
   questionText: string;
-  answer: string;
+  answerText: string;
 }
 
 export interface IQuestionMeta {

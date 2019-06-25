@@ -1,17 +1,8 @@
-import { get } from '../services/api-service';
+import { getQuestionList } from '../services/api-service';
 jest.mock('../__mocks__/request');
 
 describe('api-service', () => {
   it('Should return a list of questions', () => {
-    expect(get('questions').then(data => expect(data.length).toEqual(3)));
-  });
-  it('Question should contain question text', () => {
-    expect(
-      get('questions').then(data =>
-        expect(
-          data.map(({ questionText }) => questionText.length),
-        ).toBeGreaterThan(0),
-      ),
-    );
+    expect(getQuestionList().then(data => expect(data).toEqual(3)));
   });
 });
