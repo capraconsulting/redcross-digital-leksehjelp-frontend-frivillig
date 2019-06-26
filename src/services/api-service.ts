@@ -7,8 +7,8 @@ const api = axios.create({
   headers: HEADERS,
 });
 
-export function getQuestion(id: string): Promise<IQuestion> {
-  return api
+export async function getQuestion(id: string): Promise<IQuestion> {
+  return await api
     .get(`questions/${id}`)
     .then(res => res.data)
     .catch(err => err);
@@ -18,20 +18,20 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   let url = '';
   switch (parameter) {
     case 'inbox':
-      url = 'unanswered';
+      url = '/unanswered';
       break;
     case 'started':
-      url = 'edit';
+      url = '/edit';
       break;
     case 'approval':
-      url = 'approve';
+      url = '/approve';
       break;
     default:
       url = '';
       break;
   }
   return await api
-    .get(parameter !== undefined ? `questions/${url}` : 'questions')
+    .get(parameter !== undefined ? `questions${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
 }
@@ -52,16 +52,14 @@ export async function postAnswer(
     case 'approval':
       return await api
         .post(`questions/${questionId}/approve`, { title })
-        .then(res => res.data)
-        .catch(err => err.response);
+        .then(res => res.data);
     default:
       url = '';
       break;
   }
   return await api
     .post(`questions/${questionId}${url}`, { answerText })
-    .then(res => res.data)
-    .catch(err => err.response);
+    .then(res => res.data);
 }
 
 export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
