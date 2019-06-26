@@ -39,17 +39,16 @@ describe('api-service', () => {
   const mock = axios.create();
 
   it('TEST: saveAnswer \n Should work', async () => {
-    mocked(mock.post).mockResolvedValue({ status: 'ok' });
-
+    mocked(mock.post).mockResolvedValue({});
     const data = await saveAnswer({
-      questionId: '1',
-      answerText: 'test',
+      questionId: ':id',
+      answerText: 'answer',
       title: 'title',
     });
 
     const call = mocked(mock.post).mock.calls[0];
-    console.log(call);
 
-    expect(call[0]).toEqual('questions');
+    expect(call[0]).toEqual('questions/:id/edit');
+    expect(call[1]).toEqual({ answerText: 'answer' });
   });
 });
