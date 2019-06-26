@@ -19,25 +19,40 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     subject: '',
   });
   const [isSaved, setIsSaved] = React.useState(false as boolean);
+  const [modalText, setModalText] = React.useState('' as string);
 
   React.useEffect(() => {
     getQuestion(props.id).then(setQuestion);
   }, []);
 
   const onSend = event => {
-    postAnswer({ questionId: props.id, answerText }, props.type).then(() =>
-      props.history.goBack(),
-    ); //TODO: Handle error and response-message
+    const { id, type, history } = props;
+    const data = {
+      questionId: id,
+      answerText,
+      title,
+    };
+    postAnswer(data, type).then(() => {
+      setModalText(
+        type === 'approval'
+          ? 'Svaret er nå sendt til studenten.'
+          : 'Svaret er sendt til godkjenning.',
+      );
+      setIsSaved(true);
+      setTimeout(() => history.goBack(), 2000);
+    }); //TODO: Handle error and response-message
     event.preventDefault();
   };
 
   const onSave = event => {
-    const { id, answerText } = question;
+    const { id } = props;
     const data = {
       questionId: id,
       answerText,
+      title,
     };
     saveAnswer(data).then(() => {
+      setModalText('Svaret er nå lagret.');
       setIsSaved(true); //TODO: handle isSaved message
     });
     event.preventDefault();
@@ -104,7 +119,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         </div>
       </div>
       <div className={`modal--open-${isSaved}`}>
-        <p>Svaret er nå lagret.</p>
+        <p>{modalText}</p>
         <button onClick={() => setIsSaved(false)}>x</button>
       </div>
     </div>

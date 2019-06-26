@@ -40,18 +40,18 @@ export async function postAnswer(
   data: IAnswer,
   type?: string,
 ): Promise<IQuestion> {
-  const { questionId, answerText } = data;
+  const { questionId, answerText, title } = data;
   let url = '';
   switch (type) {
     case 'inbox':
-      url = '/edit';
+      url = '/answer';
       break;
     case 'started':
       url = '/answer';
       break;
     case 'approval':
       return await api
-        .post(`questions/${questionId}/approve`)
+        .post(`questions/${questionId}/approve`, { title })
         .then(res => res.data)
         .catch(err => err.response);
     default:
@@ -59,7 +59,7 @@ export async function postAnswer(
       break;
   }
   return await api
-    .post(`questions/${questionId}${url}`, { answerText: answerText })
+    .post(`questions/${questionId}${url}`, { answerText })
     .then(res => res.data)
     .catch(err => err.response);
 }
