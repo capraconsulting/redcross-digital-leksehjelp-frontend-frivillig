@@ -11,11 +11,11 @@ const Routes = () => {
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
         <Route
-          path="/questions/:id"
+          path="/questions/:id/:type"
           render={({ match, location }) => (
             <AnswerQuestionContainer
               id={match.params.id}
-              type={location.state}
+              type={match.params.type}
             />
           )}
         />

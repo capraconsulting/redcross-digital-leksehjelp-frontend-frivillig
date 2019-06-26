@@ -14,6 +14,8 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
     return <p>Denne listen er tom for øyeblikket</p>;
   }
 
+  const { type } = props;
+
   return (
     <div className="question--list">
       {questionList.map(
@@ -24,12 +26,7 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
             <p>Sendt inn: {dateFormat(questionDate)}</p>
             <div className="question--list-button">
               <button
-                onClick={() =>
-                  props.history.push({
-                    pathname: `questions/${id}`,
-                    state: props.type,
-                  })
-                }
+                onClick={() => props.history.push(`questions/${id}/${type}`)}
               >
                 {' '}
                 Se spørsmål

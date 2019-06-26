@@ -50,14 +50,24 @@ export async function postAnswer(
       url = '/answer';
       break;
     case 'approval':
-      url = '/approve';
-      break;
+      return await api
+        .post(`questions/${questionId}/approve`)
+        .then(res => res.data)
+        .catch(err => err.response);
     default:
       url = '';
       break;
   }
   return await api
     .post(`questions/${questionId}${url}`, { answerText: answerText })
+    .then(res => res.data)
+    .catch(err => err.response);
+}
+
+export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
+  const { questionId, answerText } = data;
+  return await api
+    .post(`questions/${questionId}/edit`, { answerText: answerText })
     .then(res => res.data)
     .catch(err => err.response);
 }
