@@ -1,7 +1,7 @@
 @import 'colors';
 
 .cb {
-  height: 80vh;
+  height: 79vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -9,6 +9,19 @@
     width: 100%;
     max-height: 100%;
     overflow: scroll;
+
+    > .welcome-container {
+      border-bottom: @message-separator 1px solid;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      > .welcome-header {
+        color: @primary-color;
+        font-size: 1rem;
+      }
+      > .welcome-body {
+        color: @welcome-message-body;
+      }
+    }
   }
   > .message-form-container {
     padding-top: 1rem;
@@ -44,6 +57,12 @@
           display: block;
           transform: translate(0, -100%);
         }
+        &:hover {
+          background-color: @link-hover-color;
+        }
+        &:focus {
+          outline: none;
+        }
       }
       > .file {
         display: none;
@@ -67,4 +86,11 @@
 
 .arrow {
   fill: @secondary-color;
+  &:hover {
+    fill: @link-hover-color;
+  }
+}
+
+.hidden {
+  display: none;
 }
