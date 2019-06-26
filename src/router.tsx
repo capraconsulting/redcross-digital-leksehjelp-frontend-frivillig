@@ -12,7 +12,7 @@ const Routes = () => {
         <Route exact path="/questions" component={QuestionContainer} />
         <Route
           path="/questions/:id/:type"
-          render={({ match, location }) => (
+          render={({ match }) => (
             <AnswerQuestionContainer
               id={match.params.id}
               type={match.params.type}

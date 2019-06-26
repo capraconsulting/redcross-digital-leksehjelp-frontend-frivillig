@@ -27,6 +27,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onSend = event => {
     const { id, type, history } = props;
+    const { answerText, title } = question;
     const data = {
       questionId: id,
       answerText,
@@ -46,6 +47,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onSave = event => {
     const { id } = props;
+    const { answerText, title } = question;
     const data = {
       questionId: id,
       answerText,
