@@ -53,10 +53,15 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       answerText,
       title,
     };
-    saveAnswer(data).then(() => {
-      setModalText('Svaret er nå lagret.');
-      setIsSaved(true); //TODO: handle isSaved message
-    });
+    saveAnswer(data)
+      .then(() => {
+        setModalText('Svaret er nå lagret.');
+        setIsSaved(true);
+      })
+      .catch(() => {
+        setModalText('Noe gikk galt. Data ble ikke lagret.');
+        setIsSaved(true);
+      });
     event.preventDefault();
   };
 
