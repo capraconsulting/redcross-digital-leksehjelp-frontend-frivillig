@@ -117,7 +117,7 @@ module.exports = env => {
     devtool: 'inline-source-map',
     devServer: {
       contentBase: './build',
-      port: 3001,
+      port: 3002,
       historyApiFallback: true,
     },
   };
