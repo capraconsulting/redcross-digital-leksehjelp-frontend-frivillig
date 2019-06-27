@@ -1,7 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { HomeComponent, HeaderComponent as Header } from './components';
-import { QuestionContainer, AnswerQuestionContainer } from './containers';
+import {
+  QuestionContainer,
+  AnswerQuestionContainer,
+  AdminContainer,
+} from './containers';
 
 const Routes = () => {
   return (
@@ -18,6 +22,11 @@ const Routes = () => {
               type={match.params.type}
             />
           )}
+        />
+        <Route
+          exaxt
+          path="/admin/questions"
+          component={AdminQuestionsContainer}
         />
       </Switch>
     </Router>
