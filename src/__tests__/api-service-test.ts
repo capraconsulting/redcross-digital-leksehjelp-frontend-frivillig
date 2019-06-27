@@ -40,7 +40,7 @@ describe('api-service', () => {
 
   it('TEST: saveAnswer \n Should work', async () => {
     mocked(mock.post).mockResolvedValue({});
-    const data = await saveAnswer({
+    await saveAnswer({
       questionId: ':id',
       answerText: 'answer',
       title: 'title',
