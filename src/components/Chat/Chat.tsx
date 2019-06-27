@@ -3,12 +3,13 @@ import ChatBody from './Sections/ChatBody';
 import ChatHeader from './Sections/ChatHeader';
 import ChatQueue from './Sections/ChatQueue';
 import {
+  IGenerateRoomMessage,
   IGetMessage,
   ISocketMessage,
   ITextMessage,
 } from '../../interfaces/IMessage';
 import '../../styles/Chat.less';
-import { createGetQueueMessage } from '../../services/message-service';
+import { createGenerateRoomMessage, createGetQueueMessage } from '../../services/message-service';
 
 const Chat = () => {
   const [socket, setSocket] = useState(null as any);
@@ -64,11 +65,17 @@ const Chat = () => {
     const msg: IGetMessage = createGetQueueMessage();
     socket.send(JSON.stringify(msg));
   };
+
+  const sendGenerateRoomMessage = (studentID: string) => {
+    const msg: ISocketMessage = createGenerateRoomMessage(studentID, uniqueID);
+    socket.send(JSON.stringify(msg));
+  };
+
   return (
     <div className={'chat'}>
       <ChatHeader connectedWith="Caroline Sandsbråten" course="Engelsk" />
       <button onClick={() => sendGetQueueMessage()}>Update queue</button>
-      <ChatQueue queueMembers={queue} />
+      <ChatQueue createRoomWith={sendGenerateRoomMessage} queueMembers={queue} />
       <ChatBody
         uniqueID={uniqueID}
         roomID={roomID}

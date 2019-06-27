@@ -26,4 +26,3 @@ export interface ISocketMessage {
 export interface IGetMessage {
   type: string;
 }
-

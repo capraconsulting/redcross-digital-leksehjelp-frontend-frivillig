@@ -4,7 +4,8 @@ import {
   IGenerateRoomMessage,
   IEnterQueueMessage,
   ISocketMessage,
-  ITextMessage, IGetMessage,
+  ITextMessage,
+  IGetMessage,
 } from '../interfaces/IMessage';
 
 const createMessage = (
@@ -21,6 +22,17 @@ export const createGetQueueMessage = (): IGetMessage => {
   return {
     type: 'getQueueMessage',
   };
+};
+
+export const createGenerateRoomMessage = (
+  uniqueID: string,
+  studentID: string,
+): ISocketMessage => {
+  const msg: IGenerateRoomMessage = {
+    uniqueID,
+    studentID,
+  };
+  return createMessage(msg, 'generateRoomMessage')
 };
 
 export const createTextMessage = (

@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface IProps {
-  queueMembers: string[]
+  queueMembers: string[];
+  createRoomWith;
 }
 
 const ChatQueue = (props: IProps) => {
   const createList = () => {
-    return props.queueMembers.map((listItem, index) => {
-      return <li key={index}>{listItem}</li>;
+    return props.queueMembers.map((student, index) => {
+      return <li onClick={() => props.createRoomWith(student)} key={index}>{student}</li>;
     });
   };
 
