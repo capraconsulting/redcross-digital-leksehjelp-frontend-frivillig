@@ -7,15 +7,8 @@ const api = axios.create({
   headers: HEADERS,
 });
 
-export function get(url: string): Promise<IQuestion[]> {
-  return api
-    .get(`${url}`)
-    .then(res => res.data)
-    .catch(err => err);
-}
-
-export function getQuestion(id: string): Promise<IQuestion> {
-  return api
+export async function getQuestion(id: string): Promise<IQuestion> {
+  return await api
     .get(`questions/${id}`)
     .then(res => res.data)
     .catch(err => err);
@@ -25,49 +18,54 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   let url = '';
   switch (parameter) {
     case 'inbox':
-      url = 'answer';
+      url = '/unanswered';
       break;
     case 'started':
-      url = 'edit';
+      url = '/edit';
       break;
     case 'approval':
-      url = 'approve';
+      url = '/approve';
       break;
     default:
       url = '';
       break;
   }
   return await api
-    .get(parameter !== undefined ? `questions/${url}` : 'questions')
+    .get(parameter !== undefined ? `questions${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
 }
 
-export function put(url: string, data: any): Promise<any> {
-  return api
-    .put(`${url}`, data)
-    .then(res => res.data)
-    .catch(err => err.response);
-}
-
-export function post(url: string, body: any): Promise<any> {
-  return api
-    .post(`${url}`, body)
-    .then(res => res)
-    .catch(err => err.response);
-}
-
-export async function postAnswer(body: IAnswer): Promise<IQuestion> {
-  const { questionId } = body;
+export async function postAnswer(
+  data: IAnswer,
+  type?: string,
+): Promise<IQuestion> {
+  const { questionId, answerText, title } = data;
+  let url = '';
+  switch (type) {
+    case 'inbox':
+      url = '/answer';
+      break;
+    case 'started':
+      url = '/answer';
+      break;
+    case 'approval':
+      return await api
+        .post(`questions/${questionId}/approve`, { title })
+        .then(res => res.data);
+    default:
+      url = '';
+      break;
+  }
   return await api
-    .put(`questions/${questionId}/edit`, body)
-    .then(res => res)
-    .catch(err => err.response);
+    .post(`questions/${questionId}${url}`, { answerText })
+    .then(res => res.data);
 }
 
-export function remove(url: string): Promise<any> {
-  return api
-    .delete(`${url}`)
-    .then(res => res)
+export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
+  const { questionId, answerText } = data;
+  return await api
+    .post(`questions/${questionId}/edit`, { answerText: answerText })
+    .then(res => res.data)
     .catch(err => err.response);
 }
