@@ -8,31 +8,31 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
-  const [questionObj, setQuestionObj] = React.useState<IQuestion>({
+  const [question, setQuestion] = React.useState<IQuestion>({
     id: '',
     title: '',
-    question: '',
+    questionText: '',
     answer: '',
-    class: '',
-    date: '',
-    course: '',
+    studentGrade: '',
+    questionDate: '',
+    subject: '',
   });
 
   React.useEffect(() => {
-    getQuestion(props.id).then(setQuestionObj);
+    getQuestion(props.id).then(setQuestion);
   }, []);
 
   const onSend = event => {
-    const { id, answer } = questionObj;
+    const { id, answer } = question;
     const body = {
-      id,
-      answer,
+      questionId: id,
+      answerText: answer,
     };
     postAnswer(body).then(() => props.history.push('/'));
     event.preventDefault();
   };
 
-  const { question, title, answer } = questionObj;
+  const { questionText, title, answer } = question;
   return (
     <div className="question-answer">
       <div className="question-answer--container">
@@ -51,7 +51,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             Spørsmål
             <textarea
               className="question-form--question"
-              value={question}
+              value={questionText}
               name="question"
             />
           </label>
@@ -62,7 +62,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               value={answer}
               name="answer"
               onChange={e =>
-                setQuestionObj({ ...questionObj, answer: e.target.value })
+                setQuestion({ ...question, answer: e.target.value })
               }
             />
           </label>

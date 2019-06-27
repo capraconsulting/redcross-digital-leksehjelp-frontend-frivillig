@@ -1,9 +1,12 @@
-export interface IQuestion {
-  id: string;
+export interface IQuestion extends IQuestionMeta {
   title: string;
-  question: string;
+  questionText: string;
   answer: string;
-  class: string;
-  date: string;
-  course: string;
+}
+
+export interface IQuestionMeta {
+  id: string;
+  subject: string;
+  questionDate: string;
+  studentGrade: string;
 }

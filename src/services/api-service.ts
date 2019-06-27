@@ -21,11 +21,24 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export function getQuestionList(answered?: boolean): Promise<IQuestion[]> {
-  return api
-    .get(
-      answered !== undefined ? `questions?answered=${answered}` : 'questions',
-    )
+export async function getQuestionList<T>(parameter?: string): Promise<T> {
+  let url = '';
+  switch (parameter) {
+    case 'inbox':
+      url = 'answer';
+      break;
+    case 'started':
+      url = 'edit';
+      break;
+    case 'approval':
+      url = 'approve';
+      break;
+    default:
+      url = '';
+      break;
+  }
+  return await api
+    .get(parameter !== undefined ? `questions/${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
 }
@@ -44,9 +57,10 @@ export function post(url: string, body: any): Promise<any> {
     .catch(err => err.response);
 }
 
-export function postAnswer(body: IAnswer): Promise<IQuestion> {
-  return api
-    .post(`answers`, body)
+export async function postAnswer(body: IAnswer): Promise<IQuestion> {
+  const { questionId } = body;
+  return await api
+    .put(`questions/${questionId}/edit`, body)
     .then(res => res)
     .catch(err => err.response);
 }

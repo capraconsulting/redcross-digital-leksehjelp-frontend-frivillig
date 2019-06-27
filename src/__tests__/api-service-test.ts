@@ -8,7 +8,9 @@ describe('api-service', () => {
   it('Question should contain question text', () => {
     expect(
       get('questions').then(data =>
-        expect(data.map(({ question }) => question.length)).toBeGreaterThan(0),
+        expect(
+          data.map(({ questionText }) => questionText.length),
+        ).toBeGreaterThan(0),
       ),
     );
   });

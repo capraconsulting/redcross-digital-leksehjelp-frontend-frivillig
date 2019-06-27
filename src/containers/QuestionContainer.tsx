@@ -1,19 +1,25 @@
 import React from 'react';
 import { getQuestionList } from '../services/api-service';
-import { QuestionComponent } from '../components';
-import { IQuestion } from '../interfaces/IQuestion';
+import { QuestionListComponent } from '../components';
+import { IQuestionMeta } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [answeredQuestions, setAnsweredQuestions] = React.useState(
-    [] as IQuestion[],
+  const [inboxQuestions, setInboxQuestions] = React.useState(
+    [] as IQuestionMeta[],
   );
-  const [unansweredQuestions, setUnansweredQuestions] = React.useState(
-    [] as IQuestion[],
+
+  const [startedQuestions, setStartedQuestions] = React.useState(
+    [] as IQuestionMeta[],
+  );
+
+  const [approvalQuestions, setAnsweredQuestions] = React.useState(
+    [] as IQuestionMeta[],
   );
 
   React.useEffect(() => {
-    getQuestionList(true).then(setAnsweredQuestions);
-    getQuestionList(false).then(setUnansweredQuestions);
+    getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions);
+    getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions);
+    getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions);
   }, []);
 
   return (
@@ -21,26 +27,24 @@ const QuestionContainer = () => {
       <div className="question--header">
         <h3>Spørsmål</h3>
       </div>
-      <h3>Spørsmål som kan besvares</h3>
-      {answeredQuestions.length > 0 ? (
-        <div className="question--list">
-          {answeredQuestions.map((question, index) => (
-            <QuestionComponent key={index} questionObj={question} />
-          ))}
+      <div className="question--container">
+        <div className="question--container-inbox">
+          <h5>Innboks</h5>
+          <QuestionListComponent questionList={inboxQuestions} />
         </div>
-      ) : (
-        <p>Det er ingen nye spørsmål som kan besvares</p>
-      )}
-      <h3>Besvarte spørsmål</h3>
-      {unansweredQuestions.length > 0 ? (
-        <div className="question--list">
-          {unansweredQuestions.map((question, index) => (
-            <QuestionComponent key={index} questionObj={question} />
-          ))}
+        <div className="question--container-started">
+          <h5>Påbegynt</h5>
+          <QuestionListComponent questionList={startedQuestions} />
         </div>
-      ) : (
-        <p>Det finnes ingen spørsmål som er besvart</p>
-      )}
+        <div className="question--container-aproval">
+          <h5>Til godkjenning</h5>
+          <QuestionListComponent questionList={approvalQuestions} />
+        </div>
+        <div className="question--container-feedback">
+          <h5>Tilbakemeldinger</h5>
+          <QuestionListComponent questionList={[]} />
+        </div>
+      </div>
     </div>
   );
 };
