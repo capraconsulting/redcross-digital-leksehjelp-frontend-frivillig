@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ChatBody from './Sections/ChatBody';
 import ChatHeader from './Sections/ChatHeader';
 import ChatQueue from './Sections/ChatQueue';
+import ChatInput from './Sections/ChatInput';
 import {
   IGenerateRoomMessage,
   IGetMessage,
@@ -94,12 +95,8 @@ const Chat = () => {
         createRoomWith={sendGenerateRoomMessage}
         queueMembers={queue}
       />
-      <ChatBody
-        uniqueID={uniqueID}
-        roomID={roomID}
-        messages={messages}
-        send={sendTextMessage}
-      />
+      <ChatBody messages={messages} />
+      <ChatInput uniqueID={uniqueID} roomID={roomID} send={sendTextMessage} />
     </div>
   );
 };

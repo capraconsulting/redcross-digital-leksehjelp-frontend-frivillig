@@ -1,0 +1,73 @@
+@import "colors";
+
+.message-form-container {
+  padding-top: 1rem;
+  > .message-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    > .upload {
+      flex-shrink: 0;
+      padding: 0;
+      border: none;
+      color: white;
+      background-color: @action-color;
+      width: 37px;
+      height: 37px;
+      > .plus {
+        font-size: 32px;
+      }
+      > .tooltip {
+        background-color: #f2ecf8;
+        display: none;
+        color: @primary-color;
+        position: relative;
+        top: -3rem;
+        left: 0;
+        text-align: left;
+        width: 90vw;
+        max-width: 320px;
+        font-size: 15px;
+        padding: 10px;
+      }
+      &:hover > .tooltip {
+        display: block;
+        transform: translate(0, -100%);
+      }
+      &:hover {
+        background-color: @link-hover-color;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+    > .file {
+      display: none;
+    }
+    > .message-text {
+      width: 80%;
+      padding: 0.5rem;
+      border: solid 1px @select-color;
+      border-radius: 0;
+      -webkit-appearance: none;
+      font-size: 15px;
+      height: 1.5vh;
+    }
+    > .send-message {
+      background-color: rgba(0, 0, 0, 0);
+      border: 0;
+    }
+  }
+}
+
+
+.arrow {
+  fill: @secondary-color;
+  &:hover {
+    fill: @link-hover-color;
+  }
+}
+
+.hidden {
+  display: none;
+}
