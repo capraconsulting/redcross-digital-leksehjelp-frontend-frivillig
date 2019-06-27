@@ -8,10 +8,12 @@ interface IProps {
 const ChatQueue = (props: IProps) => {
   const createList = () => {
     return props.queueMembers.map((student, index) => {
-      return <li key={index}>
-        {student}
-        <button onClick={() => props.createRoomWith(student)} >Chat</button>
-      </li>;
+      return (
+        <li key={index}>
+          {student}
+          <button onClick={() => props.createRoomWith(student)}>Chat</button>
+        </li>
+      );
     });
   };
 

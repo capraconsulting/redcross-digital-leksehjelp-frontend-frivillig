@@ -26,6 +26,18 @@ const Chat = () => {
     setSocket(new WebSocket('ws://localhost:3001/events'));
   }, []);
 
+  const generateTextMessageFromPayload = (
+    message: ISocketMessage,
+  ): ITextMessage => {
+    return {
+      author: message.payload['author'],
+      roomID: message.payload['roomID'],
+      uniqueID: message.payload['uniqueID'],
+      message: message.payload['message'],
+      datetime: message.payload['datetime'],
+    };
+  };
+
   const socketHandler = message => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
 
@@ -56,18 +68,6 @@ const Chat = () => {
       display.scrollTo(0, display.scrollHeight);
     }
   }, [messages]);
-
-  const generateTextMessageFromPayload = (
-    message: ISocketMessage,
-  ): ITextMessage => {
-    return {
-      author: message.payload['author'],
-      roomID: message.payload['roomID'],
-      uniqueID: message.payload['uniqueID'],
-      message: message.payload['message'],
-      datetime: message.payload['datetime'],
-    };
-  };
 
   const sendTextMessage = (message: ISocketMessage) => {
     setMessages(messages => [

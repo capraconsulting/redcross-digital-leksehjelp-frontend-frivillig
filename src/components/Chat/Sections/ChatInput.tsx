@@ -4,14 +4,11 @@ import { createTextMessage } from '../../../services/message-service';
 import ISocketFile from '../../../interfaces/ISocketFile';
 import '../../../styles/ChatInput.less';
 
-
 interface IProps {
   uniqueID: string;
   roomID: string;
   send;
 }
-
-
 
 const ChatInput = (props: IProps) => {
   const [message, setMessage] = useState('' as string);
@@ -19,7 +16,11 @@ const ChatInput = (props: IProps) => {
   const sendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const msg: ISocketMessage = createTextMessage(message, props.uniqueID, props.roomID);
+      const msg: ISocketMessage = createTextMessage(
+        message,
+        props.uniqueID,
+        props.roomID,
+      );
       setMessage('');
       props.send(msg);
     }
@@ -42,7 +43,11 @@ const ChatInput = (props: IProps) => {
         size: file.size,
         dataURL: String(fr.result),
       };
-      const msg: ISocketMessage = createTextMessage(socketFile, props.uniqueID, props.roomID);
+      const msg: ISocketMessage = createTextMessage(
+        socketFile,
+        props.uniqueID,
+        props.roomID,
+      );
       props.send(msg);
     };
     fr.readAsDataURL(file);
@@ -86,6 +91,5 @@ const ChatInput = (props: IProps) => {
     </div>
   );
 };
-
 
 export default ChatInput;

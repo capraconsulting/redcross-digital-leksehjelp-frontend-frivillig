@@ -1,5 +1,5 @@
 import React from 'react';
-import {ITextMessage} from '../../../interfaces/IMessage';
+import { ITextMessage } from '../../../interfaces/IMessage';
 import '../../../styles/ChatMessage.less';
 import { NorwegianTime } from '../../../services/date-service';
 
@@ -8,8 +8,7 @@ interface IProps {
 }
 
 const ChatMessage = (props: IProps) => {
-  const authorType =
-    props.message.author === 'student' ? 'self' : 'other';
+  const authorType = props.message.author === 'student' ? 'self' : 'other';
 
   const downloadFile = file => {
     const a = document.createElement('a');

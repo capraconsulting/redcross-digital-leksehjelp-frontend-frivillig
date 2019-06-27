@@ -32,7 +32,7 @@ export const createGenerateRoomMessage = (
     uniqueID,
     studentID,
   };
-  return createMessage(msg, 'generateRoomMessage')
+  return createMessage(msg, 'generateRoomMessage');
 };
 
 export const createTextMessage = (
