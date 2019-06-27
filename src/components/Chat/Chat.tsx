@@ -9,7 +9,10 @@ import {
   ITextMessage,
 } from '../../interfaces/IMessage';
 import '../../styles/Chat.less';
-import { createGenerateRoomMessage, createGetQueueMessage } from '../../services/message-service';
+import {
+  createGenerateRoomMessage,
+  createGetQueueMessage,
+} from '../../services/message-service';
 
 const Chat = () => {
   const [socket, setSocket] = useState(null as any);
@@ -26,14 +29,10 @@ const Chat = () => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
 
     if (parsedMessage.type === 'textMessage') {
-      const msg: ITextMessage = {
-        author: parsedMessage.payload['author'],
-        roomID: parsedMessage.payload['roomID'],
-        uniqueID: parsedMessage.payload['uniqueID'],
-        message: parsedMessage.payload['message'],
-        datetime: parsedMessage.payload['datetime'],
-      };
-      setMessages(messages => [...messages, msg]);
+      setMessages(messages => [
+        ...messages,
+        generateTextMessageFromPayload(parsedMessage),
+      ]);
     } else if (parsedMessage.type === 'distributeRoomMessage') {
       setRoomID(parsedMessage.payload['roomID']);
     } else if (parsedMessage.type === 'connectionMessage') {
@@ -57,7 +56,23 @@ const Chat = () => {
     }
   }, [messages]);
 
+  const generateTextMessageFromPayload = (
+    message: ISocketMessage,
+  ): ITextMessage => {
+    return {
+      author: message.payload['author'],
+      roomID: message.payload['roomID'],
+      uniqueID: message.payload['uniqueID'],
+      message: message.payload['message'],
+      datetime: message.payload['datetime'],
+    };
+  };
+
   const sendTextMessage = (message: ISocketMessage) => {
+    setMessages(messages => [
+      ...messages,
+      generateTextMessageFromPayload(message),
+    ]);
     socket.send(JSON.stringify(message));
   };
 
@@ -75,7 +90,10 @@ const Chat = () => {
     <div className={'chat'}>
       <ChatHeader connectedWith="Caroline Sandsbråten" course="Engelsk" />
       <button onClick={() => sendGetQueueMessage()}>Update queue</button>
-      <ChatQueue createRoomWith={sendGenerateRoomMessage} queueMembers={queue} />
+      <ChatQueue
+        createRoomWith={sendGenerateRoomMessage}
+        queueMembers={queue}
+      />
       <ChatBody
         uniqueID={uniqueID}
         roomID={roomID}
