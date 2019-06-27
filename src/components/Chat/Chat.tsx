@@ -1,20 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import openSocket from 'socket.io-client';
 import ChatBody from './Sections/ChatBody';
 import ChatHeader from './Sections/ChatHeader';
-import IMessage from '../../interfaces/IMessage';
+import ChatQueue from './Sections/ChatQueue';
+import {
+  IGetMessage,
+  ISocketMessage,
+  ITextMessage,
+} from '../../interfaces/IMessage';
 import '../../styles/Chat.less';
+import { createGetQueueMessage } from '../../services/message-service';
 
 const Chat = () => {
-  const socket = openSocket('http://localhost:8000');
-
-  const [messages, setMessages] = useState([] as IMessage[]);
+  const [socket, setSocket] = useState(null as any);
+  const [messages, setMessages] = useState([] as ITextMessage[]);
+  const [roomID, setRoomID] = useState('' as string);
+  const [uniqueID, setUniqueID] = useState('' as string);
+  const [queue, setQueue] = useState([] as string[]);
 
   useEffect(() => {
-    socket.on('message', message => {
-      setMessages(messages => [...messages, message]);
-    });
+    setSocket(new WebSocket('ws://localhost:3001/events'));
   }, []);
+
+  const socketHandler = message => {
+    const parsedMessage: ISocketMessage = JSON.parse(message.data);
+
+    if (parsedMessage.type === 'textMessage') {
+      const msg: ITextMessage = {
+        author: parsedMessage.payload['author'],
+        roomID: parsedMessage.payload['roomID'],
+        uniqueID: parsedMessage.payload['uniqueID'],
+        message: parsedMessage.payload['message'],
+        datetime: parsedMessage.payload['datetime'],
+      };
+      setMessages(messages => [...messages, msg]);
+    } else if (parsedMessage.type === 'distributeRoomMessage') {
+      setRoomID(parsedMessage.payload['roomID']);
+    } else if (parsedMessage.type === 'connectionMessage') {
+      setUniqueID(parsedMessage.payload['uniqueID']);
+    } else if (parsedMessage.type === 'setQueueMessage') {
+      setQueue(parsedMessage.payload['queueMembers']);
+    }
+  };
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+    socket.onmessage = socketHandler;
+  });
 
   useEffect(() => {
     const display = document.querySelector('.display');
@@ -23,19 +56,25 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const send = message => {
-    socket.emit('message', message, '1');
-    setMessages(messages => [...messages, message]);
+  const sendTextMessage = (message: ISocketMessage) => {
+    socket.send(JSON.stringify(message));
   };
 
+  const sendGetQueueMessage = () => {
+    const msg: IGetMessage = createGetQueueMessage();
+    socket.send(JSON.stringify(msg));
+  };
   return (
     <div className={'chat'}>
-      <ChatHeader connectedWith='Student #3123125' course='Engelsk'/>
-      {/*This button is temporary, only to join rooms while we dont have a proper queue*/}
-      <button onClick={() => socket.emit('join room', '1')}>
-        Join temporary testing room
-      </button>
-      <ChatBody messages={messages} send={send}/>
+      <ChatHeader connectedWith="Caroline Sandsbråten" course="Engelsk" />
+      <button onClick={() => sendGetQueueMessage()}>Update queue</button>
+      <ChatQueue queueMembers={queue} />
+      <ChatBody
+        uniqueID={uniqueID}
+        roomID={roomID}
+        messages={messages}
+        send={sendTextMessage}
+      />
     </div>
   );
 };

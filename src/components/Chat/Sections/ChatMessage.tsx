@@ -1,10 +1,10 @@
 import React from 'react';
-import IMessage from '../../../interfaces/IMessage';
+import {ITextMessage} from '../../../interfaces/IMessage';
 import '../../../styles/ChatMessage.less';
 import { NorwegianTime } from '../../../services/date-service';
 
 interface IProps {
-  message: IMessage;
+  message: ITextMessage;
 }
 
 const ChatMessage = (props: IProps) => {

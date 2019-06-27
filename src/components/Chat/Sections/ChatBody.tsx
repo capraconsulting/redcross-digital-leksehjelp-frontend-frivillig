@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import ChatMessage from './ChatMessage';
 import '../../../styles/ChatBody';
 import ISocketFile from '../../../interfaces/ISocketFile';
-import IMessage from '../../../interfaces/IMessage';
-import { createFileMessage, createTextMessage } from '../../../services/message-service';
+import { createTextMessage } from '../../../services/message-service';
+import { ISocketMessage, ITextMessage } from '../../../interfaces/IMessage';
 
 interface IProps {
-  messages: IMessage[];
+  messages: ITextMessage[];
+  uniqueID: string;
+  roomID: string;
   send;
 }
 
@@ -19,10 +21,10 @@ const ChatBody = (props: IProps) => {
     });
   };
 
-  const send = event => {
+  const sendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const msg: IMessage = createTextMessage(message);
+      const msg: ISocketMessage = createTextMessage(message, props.uniqueID, props.roomID);
       setMessage('');
       props.send(msg);
     }
@@ -35,7 +37,7 @@ const ChatBody = (props: IProps) => {
     }
   };
 
-  const sendFile = (file: File) => {
+  const sendFileMessage = (file: File) => {
     const fr = new FileReader();
     console.log(file);
     fr.onload = () => {
@@ -45,7 +47,7 @@ const ChatBody = (props: IProps) => {
         size: file.size,
         dataURL: String(fr.result),
       };
-      const msg: IMessage = createFileMessage(socketFile);
+      const msg: ISocketMessage = createTextMessage(socketFile, props.uniqueID, props.roomID);
       props.send(msg);
     };
     fr.readAsDataURL(file);
@@ -67,7 +69,7 @@ const ChatBody = (props: IProps) => {
         <form className={'message-form'}>
           <input
             onChange={event =>
-              event.target.files && sendFile(event.target.files[0])
+              event.target.files && sendFileMessage(event.target.files[0])
             }
             type="file"
             name="attachment"
@@ -88,7 +90,7 @@ const ChatBody = (props: IProps) => {
             value={message}
             onChange={event => setMessage(event.target.value)}
           />
-          <button onClick={event => send(event)} className={'send-message'}>
+          <button onClick={event => sendTextMessage(event)} className={'send-message'}>
             <svg width="30px" height="30px" viewBox="0 0 30 30">
               <polygon
                 className="arrow"
