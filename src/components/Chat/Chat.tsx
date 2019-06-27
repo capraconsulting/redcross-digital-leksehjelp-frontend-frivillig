@@ -67,7 +67,7 @@ const Chat = () => {
   };
 
   const sendGenerateRoomMessage = (studentID: string) => {
-    const msg: ISocketMessage = createGenerateRoomMessage(studentID, uniqueID);
+    const msg: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
     socket.send(JSON.stringify(msg));
   };
 
