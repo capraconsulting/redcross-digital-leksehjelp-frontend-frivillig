@@ -1,11 +1,28 @@
 @import './header-component';
 @import './question-component';
+@import './admin-questions';
 @import './colors';
 
 body {
   font-family: sans-serif;
   font-weight: lighter;
   margin: 10px 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+}
+
+h5 {
+  font-weight: 100;
+}
+
+h3 {
+  font-weight: normal;
 }
 
 .modal--open {
@@ -42,4 +59,13 @@ body {
   &-false {
     display: none;
   }
+}
+
+.container--header {
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  border-bottom-color: grey;
+  margin-top: 2rem;
+  margin-bottom: 0px;
+  padding-bottom: 1rem;
 }
