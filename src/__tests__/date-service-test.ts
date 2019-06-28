@@ -12,7 +12,7 @@ describe('date-service', () => {
   });
   it('TEST: timeStringFromDate \n Should return time on the form HH:MM', async () => {
     const inputDate = new Date(
-      'Fri Jun 28 2019 10:06:58 GMT+0200 (Central European Summer Time)',
+      'Fri Jun 28 2019 10:06:58',
     );
     const receivedValue = await timeStringFromDate(inputDate);
     const expectedValue = '10:06';
