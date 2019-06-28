@@ -11,9 +11,7 @@ describe('date-service', () => {
     expect(dateString).toEqual(inputValue);
   });
   it('TEST: timeStringFromDate \n Should return time on the form HH:MM', async () => {
-    const inputDate = new Date(
-      'Fri Jun 28 2019 10:06:58',
-    );
+    const inputDate = new Date('Fri Jun 28 2019 10:06:58');
     const receivedValue = await timeStringFromDate(inputDate);
     const expectedValue = '10:06';
     expect(receivedValue).toEqual(expectedValue);
