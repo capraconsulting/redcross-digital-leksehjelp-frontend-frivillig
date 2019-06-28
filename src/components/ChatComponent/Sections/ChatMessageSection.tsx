@@ -1,15 +1,13 @@
 import React from 'react';
-import {ITextMessage} from '../../../interfaces/IMessage';
-import '../../../styles/ChatMessage.less';
+import { ITextMessage } from '../../../interfaces';
 import { NorwegianTime } from '../../../services/date-service';
 
 interface IProps {
   message: ITextMessage;
 }
 
-const ChatMessage = (props: IProps) => {
-  const authorType =
-    props.message.author === 'student' ? 'self' : 'other';
+const ChatMessageSection = (props: IProps) => {
+  const authorType = props.message.author === 'student' ? 'self' : 'other';
 
   const downloadFile = file => {
     const a = document.createElement('a');
@@ -20,21 +18,21 @@ const ChatMessage = (props: IProps) => {
   const renderMessage = () => {
     if (typeof props.message.message === 'string') {
       return (
-        <p className={`cm--message cm--${authorType}`}>
+        <p className={`chat-message--message chat-message--${authorType}`}>
           {props.message.message}
         </p>
       );
     } else {
       return (
         <div
-          className={`cm--${authorType} cm--download`}
+          className={`chat-message--${authorType} chat-message--download`}
           onClick={() => downloadFile(props.message.message)}
         >
-          <p className={`cm--message`}>
-            <span className="cm--file-name">
+          <p className={`chat-message--message`}>
+            <span className="chat-message--file-name">
               {props.message.message.name} {' | '}
             </span>
-            <span className="cm--file-size">
+            <span className="chat-message--file-size">
               {(props.message.message.size / 1000000).toPrecision(3)} MB {' - '}
               {props.message.message.type}
             </span>
@@ -49,8 +47,8 @@ const ChatMessage = (props: IProps) => {
     }
   };
   return (
-    <div className={`cm`}>
-      <p className={`cm--author-${authorType}`}>
+    <div className={`chat-message`}>
+      <p className={`chat-message--author-${authorType}`}>
         <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
         <span>{NorwegianTime(props.message.datetime)}</span>
       </p>
@@ -59,4 +57,4 @@ const ChatMessage = (props: IProps) => {
   );
 };
 
-export default ChatMessage;
+export default ChatMessageSection;

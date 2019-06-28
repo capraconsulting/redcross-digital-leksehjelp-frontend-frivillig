@@ -11,11 +11,7 @@ export function NorwegianDate(date): string {
 
 export function NorwegianTime(date): string {
   const tmpDate = new Date(date);
-  return (
-    tmpDate.getHours() +
-    ':' +
-    tmpDate.getMinutes()
-  );
+  return tmpDate.getHours() + ':' + tmpDate.getMinutes();
 }
 const formatAsDate = (value: string): string => {
   return value

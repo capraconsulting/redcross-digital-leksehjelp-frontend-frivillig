@@ -1,12 +1,11 @@
-import ISocketFile from '../interfaces/ISocketFile';
-
 import {
   IGenerateRoomMessage,
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
   IGetMessage,
-} from '../interfaces/IMessage';
+  ISocketFile,
+} from '../interfaces';
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage,
@@ -32,7 +31,7 @@ export const createGenerateRoomMessage = (
     uniqueID,
     studentID,
   };
-  return createMessage(msg, 'generateRoomMessage')
+  return createMessage(msg, 'generateRoomMessage');
 };
 
 export const createTextMessage = (

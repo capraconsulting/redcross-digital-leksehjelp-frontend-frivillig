@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import ChatBody from './Sections/ChatBody';
-import ChatHeader from './Sections/ChatHeader';
-import ChatQueue from './Sections/ChatQueue';
-import ChatInput from './Sections/ChatInput';
-import {
-  IGenerateRoomMessage,
-  IGetMessage,
-  ISocketMessage,
-  ITextMessage,
-} from '../../interfaces/IMessage';
-import '../../styles/Chat.less';
+import ChatBodySection from './Sections/ChatBodySection';
+import ChatHeaderSection from './Sections/ChatHeaderSection';
+import ChatQueueSection from './Sections/ChatQueueSection';
+import ChatInputSection from './Sections/ChatInputSection';
+import { IGetMessage, ISocketMessage, ITextMessage } from '../../interfaces';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
 } from '../../services/message-service';
+import { CHAT_URL } from '../../config';
 
-const Chat = () => {
+const ChatComponent = () => {
   const [socket, setSocket] = useState(null as any);
   const [messages, setMessages] = useState([] as ITextMessage[]);
   const [roomID, setRoomID] = useState('' as string);
@@ -23,10 +18,22 @@ const Chat = () => {
   const [queue, setQueue] = useState([] as string[]);
 
   useEffect(() => {
-    setSocket(new WebSocket('ws://localhost:3001/events'));
+    setSocket(new WebSocket(CHAT_URL));
   }, []);
 
-  const socketHandler = message => {
+  const generateTextMessageFromPayload = (
+    message: ISocketMessage,
+  ): ITextMessage => {
+    return {
+      author: message.payload['author'],
+      roomID: message.payload['roomID'],
+      uniqueID: message.payload['uniqueID'],
+      message: message.payload['message'],
+      datetime: message.payload['datetime'],
+    };
+  };
+
+  const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
 
     if (parsedMessage.type === 'textMessage') {
@@ -51,25 +58,14 @@ const Chat = () => {
   });
 
   useEffect(() => {
+    // Auto scroll down in chat
     const display = document.querySelector('.display');
     if (display) {
       display.scrollTo(0, display.scrollHeight);
     }
   }, [messages]);
 
-  const generateTextMessageFromPayload = (
-    message: ISocketMessage,
-  ): ITextMessage => {
-    return {
-      author: message.payload['author'],
-      roomID: message.payload['roomID'],
-      uniqueID: message.payload['uniqueID'],
-      message: message.payload['message'],
-      datetime: message.payload['datetime'],
-    };
-  };
-
-  const sendTextMessage = (message: ISocketMessage) => {
+  const onSendTextAndFileMessage = (message: ISocketMessage): void => {
     setMessages(messages => [
       ...messages,
       generateTextMessageFromPayload(message),
@@ -77,28 +73,35 @@ const Chat = () => {
     socket.send(JSON.stringify(message));
   };
 
-  const sendGetQueueMessage = () => {
+  const onSendGetQueueMessage = (): void => {
     const msg: IGetMessage = createGetQueueMessage();
     socket.send(JSON.stringify(msg));
   };
 
-  const sendGenerateRoomMessage = (studentID: string) => {
+  const onSendGenerateRoomMessage = (studentID: string): void => {
     const msg: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
     socket.send(JSON.stringify(msg));
   };
 
   return (
     <div className={'chat'}>
-      <ChatHeader connectedWith="Caroline Sandsbråten" course="Engelsk" />
-      <button onClick={() => sendGetQueueMessage()}>Update queue</button>
-      <ChatQueue
-        createRoomWith={sendGenerateRoomMessage}
+      <ChatHeaderSection
+        connectedWith="Caroline Sandsbråten"
+        course="Engelsk"
+      />
+      <button onClick={() => onSendGetQueueMessage()}>Update queue</button>
+      <ChatQueueSection
+        createRoomWith={onSendGenerateRoomMessage}
         queueMembers={queue}
       />
-      <ChatBody messages={messages} />
-      <ChatInput uniqueID={uniqueID} roomID={roomID} send={sendTextMessage} />
+      <ChatBodySection messages={messages} />
+      <ChatInputSection
+        uniqueID={uniqueID}
+        roomID={roomID}
+        onSend={onSendTextAndFileMessage}
+      />
     </div>
   );
 };
 
-export default Chat;
+export default ChatComponent;
