@@ -1,6 +1,6 @@
 import React from 'react';
 import { ITextMessage } from '../../../interfaces';
-import { NorwegianTime } from '../../../services/date-service';
+import { timeStringFromDate } from '../../../services/date-service';
 
 interface IProps {
   message: ITextMessage;
@@ -50,7 +50,7 @@ const ChatMessageSection = (props: IProps) => {
     <div className={`chat-message`}>
       <p className={`chat-message--author-${authorType}`}>
         <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
-        <span>{NorwegianTime(props.message.datetime)}</span>
+        <span>{timeStringFromDate(props.message.datetime)}</span>
       </p>
       {renderMessage()}
     </div>
