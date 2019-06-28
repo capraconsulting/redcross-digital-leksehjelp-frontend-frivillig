@@ -37,14 +37,19 @@ const questions = {
   },
 };
 
-export default function request() {
-  return new Promise((resolve, reject) => {
-    process.nextTick(() =>
-      questions
-        ? resolve(questions)
-        : reject({
-            error: 'There is no questions',
-          }),
-    );
-  });
-}
+const post = jest.fn();
+export default {
+  create() {
+    return {
+      get(url: string) {
+        const [_, parameter] = url.split('/');
+        if (isNaN(parseInt(parameter)) === true) {
+          return Promise.resolve({ data: url });
+        } else {
+          return Promise.resolve({ data: questions[parameter] });
+        }
+      },
+      post,
+    };
+  },
+};

@@ -13,9 +13,12 @@ const Routes = () => {
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/meldinger" component={Chat} />
         <Route
-          path="/questions/:id"
+          path="/questions/:id/:type"
           render={({ match }) => (
-            <AnswerQuestionContainer id={match.params.id} />
+            <AnswerQuestionContainer
+              id={match.params.id}
+              type={match.params.type}
+            />
           )}
         />
       </Switch>

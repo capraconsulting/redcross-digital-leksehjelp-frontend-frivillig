@@ -1,4 +1,5 @@
 export interface IAnswer {
-  id: string;
-  answer: string;
+  questionId: string;
+  answerText: string;
+  title: string;
 }
