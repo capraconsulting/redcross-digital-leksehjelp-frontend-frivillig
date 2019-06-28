@@ -4,7 +4,7 @@ import { HomeComponent, HeaderComponent as Header } from './components';
 import {
   QuestionContainer,
   AnswerQuestionContainer,
-  AdminContainer,
+  AdminQuestionsContainer,
 } from './containers';
 
 const Routes = () => {
