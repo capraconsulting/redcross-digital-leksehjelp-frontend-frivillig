@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import ChatBodySection from './Sections/ChatBodySection';
-import ChatHeaderSection from './Sections/ChatHeaderSection';
-import ChatQueueSection from './Sections/ChatQueueSection';
-import ChatInputSection from './Sections/ChatInputSection';
-import { IGetMessage, ISocketMessage, ITextMessage } from '../../interfaces';
+import ChatBodyComponent from '../components/ChatComponents/ChatBodyComponent';
+import ChatHeaderComponent from '../components/ChatComponents/ChatHeaderComponent';
+import ChatQueueComponent from '../components/ChatComponents/ChatQueueComponent';
+import ChatInputComponent from '../components/ChatComponents/ChatInputComponent';
+import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
-} from '../../services/message-service';
-import { CHAT_URL } from '../../config';
+} from '../services/message-service';
+import { CHAT_URL } from '../config';
 
-const ChatComponent = () => {
+const ChatContainer = () => {
   const [socket, setSocket] = useState(null as any);
   const [messages, setMessages] = useState([] as ITextMessage[]);
   const [roomID, setRoomID] = useState('' as string);
@@ -74,28 +74,28 @@ const ChatComponent = () => {
   };
 
   const onSendGetQueueMessage = (): void => {
-    const msg: IGetMessage = createGetQueueMessage();
-    socket.send(JSON.stringify(msg));
+    const getMessage: IGetMessage = createGetQueueMessage();
+    socket.send(JSON.stringify(getMessage));
   };
 
   const onSendGenerateRoomMessage = (studentID: string): void => {
-    const msg: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
-    socket.send(JSON.stringify(msg));
+    const socketMessage: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
+    socket.send(JSON.stringify(socketMessage));
   };
 
   return (
     <div className={'chat'}>
-      <ChatHeaderSection
+      <ChatHeaderComponent
         connectedWith="Caroline Sandsbråten"
         course="Engelsk"
       />
       <button onClick={() => onSendGetQueueMessage()}>Update queue</button>
-      <ChatQueueSection
+      <ChatQueueComponent
         createRoomWith={onSendGenerateRoomMessage}
         queueMembers={queue}
       />
-      <ChatBodySection messages={messages} />
-      <ChatInputSection
+      <ChatBodyComponent messages={messages} />
+      <ChatInputComponent
         uniqueID={uniqueID}
         roomID={roomID}
         onSend={onSendTextAndFileMessage}
@@ -104,4 +104,4 @@ const ChatComponent = () => {
   );
 };
 
-export default ChatComponent;
+export default ChatContainer;

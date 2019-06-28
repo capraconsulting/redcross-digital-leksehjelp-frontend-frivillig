@@ -1,12 +1,12 @@
 import React from 'react';
-import { ITextMessage } from '../../../interfaces';
-import { timeStringFromDate } from '../../../services/date-service';
+import { ITextMessage } from '../../interfaces';
+import { timeStringFromDate } from '../../services/date-service';
 
 interface IProps {
   message: ITextMessage;
 }
 
-const ChatMessageSection = (props: IProps) => {
+const ChatMessageComponent = (props: IProps) => {
   const authorType = props.message.author === 'student' ? 'self' : 'other';
 
   const downloadFile = file => {
@@ -39,7 +39,7 @@ const ChatMessageSection = (props: IProps) => {
           </p>
           <img
             className="svg-download"
-            src={require('../../../assets/images/download.svg')}
+            src={require('../../assets/images/download.svg')}
             alt=""
           />
         </div>
@@ -57,4 +57,4 @@ const ChatMessageSection = (props: IProps) => {
   );
 };
 
-export default ChatMessageSection;
+export default ChatMessageComponent;

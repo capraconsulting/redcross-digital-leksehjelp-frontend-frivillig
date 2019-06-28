@@ -5,7 +5,7 @@ interface IProps {
   course: string;
 }
 
-const ChatHeaderSection = (props: IProps) => {
+const ChatHeaderComponent = (props: IProps) => {
   return (
     <div className={`chat-header`}>
       <div className={'chat-header--text'}>
@@ -16,4 +16,4 @@ const ChatHeaderSection = (props: IProps) => {
   );
 };
 
-export default ChatHeaderSection;
+export default ChatHeaderComponent;

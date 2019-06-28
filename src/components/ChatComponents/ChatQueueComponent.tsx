@@ -5,7 +5,7 @@ interface IProps {
   createRoomWith;
 }
 
-const ChatQueueSection = (props: IProps) => {
+const ChatQueueComponent = (props: IProps) => {
   const createList = () => {
     return props.queueMembers.map((student, index) => {
       return (
@@ -24,4 +24,4 @@ const ChatQueueSection = (props: IProps) => {
   );
 };
 
-export default ChatQueueSection;
+export default ChatQueueComponent;

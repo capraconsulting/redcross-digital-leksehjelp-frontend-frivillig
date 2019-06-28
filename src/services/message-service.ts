@@ -27,11 +27,11 @@ export const createGenerateRoomMessage = (
   uniqueID: string,
   studentID: string,
 ): ISocketMessage => {
-  const msg: IGenerateRoomMessage = {
+  const generateRoomMessage: IGenerateRoomMessage = {
     uniqueID,
     studentID,
   };
-  return createMessage(msg, 'generateRoomMessage');
+  return createMessage(generateRoomMessage, 'generateRoomMessage');
 };
 
 export const createTextMessage = (
@@ -39,12 +39,12 @@ export const createTextMessage = (
   uniqueID: string,
   roomID: string,
 ): ISocketMessage => {
-  const msg: ITextMessage = {
+  const textMessage: ITextMessage = {
     author: 'student',
     uniqueID,
     roomID,
     message,
     datetime: new Date(),
   };
-  return createMessage(msg, 'textMessage');
+  return createMessage(textMessage, 'textMessage');
 };

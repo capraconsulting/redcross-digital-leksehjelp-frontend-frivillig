@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { createTextMessage } from '../../../services/message-service';
-import { ISocketFile, ISocketMessage } from '../../../interfaces';
+import { createTextMessage } from '../../services/message-service';
+import { ISocketFile, ISocketMessage } from '../../interfaces';
 
 interface IProps {
   uniqueID: string;
@@ -8,19 +8,19 @@ interface IProps {
   onSend(message: ISocketMessage): void;
 }
 
-const ChatInputSection = (props: IProps) => {
+const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState('' as string);
 
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const msg: ISocketMessage = createTextMessage(
+      const socketMessage: ISocketMessage = createTextMessage(
         message,
         props.uniqueID,
         props.roomID,
       );
       setMessage('');
-      props.onSend(msg);
+      props.onSend(socketMessage);
     }
   };
 
@@ -41,12 +41,12 @@ const ChatInputSection = (props: IProps) => {
         size: file.size,
         dataURL: String(fr.result),
       };
-      const msg: ISocketMessage = createTextMessage(
+      const socketMessage: ISocketMessage = createTextMessage(
         socketFile,
         props.uniqueID,
         props.roomID,
       );
-      props.onSend(msg);
+      props.onSend(socketMessage);
     };
     fr.readAsDataURL(file);
   };
@@ -72,7 +72,7 @@ const ChatInputSection = (props: IProps) => {
           {/*<span className="plus">+</span>*/}
           <img
             className="add-file-icon"
-            src={require('../../../assets/images/add-file.svg')}
+            src={require('../../assets/images/add-file.svg')}
             alt="Legg til fil"
           />
           <div className="tooltip">
@@ -92,7 +92,7 @@ const ChatInputSection = (props: IProps) => {
         >
           <img
             className="send-icon"
-            src={require('../../../assets/images/send.svg')}
+            src={require('../../assets/images/send.svg')}
             alt="Send"
           />
         </button>
@@ -101,4 +101,4 @@ const ChatInputSection = (props: IProps) => {
   );
 };
 
-export default ChatInputSection;
+export default ChatInputComponent;

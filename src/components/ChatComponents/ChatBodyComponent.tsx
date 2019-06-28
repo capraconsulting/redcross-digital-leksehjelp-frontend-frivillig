@@ -1,15 +1,15 @@
 import React from 'react';
-import ChatMessageSection from './ChatMessageSection';
-import { ITextMessage } from '../../../interfaces/ITextMessage';
+import ChatMessageComponent from './ChatMessageComponent';
+import { ITextMessage } from '../../interfaces/ITextMessage';
 
 interface IProps {
   messages: ITextMessage[];
 }
 
-const ChatBodySection = (props: IProps) => {
+const ChatBodyComponent = (props: IProps) => {
   const mapMessages = () => {
     return props.messages.map((message, index) => {
-      return <ChatMessageSection key={index} message={message} />;
+      return <ChatMessageComponent key={index} message={message} />;
     });
   };
 
@@ -29,4 +29,4 @@ const ChatBodySection = (props: IProps) => {
   );
 };
 
-export default ChatBodySection;
+export default ChatBodyComponent;
