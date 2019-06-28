@@ -3,19 +3,67 @@ import ChatBodyComponent from '../components/ChatComponents/ChatBodyComponent';
 import ChatHeaderComponent from '../components/ChatComponents/ChatHeaderComponent';
 import ChatQueueComponent from '../components/ChatComponents/ChatQueueComponent';
 import ChatInputComponent from '../components/ChatComponents/ChatInputComponent';
-import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
+import {
+  IGetMessage,
+  ISocketMessage,
+  IStudentInQueue,
+  ITextMessage,
+} from '../interfaces';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
 } from '../services/message-service';
 import { CHAT_URL } from '../config';
 
+const testQueue: IStudentInQueue[] = [
+  {
+    nickname: 'Bjørn Olav',
+    subject: 'Matematikk',
+    grade: '10. klasse',
+    uniqueID: 'fbpfusdbf90åqwdqwhb',
+    introText:
+      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
+  },
+  {
+    nickname: 'Geir Torvald',
+    subject: 'Engelsk',
+    grade: '10. klasse',
+    uniqueID: 'ch98fh78dgokndashjbd',
+    introText:
+      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
+  },
+  {
+    nickname: 'Hanna Grostad',
+    subject: 'Norsk',
+    grade: '10. klasse',
+    uniqueID: 'dnshaudcasopdja89',
+    introText:
+      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
+  },
+  {
+    nickname: 'Gro Hamstad',
+    subject: 'Engelsk',
+    grade: '10. klasse',
+    uniqueID: 'dasdfoiushfwef9qw0',
+    introText:
+      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
+  },
+  {
+    nickname: 'Arya Stark',
+    subject: 'Sverddansing',
+    grade: '10. klasse',
+    uniqueID: 'dnh8os7ad9yuqwdjiosh',
+    introText:
+      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
+  },
+];
+
 const ChatContainer = () => {
   const [socket, setSocket] = useState(null as any);
   const [messages, setMessages] = useState([] as ITextMessage[]);
   const [roomID, setRoomID] = useState('' as string);
   const [uniqueID, setUniqueID] = useState('' as string);
-  const [queue, setQueue] = useState([] as string[]);
+  const [queue, setQueue] = useState(testQueue as IStudentInQueue[]);
 
   useEffect(() => {
     setSocket(new WebSocket(CHAT_URL));
@@ -24,13 +72,7 @@ const ChatContainer = () => {
   const generateTextMessageFromPayload = (
     message: ISocketMessage,
   ): ITextMessage => {
-    return {
-      author: message.payload['author'],
-      roomID: message.payload['roomID'],
-      uniqueID: message.payload['uniqueID'],
-      message: message.payload['message'],
-      datetime: message.payload['datetime'],
-    };
+    return message.payload as ITextMessage;
   };
 
   const socketHandler = (message): void => {
@@ -79,27 +121,36 @@ const ChatContainer = () => {
   };
 
   const onSendGenerateRoomMessage = (studentID: string): void => {
-    const socketMessage: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
+    const socketMessage: ISocketMessage = createGenerateRoomMessage(
+      uniqueID,
+      studentID,
+    );
     socket.send(JSON.stringify(socketMessage));
   };
 
   return (
     <div className={'chat'}>
-      <ChatHeaderComponent
-        connectedWith="Caroline Sandsbråten"
-        course="Engelsk"
-      />
       <button onClick={() => onSendGetQueueMessage()}>Update queue</button>
-      <ChatQueueComponent
-        createRoomWith={onSendGenerateRoomMessage}
-        queueMembers={queue}
-      />
-      <ChatBodyComponent messages={messages} />
-      <ChatInputComponent
-        uniqueID={uniqueID}
-        roomID={roomID}
-        onSend={onSendTextAndFileMessage}
-      />
+      {roomID && (
+        <ChatHeaderComponent
+          connectedWith="Caroline Sandsbråten"
+          course="Engelsk"
+        />
+      )}
+      {!roomID && (
+        <ChatQueueComponent
+          createRoomWith={onSendGenerateRoomMessage}
+          queueMembers={queue}
+        />
+      )}
+      {roomID && <ChatBodyComponent messages={messages} />}
+      {roomID && (
+        <ChatInputComponent
+          uniqueID={uniqueID}
+          roomID={roomID}
+          onSend={onSendTextAndFileMessage}
+        />
+      )}
     </div>
   );
 };
