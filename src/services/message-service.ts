@@ -1,12 +1,11 @@
-import ISocketFile from '../interfaces/ISocketFile';
-
 import {
   IGenerateRoomMessage,
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
   IGetMessage,
-} from '../interfaces/IMessage';
+  ISocketFile,
+} from '../interfaces';
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage,

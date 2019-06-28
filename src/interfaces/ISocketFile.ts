@@ -1,4 +1,4 @@
-export default interface ISocketFile {
+export interface ISocketFile {
   name: string;
   type: string;
   size: number;

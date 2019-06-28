@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import { ISocketMessage } from '../../../interfaces/IMessage';
 import { createTextMessage } from '../../../services/message-service';
-import ISocketFile from '../../../interfaces/ISocketFile';
-import '../../../styles/ChatInput.less';
+import { ISocketFile, ISocketMessage } from '../../../interfaces';
 
 interface IProps {
   uniqueID: string;
   roomID: string;
-  send;
+  onSend(message: ISocketMessage): void;
 }
 
-const ChatInput = (props: IProps) => {
+const ChatInputSection = (props: IProps) => {
   const [message, setMessage] = useState('' as string);
 
-  const sendTextMessage = event => {
+  const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
       const msg: ISocketMessage = createTextMessage(
@@ -22,18 +20,18 @@ const ChatInput = (props: IProps) => {
         props.roomID,
       );
       setMessage('');
-      props.send(msg);
+      props.onSend(msg);
     }
   };
 
-  const uploadFile = () => {
+  const onFileUploadClick = () => {
     const fileInput = document.getElementById('msg-file-input');
     if (fileInput) {
       fileInput.click();
     }
   };
 
-  const sendFileMessage = (file: File) => {
+  const onSendFileMessage = (file: File) => {
     const fr = new FileReader();
     console.log(file);
     fr.onload = () => {
@@ -48,7 +46,7 @@ const ChatInput = (props: IProps) => {
         props.uniqueID,
         props.roomID,
       );
-      props.send(msg);
+      props.onSend(msg);
     };
     fr.readAsDataURL(file);
   };
@@ -58,7 +56,7 @@ const ChatInput = (props: IProps) => {
       <form className={'message-form'}>
         <input
           onChange={event =>
-            event.target.files && sendFileMessage(event.target.files[0])
+            event.target.files && onSendFileMessage(event.target.files[0])
           }
           type="file"
           name="attachment"
@@ -66,8 +64,17 @@ const ChatInput = (props: IProps) => {
           accept="image/*|.pdf|.doc|.docx"
           className="file"
         />
-        <button type="button" className="upload" onClick={() => uploadFile()}>
-          <span className="plus">+</span>
+        <button
+          type="button"
+          className="upload"
+          onClick={() => onFileUploadClick()}
+        >
+          {/*<span className="plus">+</span>*/}
+          <img
+            className="add-file-icon"
+            src={require('../../../assets/images/add-file.svg')}
+            alt="Legg til fil"
+          />
           <div className="tooltip">
             Hvis du sender et vedlegg, må du gjerne fjerne navnet ditt eller
             andre ting fra dokumentet som kan identifisere deg.
@@ -80,16 +87,18 @@ const ChatInput = (props: IProps) => {
           onChange={event => setMessage(event.target.value)}
         />
         <button
-          onClick={event => sendTextMessage(event)}
+          onClick={event => onSendTextMessage(event)}
           className={'send-message'}
         >
-          <svg width="30px" height="30px" viewBox="0 0 30 30">
-            <polygon className="arrow" points="30 15 0 30 5.5 15 0 0"></polygon>
-          </svg>
+          <img
+            className="send-icon"
+            src={require('../../../assets/images/send.svg')}
+            alt="Send"
+          />
         </button>
       </form>
     </div>
   );
 };
 
-export default ChatInput;
+export default ChatInputSection;

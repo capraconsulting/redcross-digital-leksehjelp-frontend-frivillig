@@ -1,21 +1,20 @@
 import React from 'react';
-import ChatMessage from './ChatMessage';
-import '../../../styles/ChatBody';
-import { ITextMessage } from '../../../interfaces/IMessage';
+import ChatMessageSection from './ChatMessageSection';
+import { ITextMessage } from '../../../interfaces/ITextMessage';
 
 interface IProps {
   messages: ITextMessage[];
 }
 
-const ChatBody = (props: IProps) => {
+const ChatBodySection = (props: IProps) => {
   const mapMessages = () => {
     return props.messages.map((message, index) => {
-      return <ChatMessage key={index} message={message} />;
+      return <ChatMessageSection key={index} message={message} />;
     });
   };
 
   return (
-    <div className={'cb'}>
+    <div className={'chat-body-container'}>
       <div className={'display'} id="message-display">
         <div className={'welcome-container'}>
           <p className="welcome-header">Velkommen til chaten!</p>
@@ -30,4 +29,4 @@ const ChatBody = (props: IProps) => {
   );
 };
 
-export default ChatBody;
+export default ChatBodySection;

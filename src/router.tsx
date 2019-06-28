@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { HomeComponent, HeaderComponent as Header } from './components';
+import {
+  HomeComponent,
+  HeaderComponent as Header,
+  ChatComponent,
+} from './components';
 import { QuestionContainer, AnswerQuestionContainer } from './containers';
-import Chat from './components/Chat/Chat';
 
 const Routes = () => {
   return (
@@ -11,7 +14,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
-        <Route exact path="/meldinger" component={Chat} />
+        <Route exact path="/messages" component={ChatComponent} />
         <Route
           path="/questions/:id"
           render={({ match }) => (
