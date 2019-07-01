@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 
@@ -24,7 +24,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
   }, []);
 
   return (
-    <div>
+    <Fragment>
       <div className="header--component">
         <ul className="header--list">
           <li
@@ -120,7 +120,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
           </ul>
         </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

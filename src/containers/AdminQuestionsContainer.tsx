@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { IQuestion } from '../interfaces';
 import { getQuestionList } from '../services';
 import { AdminQuestionList } from '../components';
@@ -12,29 +12,27 @@ const AdminQuestionsContainer = () => {
     getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
   }, []);
 
-  return (
-    <div>
-      <div className="container--header">
-        <h3>Alle godkjente spørsmål</h3>
+  return [
+    <div className="container--header">
+      <h3>Alle godkjente spørsmål</h3>
+    </div>,
+    <div className="admin-questions">
+      <div className="admin-questions--item">
+        <h5>Publisert</h5>
+        {publicQuestionList.length > 0 ? (
+          <AdminQuestionList questionList={publicQuestionList} />
+        ) : (
+          <p>Det er ingen spørsmål som kan redigeres</p>
+        )}
       </div>
-      <div className="admin-questions">
-        <div className="admin-questions--item">
-          <h5>Publisert</h5>
-          {publicQuestionList.length > 0 ? (
-            <AdminQuestionList questionList={publicQuestionList} />
-          ) : (
-            <p>Det er ingen spørsmål som kan redigeres</p>
-          )}
-        </div>
-        <div className="admin-questions--item">
-          <h5>Ikke Publisert</h5>
-          <div className="admin-questions--list">
-            <p>Det er ingen spørsmål som kan redigeres</p>
-          </div>
+      <div className="admin-questions--item">
+        <h5>Ikke Publisert</h5>
+        <div className="admin-questions--list">
+          <p>Det er ingen spørsmål som kan redigeres</p>
         </div>
       </div>
-    </div>
-  );
+    </div>,
+  ];
 };
 
 export default AdminQuestionsContainer;
