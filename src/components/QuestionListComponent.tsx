@@ -1,7 +1,7 @@
 import React from 'react';
 import { IQuestionMeta } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { dateStringFormat } from '../services/date-service';
+import { dateStringFormat, studentGradeFormat } from '../services';
 
 interface IProps {
   questionList: IQuestionMeta[];
@@ -22,7 +22,7 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
         ({ id, subject, questionDate, studentGrade }, index) => (
           <div key={index} className="question--list-item">
             <h4>{subject}</h4>
-            <p>Klasse: {studentGrade}</p>
+            <p>Klasse: {studentGradeFormat(studentGrade)}</p>
             <p>Sendt inn: {dateStringFormat(questionDate)}</p>
             <div className="question--list-button">
               <button
