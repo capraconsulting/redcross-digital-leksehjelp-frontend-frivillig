@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { createTextMessage } from '../../services/message-service';
 import { ISocketFile, ISocketMessage } from '../../interfaces';
 
-const addFileIcon = require('../../assets/images/add-file.svg');
-const sendIcon = require('../../assets/images/send.svg');
-
 interface IProps {
   uniqueID: string;
   roomID: string;
@@ -13,7 +10,7 @@ interface IProps {
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const {uniqueID, roomID, onSend} = props;
+  const { uniqueID, roomID, onSend } = props;
 
   const onSendTextMessage = event => {
     event.preventDefault();
@@ -67,14 +64,10 @@ const ChatInputComponent = (props: IProps) => {
           accept="image/*|.pdf|.doc|.docx"
           className="file"
         />
-        <button
-          type="button"
-          className="upload"
-          onClick={onFileUploadClick}
-        >
+        <button type="button" className="upload" onClick={onFileUploadClick}>
           <img
             className="add-file-icon"
-            src={addFileIcon}
+            src={require('../../assets/images/add-file.svg')}
             alt="Legg til fil"
           />
           <div className="tooltip">
@@ -88,13 +81,10 @@ const ChatInputComponent = (props: IProps) => {
           value={message}
           onChange={event => setMessage(event.target.value)}
         />
-        <button
-          onClick={onSendTextMessage}
-          className="send-message"
-        >
+        <button onClick={onSendTextMessage} className="send-message">
           <img
             className="send-icon"
-            src={sendIcon}
+            src={require('../../assets/images/send.svg')}
             alt="Send"
           />
         </button>

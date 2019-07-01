@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 
 interface IProps {
   queueMembers: string[];
@@ -6,15 +6,15 @@ interface IProps {
 }
 
 const ChatQueueComponent = (props: IProps) => {
-
   const queue = useMemo(
-    () => props.queueMembers.map((student, index) => (
-      <li key={index}>
-        {student}
-        <button onClick={() => props.createRoomWith(student)}>Chat</button>
-      </li>
-    )),
-    [props.queueMembers]
+    () =>
+      props.queueMembers.map((student, index) => (
+        <li key={index}>
+          {student}
+          <button onClick={() => props.createRoomWith(student)}>Chat</button>
+        </li>
+      )),
+    [props.queueMembers],
   );
 
   return (
