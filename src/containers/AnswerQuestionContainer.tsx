@@ -28,6 +28,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onSend = event => {
     const { id, type, history } = props;
     const { answerText, title } = question;
+    console.log('props', props);
+    console.log('question', question);
     const data = {
       questionId: id,
       answerText,

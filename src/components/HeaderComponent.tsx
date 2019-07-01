@@ -7,7 +7,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const [subPath, setSubPath] = useState('' as string);
 
-  const [onDropDown, setOnDropDown] = useState(false as boolean);
+  const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -28,7 +28,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
       <div className="header--component">
         <ul className="header--list">
           <li
-            className={`header--list-item ${path === 'que' && 'active'}`}
+            className={`header--list-item ${path === 'queue' && 'active'}`}
             onClick={() => {
               setPath('que');
               setOnDropDown(false);
