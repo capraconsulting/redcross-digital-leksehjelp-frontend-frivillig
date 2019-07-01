@@ -1,0 +1,54 @@
+.chat-message {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  &--file-name {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  &--file-size {
+    font-size: .8rem;
+  }
+
+  &:hover {
+    filter: brightness(120%);
+  }
+  &--message {
+    margin: 0;
+    font-size: 1rem;
+    padding: 0.3rem;
+    overflow-wrap: break-spaces;
+  }
+  &--download {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  &--self {
+    background-color: gray;
+    color: white;
+    margin-left: 10%;
+  }
+  &--other {
+    background-color: @primary-color--light;
+    margin-right: 10%;
+  }
+  &--author-self {
+    text-align: right;
+  }
+  &--author-other {
+    text-align: left;
+  }
+  &--author-self,
+  &--author-other {
+    margin: 0;
+    font-weight: lighter;
+    color: @label-color;
+  }
+}
+
+.svg-download {
+  height: 1.5rem;
+  padding: 0.6rem;
+}
