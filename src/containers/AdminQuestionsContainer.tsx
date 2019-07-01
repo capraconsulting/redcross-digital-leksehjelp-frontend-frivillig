@@ -56,10 +56,16 @@ const AdminQuestionsContainer = () => {
                       <p>Sendt inn:</p> {dateStringFormat(questionDate)}
                     </div>
                     <div className="item-footer">
-                      <Link className="leksehjelp--link" to={`questions/${id}`}>
+                      <Link
+                        className="leksehjelp--link"
+                        to={`/questions/${id}/edit`}
+                      >
                         Vis
                       </Link>
-                      <Link className="leksehjelp--link" to={`questions/${id}`}>
+                      <Link
+                        className="leksehjelp--link"
+                        to={`/questions/${id}/edit`}
+                      >
                         Rediger
                       </Link>
                     </div>
@@ -73,7 +79,9 @@ const AdminQuestionsContainer = () => {
         </div>
         <div className="admin-questions--item">
           <h5>Ikke Publisert</h5>
-          <div className="admin-questions--list"></div>
+          <div className="admin-questions--list">
+            <p>Det er ingen spørsmål som kan redigeres</p>
+          </div>
         </div>
       </div>
     </div>
