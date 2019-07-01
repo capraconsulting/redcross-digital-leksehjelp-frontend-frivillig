@@ -9,10 +9,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
     <div className="header--component">
       <ul className="header--list">
         <li className={`header--list-item ${pathname === '/que' && 'active'}`}>
-          <Link to="/">Elever i kø</Link>
+          <Link to="/queue">Elever i kø</Link>
         </li>
         <li className={`header--list-item ${pathname === '/chat' && 'active'}`}>
-          <Link to="/">Chat</Link>
+          <Link to="/messages">Chat</Link>
         </li>
         <li className={`header--list-item ${path === 'questions' && 'active'}`}>
           <Link to="/questions">Spørsmål</Link>

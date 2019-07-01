@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { IStudentInQueue } from '../../interfaces';
+import { IStudent } from '../../interfaces';
 
 interface IProps {
-  queueMembers: IStudentInQueue[];
+  queueMembers: IStudent[];
   createRoomWith(studentID: string): void;
 }
 

@@ -40,7 +40,7 @@ export const createTextMessage = (
   roomID: string,
 ): ISocketMessage => {
   const textMessage: ITextMessage = {
-    author: 'student',
+    author: 'frivillig',
     uniqueID,
     roomID,
     message,

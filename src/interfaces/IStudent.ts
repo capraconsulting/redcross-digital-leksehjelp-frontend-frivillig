@@ -1,4 +1,4 @@
-export interface IStudentInQueue {
+export interface IStudent {
   nickname: string;
   subject: string;
   grade: string;

@@ -6,4 +6,5 @@ export interface ITextMessage {
   uniqueID: string;
   message: string | ISocketFile;
   datetime: Date;
+  unread?: number;
 }

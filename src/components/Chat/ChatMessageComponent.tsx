@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const authorType = props.message.author === 'student' ? 'self' : 'other';
+  const authorType = props.message.author === 'frivillig' ? 'self' : 'other';
 
   const downloadFile = file => {
     const downloadLink = document.createElement('a');
