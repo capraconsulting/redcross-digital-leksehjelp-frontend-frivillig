@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
-  HomeComponent,
-  HeaderComponent as Header,
-  ChatComponent,
-} from './components';
-import { QuestionContainer, AnswerQuestionContainer } from './containers';
+  QuestionContainer,
+  AnswerQuestionContainer,
+  AdminQuestionsContainer,
+  ChatContainer,
+} from './containers';
+import { HomeComponent, HeaderComponent as Header } from './components';
 
 const Routes = () => {
   return (
@@ -14,7 +15,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
-        <Route exact path="/messages" component={ChatComponent} />
+        <Route exact path="/messages" component={ChatContainer} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (
@@ -23,6 +24,11 @@ const Routes = () => {
               type={match.params.type}
             />
           )}
+        />
+        <Route
+          exaxt
+          path="/admin/questions"
+          component={AdminQuestionsContainer}
         />
       </Switch>
     </Router>

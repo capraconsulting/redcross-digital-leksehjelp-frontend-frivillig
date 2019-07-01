@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
-import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
-import ChatQueueComponent from '../components/Chat/ChatQueueComponent';
-import ChatInputComponent from '../components/Chat/ChatInputComponent';
+import { ChatBody, ChatHeader, ChatInput, ChatQueue } from '../components';
 import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
   createGenerateRoomMessage,
@@ -82,17 +79,14 @@ const ChatContainer = () => {
 
   return (
     <div className="chat">
-      <ChatHeaderComponent
-        connectedWith="Caroline Sandsbråten"
-        course="Engelsk"
-      />
+      <ChatHeader connectedWith="Caroline Sandsbråten" course="Engelsk" />
       <button onClick={() => onSendGetQueueMessage()}>Update queue</button>
-      <ChatQueueComponent
+      <ChatQueue
         createRoomWith={onSendGenerateRoomMessage}
         queueMembers={queue}
       />
-      <ChatBodyComponent messages={messages} />
-      <ChatInputComponent
+      <ChatBody messages={messages} />
+      <ChatInput
         uniqueID={uniqueID}
         roomID={roomID}
         onSend={onSendTextAndFileMessage}
