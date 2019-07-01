@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IQuestion } from '../interfaces';
-import { getQuestionList } from '../services/api-service';
-import { dateStringFormat } from '../services/date-service';
-
-const GRADES = [
-  { gradeID: '8', label: '8. klasse' },
-  { gradeID: '9', label: '9. klasse' },
-  { gradeID: '10', label: '10. klasse' },
-  { gradeID: '11', label: 'Vg 1' },
-  { gradeID: '12', label: 'Vg 2' },
-  { gradeID: '13', label: 'Vg 3' },
-];
-
-Object.freeze(GRADES);
+import {
+  getQuestionList,
+  dateStringFormat,
+  studentGradeFormat,
+} from '../services';
 
 const AdminQuestionsContainer = () => {
   const [publicQuestionList, setPublicQuestionList] = useState(
@@ -23,12 +15,6 @@ const AdminQuestionsContainer = () => {
   useEffect(() => {
     getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
   }, []);
-
-  const studentGradeFormat = (studentGrade: string): string => {
-    return GRADES.filter(({ gradeID }) => gradeID === studentGrade).map(
-      ({ label }) => label,
-    )[0];
-  };
 
   return (
     <div>
