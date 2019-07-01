@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { HomeComponent, HeaderComponent as Header } from './components';
+import {
+  HomeComponent,
+  HeaderComponent as Header,
+  ChatComponent,
+} from './components';
 import { QuestionContainer, AnswerQuestionContainer } from './containers';
 
 const Routes = () => {
@@ -10,6 +14,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
+        <Route exact path="/messages" component={ChatComponent} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (
