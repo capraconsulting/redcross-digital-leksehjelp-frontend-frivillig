@@ -28,7 +28,9 @@ const ChatQueueComponent = (props: IProps) => {
                 </span>
               </div>
             </div>
+            <hr/>
             <div className="queue-body">{student.introText}</div>
+            <hr/>
           </div>
           <button>Avslutt Leksehjelp</button>
           <button onClick={() => props.createRoomWith(student.uniqueID)}>
@@ -39,7 +41,11 @@ const ChatQueueComponent = (props: IProps) => {
     [props.queueMembers],
   );
 
-  return <div className="queue-container">{queue}</div>;
+  return (
+    <div className="queue-container">
+      <div className="queue-category-container">{queue}</div>
+    </div>
+  );
 };
 
 export default ChatQueueComponent;
