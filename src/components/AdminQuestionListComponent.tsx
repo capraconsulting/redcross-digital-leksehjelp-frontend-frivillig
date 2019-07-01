@@ -8,7 +8,6 @@ interface IProps {
 }
 const AdminQuestionListComponent = (props: IProps) => {
   const { questionList } = props;
-  console.log(questionList);
 
   return (
     <div className="admin-questions--list">
