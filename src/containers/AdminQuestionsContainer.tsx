@@ -12,27 +12,29 @@ const AdminQuestionsContainer = () => {
     getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
   }, []);
 
-  return [
-    <div className="container--header">
-      <h3>Alle godkjente spørsmål</h3>
-    </div>,
-    <div className="admin-questions">
-      <div className="admin-questions--item">
-        <h5>Publisert</h5>
-        {publicQuestionList.length > 0 ? (
-          <AdminQuestionList questionList={publicQuestionList} />
-        ) : (
-          <p>Det er ingen spørsmål som kan redigeres</p>
-        )}
+  return (
+    <Fragment>
+      <div className="container--header">
+        <h3>Alle godkjente spørsmål</h3>
       </div>
-      <div className="admin-questions--item">
-        <h5>Ikke Publisert</h5>
-        <div className="admin-questions--list">
-          <p>Det er ingen spørsmål som kan redigeres</p>
+      <div className="admin-questions">
+        <div className="admin-questions--item">
+          <h5>Publisert</h5>
+          {publicQuestionList.length > 0 ? (
+            <AdminQuestionList questionList={publicQuestionList} />
+          ) : (
+            <p>Det er ingen spørsmål som kan redigeres</p>
+          )}
+        </div>
+        <div className="admin-questions--item">
+          <h5>Ikke Publisert</h5>
+          <div className="admin-questions--list">
+            <p>Det er ingen spørsmål som kan redigeres</p>
+          </div>
         </div>
       </div>
-    </div>,
-  ];
+    </Fragment>
+  );
 };
 
 export default AdminQuestionsContainer;
