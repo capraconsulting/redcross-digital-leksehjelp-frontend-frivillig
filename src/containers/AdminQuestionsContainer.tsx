@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IQuestion, ISubject } from '../interfaces';
-import { getQuestionList, getSubjectList } from '../services/api-service';
+import { IQuestion } from '../interfaces';
+import { getQuestionList } from '../services/api-service';
 import { dateStringFormat } from '../services/date-service';
 
 const GRADES = [
@@ -20,11 +20,8 @@ const AdminQuestionsContainer = () => {
     [] as IQuestion[],
   );
 
-  const [subjectList, setSubjectList] = useState([] as ISubject[]);
-
   useEffect(() => {
     getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
-    //getSubjectList().then(setSubjectList);
   }, []);
 
   const studentGradeFormat = (studentGrade: string): string => {
@@ -38,7 +35,6 @@ const AdminQuestionsContainer = () => {
       <div className="container--header">
         <h3>Alle godkjente spørsmål</h3>
       </div>
-      {/*TODO: Add filter on studentGrade and subject*/}
       <div className="admin-questions">
         <div className="admin-questions--item">
           <h5>Publisert</h5>
