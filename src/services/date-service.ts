@@ -1,6 +1,7 @@
-export const timeStringFromDate = (date): string => {
-  const [HH, MM] = new Date(date).toLocaleTimeString().split(':');
-  return `${HH}:${MM}`;
+export const timeStringFromDate = (date: Date): string => {
+  const leftPad = (input: number): string =>
+    input < 10 ? `0${input}` : input.toString();
+  return `${leftPad(date.getHours())}:${leftPad(date.getMinutes())}`;
 };
 const formatAsDate = (value: string): string => {
   return value

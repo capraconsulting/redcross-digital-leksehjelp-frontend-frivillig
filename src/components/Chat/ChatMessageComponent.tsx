@@ -10,10 +10,10 @@ const ChatMessageComponent = (props: IProps) => {
   const authorType = props.message.author === 'student' ? 'self' : 'other';
 
   const downloadFile = file => {
-    const a = document.createElement('a');
-    a.href = String(file.dataURL);
-    a['download'] = file.name;
-    a.click();
+    const downloadLink = document.createElement('a');
+    downloadLink.href = String(file.dataURL);
+    downloadLink['download'] = file.name;
+    downloadLink.click();
   };
   const renderMessage = () => {
     if (typeof props.message.message === 'string') {
@@ -47,7 +47,7 @@ const ChatMessageComponent = (props: IProps) => {
     }
   };
   return (
-    <div className={`chat-message`}>
+    <div className="chat-message">
       <p className={`chat-message--author-${authorType}`}>
         <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
         <span>{timeStringFromDate(props.message.datetime)}</span>

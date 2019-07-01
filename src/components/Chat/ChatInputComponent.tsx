@@ -9,18 +9,19 @@ interface IProps {
 }
 
 const ChatInputComponent = (props: IProps) => {
-  const [message, setMessage] = useState('' as string);
+  const [message, setMessage] = useState<string>('');
+  const { uniqueID, roomID, onSend } = props;
 
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
       const socketMessage: ISocketMessage = createTextMessage(
         message,
-        props.uniqueID,
-        props.roomID,
+        uniqueID,
+        roomID,
       );
       setMessage('');
-      props.onSend(socketMessage);
+      onSend(socketMessage);
     }
   };
 
@@ -33,7 +34,6 @@ const ChatInputComponent = (props: IProps) => {
 
   const onSendFileMessage = (file: File) => {
     const fr = new FileReader();
-    console.log(file);
     fr.onload = () => {
       const socketFile: ISocketFile = {
         name: file.name,
@@ -43,17 +43,17 @@ const ChatInputComponent = (props: IProps) => {
       };
       const socketMessage: ISocketMessage = createTextMessage(
         socketFile,
-        props.uniqueID,
-        props.roomID,
+        uniqueID,
+        roomID,
       );
-      props.onSend(socketMessage);
+      onSend(socketMessage);
     };
     fr.readAsDataURL(file);
   };
 
   return (
-    <div className={'message-form-container'}>
-      <form className={'message-form'}>
+    <div className="message-form-container">
+      <form className="message-form">
         <input
           onChange={event =>
             event.target.files && onSendFileMessage(event.target.files[0])
@@ -64,12 +64,7 @@ const ChatInputComponent = (props: IProps) => {
           accept="image/*|.pdf|.doc|.docx"
           className="file"
         />
-        <button
-          type="button"
-          className="upload"
-          onClick={() => onFileUploadClick()}
-        >
-          {/*<span className="plus">+</span>*/}
+        <button type="button" className="upload" onClick={onFileUploadClick}>
           <img
             className="add-file-icon"
             src={require('../../assets/images/add-file.svg')}
@@ -81,15 +76,12 @@ const ChatInputComponent = (props: IProps) => {
           </div>
         </button>
         <input
-          className={'message-text'}
+          className="message-text"
           type="textarea"
           value={message}
           onChange={event => setMessage(event.target.value)}
         />
-        <button
-          onClick={event => onSendTextMessage(event)}
-          className={'send-message'}
-        >
+        <button onClick={onSendTextMessage} className="send-message">
           <img
             className="send-icon"
             src={require('../../assets/images/send.svg')}

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { IStudentInQueue } from '../../interfaces';
 
 interface IProps {
   queueMembers: IStudentInQueue[];
-  createRoomWith;
+  createRoomWith(studentID: string): void;
 }
 
 const ChatQueueComponent = (props: IProps) => {
-  const createQueueList = () => {
-    return props.queueMembers.map((student, index) => {
-      return (
+  const queue = useMemo(
+    () =>
+      props.queueMembers.map((student, index) => (
         <div className="queue-item-container" key={index}>
           <div className="queue-item">
             <div className="queue-header">
@@ -30,18 +30,16 @@ const ChatQueueComponent = (props: IProps) => {
             </div>
             <div className="queue-body">{student.introText}</div>
           </div>
-          <button>
-            Avslutt Leksehjelp
-          </button>
+          <button>Avslutt Leksehjelp</button>
           <button onClick={() => props.createRoomWith(student.uniqueID)}>
             Start chat
           </button>
         </div>
-      );
-    });
-  };
+      )),
+    [props.queueMembers],
+  );
 
-  return <div className="queue-container">{createQueueList()}</div>;
+  return <div className="queue-container">{queue}</div>;
 };
 
 export default ChatQueueComponent;

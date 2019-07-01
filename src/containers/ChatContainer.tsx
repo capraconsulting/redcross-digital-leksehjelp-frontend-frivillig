@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import ChatBodyComponent from '../components/ChatComponents/ChatBodyComponent';
-import ChatHeaderComponent from '../components/ChatComponents/ChatHeaderComponent';
-import ChatQueueComponent from '../components/ChatComponents/ChatQueueComponent';
-import ChatInputComponent from '../components/ChatComponents/ChatInputComponent';
+import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
+import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
+import ChatQueueComponent from '../components/Chat/ChatQueueComponent';
+import ChatInputComponent from '../components/Chat/ChatInputComponent';
 import {
   IGetMessage,
   ISocketMessage,
   IStudentInQueue,
   ITextMessage,
 } from '../interfaces';
+
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
 } from '../services/message-service';
-import { CHAT_URL } from '../config';
+import { getSocket } from '../utils';
 
 const testQueue: IStudentInQueue[] = [
   {
@@ -60,13 +61,13 @@ const testQueue: IStudentInQueue[] = [
 
 const ChatContainer = () => {
   const [socket, setSocket] = useState(null as any);
-  const [messages, setMessages] = useState([] as ITextMessage[]);
-  const [roomID, setRoomID] = useState('' as string);
-  const [uniqueID, setUniqueID] = useState('' as string);
-  const [queue, setQueue] = useState(testQueue as IStudentInQueue[]);
+  const [messages, setMessages] = useState<ITextMessage[]>([]);
+  const [roomID, setRoomID] = useState<string>('');
+  const [uniqueID, setUniqueID] = useState<string>('');
+  const [queue, setQueue] = useState<IStudentInQueue[]>(testQueue);
 
   useEffect(() => {
-    setSocket(new WebSocket(CHAT_URL));
+    setSocket(getSocket());
   }, []);
 
   const generateTextMessageFromPayload = (
@@ -97,7 +98,7 @@ const ChatContainer = () => {
       return;
     }
     socket.onmessage = socketHandler;
-  });
+  }, [socket]);
 
   useEffect(() => {
     // Auto scroll down in chat
