@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import ChatBodyComponent from '../components/ChatComponents/ChatBodyComponent';
-import ChatHeaderComponent from '../components/ChatComponents/ChatHeaderComponent';
-import ChatQueueComponent from '../components/ChatComponents/ChatQueueComponent';
-import ChatInputComponent from '../components/ChatComponents/ChatInputComponent';
+import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
+import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
+import ChatQueueComponent from '../components/Chat/ChatQueueComponent';
+import ChatInputComponent from '../components/Chat/ChatInputComponent';
 import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
 } from '../services/message-service';
-import { CHAT_URL } from '../config';
+import { getSocket } from '../utils';
 
 const ChatContainer = () => {
   const [socket, setSocket] = useState(null as any);
-  const [messages, setMessages] = useState([] as ITextMessage[]);
-  const [roomID, setRoomID] = useState('' as string);
-  const [uniqueID, setUniqueID] = useState('' as string);
-  const [queue, setQueue] = useState([] as string[]);
+  const [messages, setMessages] = useState<ITextMessage[]>([]);
+  const [roomID, setRoomID] = useState<string>('');
+  const [uniqueID, setUniqueID] = useState<string>('');
+  const [queue, setQueue] = useState<string[]>([]);
 
   useEffect(() => {
-    setSocket(new WebSocket(CHAT_URL));
+    setSocket(getSocket());
   }, []);
 
   const generateTextMessageFromPayload = (
     message: ISocketMessage,
   ): ITextMessage => {
-    return {
-      author: message.payload['author'],
-      roomID: message.payload['roomID'],
-      uniqueID: message.payload['uniqueID'],
-      message: message.payload['message'],
-      datetime: message.payload['datetime'],
-    };
+    return message.payload as ITextMessage;
   };
 
   const socketHandler = (message): void => {
@@ -55,7 +49,7 @@ const ChatContainer = () => {
       return;
     }
     socket.onmessage = socketHandler;
-  });
+  }, [socket]);
 
   useEffect(() => {
     // Auto scroll down in chat
@@ -79,12 +73,15 @@ const ChatContainer = () => {
   };
 
   const onSendGenerateRoomMessage = (studentID: string): void => {
-    const socketMessage: ISocketMessage = createGenerateRoomMessage(uniqueID, studentID);
+    const socketMessage: ISocketMessage = createGenerateRoomMessage(
+      uniqueID,
+      studentID,
+    );
     socket.send(JSON.stringify(socketMessage));
   };
 
   return (
-    <div className={'chat'}>
+    <div className="chat">
       <ChatHeaderComponent
         connectedWith="Caroline Sandsbråten"
         course="Engelsk"
