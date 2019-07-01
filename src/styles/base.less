@@ -9,6 +9,7 @@ body {
   margin: 10px 20px;
 }
 
+p,
 h1,
 h2,
 h3,
@@ -23,6 +24,10 @@ h5 {
 
 h3 {
   font-weight: normal;
+}
+
+p {
+  font-size: 1rem;
 }
 
 .modal--open {
@@ -68,4 +73,19 @@ h3 {
   margin-top: 2rem;
   margin-bottom: 0px;
   padding-bottom: 1rem;
+}
+
+.leksehjelp--link {
+  color: @link-color;
+  margin: 0.5rem;
+
+  :hover,
+  ::after {
+    color: @link-hover-color;
+    margin: 0.5rem;
+  }
+  :disabled {
+    color: @disabled-color;
+    margin: 0.5rem;
+  }
 }

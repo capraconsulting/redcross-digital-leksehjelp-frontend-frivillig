@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer } from '../interfaces';
+import { IQuestion, IAnswer, ISubject } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -26,6 +26,9 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     case 'approval':
       url = '/approve';
       break;
+    case 'public':
+      url = '/public';
+      break;
     default:
       url = '';
       break;
@@ -34,6 +37,10 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     .get(parameter !== undefined ? `questions${url}` : 'questions')
     .then(res => res.data)
     .catch(err => err);
+}
+
+export async function getSubjectList(): Promise<ISubject[]> {
+  return await api.get('subjects').then(res => res.data);
 }
 
 export async function postAnswer(

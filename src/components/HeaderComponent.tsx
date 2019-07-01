@@ -11,9 +11,12 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
-    const path = pathname.split('/');
-    setPath(path[1]);
-    setSubPath(path[2]);
+    const pathList = pathname.split('/');
+    setPath(pathList[1]);
+    setSubPath(pathList[2]);
+    if (pathList[1] === 'admin') {
+      setOnDropDown(true);
+    }
   };
 
   useEffect(() => {
