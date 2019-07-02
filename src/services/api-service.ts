@@ -14,8 +14,8 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export async function getFeedbackList(): Promise<IFeedback[]> {
-  return await api.get('feedback').then(res => res.data);
+export async function getFeedbackList(id?:string): Promise<IFeedback[]> {
+  return await api.get(id? `feedback/question/${id}` : 'feedback').then(res => res.data);
 }
 
 export async function getQuestionList<T>(parameter?: string): Promise<T> {

@@ -32,12 +32,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   React.useEffect(() => {
     getQuestion(props.id).then(setQuestion);
-    getFeedbackList().then(list => {
-      const questionFeedback = list.filter(
-        feedback => feedback.questionID === Number(props.id),
-      );
-      setFeedbackQuestions(questionFeedback);
-    });
+    getFeedbackList(props.id).then(setFeedbackQuestions);
   }, []);
 
   const onSend = event => {
