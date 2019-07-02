@@ -1,6 +1,7 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { StateContext } from '../StateProvider';
 
 const HeaderComponent = (props: RouteComponentProps) => {
   const [path, setPath] = useState('' as string);
@@ -22,6 +23,9 @@ const HeaderComponent = (props: RouteComponentProps) => {
   useEffect(() => {
     setLocationPath();
   }, []);
+
+  const { activeState , setActiveState } = useContext(StateContext);
+
 
   return (
     <Fragment>
@@ -76,9 +80,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
         </ul>
         <div className="header--list-split" />
         <ul className="header--list">
-          <li className={`header--list-item ${path === 'status' && 'active'}`}>
+          <>
             Min status
-          </li>
+            <button onClick={() => setActiveState(!activeState)}>{activeState.toString()}</button>
+          </>
           <li className="header--list-item">
             <button>Steng Leksehjelp</button>
           </li>
