@@ -80,3 +80,7 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
     .then(res => res.data)
     .catch(err => err.response);
 }
+
+export async function deleteFeedback(id: string): Promise<{}> {
+  return await api.post(`feedback/${id}/delete`).then(res => res.data)
+}
