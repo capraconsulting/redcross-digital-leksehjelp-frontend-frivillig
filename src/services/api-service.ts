@@ -82,5 +82,5 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
 }
 
 export async function deleteFeedback(id: string): Promise<{}> {
-  return await api.post(`feedback/${id}/delete`).then(res => res.data)
+  return await api.post(`feedback/${id}/delete`).then(res => res.data);
 }

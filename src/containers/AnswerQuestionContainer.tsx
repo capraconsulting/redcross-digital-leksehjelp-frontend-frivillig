@@ -33,7 +33,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   React.useEffect(() => {
     getQuestion(props.id).then(setQuestion);
     getFeedbackList().then(list => {
-      const questionFeedback = list.filter(feedback => feedback.questionID === Number(props.id));
+      const questionFeedback = list.filter(
+        feedback => feedback.questionID === Number(props.id),
+      );
       setFeedbackQuestions(questionFeedback);
     });
   }, []);
@@ -81,16 +83,18 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onDeleteFeedback = (event, value: number) => {
     event.preventDefault();
     const id = value.toString();
-    deleteFeedback(id).then(() => {
-      setModalText('Feedback er nå slettet.');
-      setIsSaved(true);
-      const feedbackList = feedbackQuestions.filter(({id}) => id !== value)
-      setFeedbackQuestions(feedbackList)
-    }).catch(() => {
-      setModalText('Noe gikk galt. Feedback ble ikke slettet.');
-      setIsSaved(true);
-    })
-  }
+    deleteFeedback(id)
+      .then(() => {
+        setModalText('Feedback er nå slettet.');
+        setIsSaved(true);
+        const feedbackList = feedbackQuestions.filter(({ id }) => id !== value);
+        setFeedbackQuestions(feedbackList);
+      })
+      .catch(() => {
+        setModalText('Noe gikk galt. Feedback ble ikke slettet.');
+        setIsSaved(true);
+      });
+  };
 
   const { questionText, title, answerText } = question;
   const { type } = props;
@@ -158,7 +162,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
                     <p>{feedbackText}</p>
                   </div>
                   <div className="feedback--list-footer">
-                    <button className="leksehjelp--link-warning" onClick={(e) => onDeleteFeedback(e, id)}>Slett</button>
+                    <button
+                      className="leksehjelp--link-warning"
+                      onClick={e => onDeleteFeedback(e, id)}
+                    >
+                      Slett
+                    </button>
                     <a className="leksehjelp--link">Resolve</a>
                   </div>
                 </div>
