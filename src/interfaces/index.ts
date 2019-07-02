@@ -7,3 +7,4 @@ export * from './IGetMessage';
 export * from './IGenerateRoomMessage';
 export * from './IEnterQueueMessage';
 export * from './ISocketFile';
+export * from './IFeedback';
