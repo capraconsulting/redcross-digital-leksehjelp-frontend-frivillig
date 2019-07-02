@@ -80,10 +80,13 @@ const HeaderComponent = (props: RouteComponentProps) => {
         </ul>
         <div className="header--list-split" />
         <ul className="header--list">
-          <>
+          <div className="header--list-button">
             Min status
-            <button onClick={() => setActiveState(!activeState)}>{activeState.toString()}</button>
-          </>
+            <label className="switch">
+              <input type="checkbox" />
+              <span  className="slider" onClick={() => setActiveState(!activeState)} />
+            </label>
+          </div>
           <li className="header--list-item">
             <button>Steng Leksehjelp</button>
           </li>
