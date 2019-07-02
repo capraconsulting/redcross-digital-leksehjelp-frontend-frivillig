@@ -24,8 +24,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
     setLocationPath();
   }, []);
 
-  const { activeState , setActiveState } = useContext(StateContext);
-
+  const { activeState, setActiveState } = useContext(StateContext);
 
   return (
     <Fragment>
@@ -84,7 +83,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
             Min status
             <label className="switch">
               <input type="checkbox" />
-              <span  className="slider" onClick={() => setActiveState(!activeState)} />
+              <span
+                className="slider"
+                onClick={() => setActiveState(!activeState)}
+              />
             </label>
           </div>
           <li className="header--list-item">
