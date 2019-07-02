@@ -3,14 +3,14 @@ import { IChat } from '../../interfaces';
 
 interface IProps {
   availableChats: IChat[];
-  showMessages(chat: IChat): void;
+  showMessages(index: number): void;
 }
 
 const ActiveChatsComponent = (props: IProps) => {
-  const [activeChat, setActiveChat] = useState<number>();
+  const [activeChat, setActiveChat] = useState<number>(0);
 
   const onClickHandler = (index: number): void => {
-    props.showMessages(props.availableChats[index]);
+    props.showMessages(index);
     setActiveChat(index);
   };
 
@@ -29,7 +29,7 @@ const ActiveChatsComponent = (props: IProps) => {
             <span className="name">{chat.student.nickname}</span>
             <span className="subject">{chat.student.subject}</span>
           </div>
-          <span className="dot">1</span>
+          <span className="dot">{chat.unread}</span>
         </div>
       )));
 

@@ -6,14 +6,22 @@ interface IProps {
   messages: ITextMessage[];
 }
 
+
 const ChatBodyComponent = (props: IProps) => {
-  const listMessages = useMemo(
+  /*const listMessages = useMemo(
     () =>
       props.messages.map((message, index) => (
         <ChatMessageComponent key={index} message={message} />
       )),
     [props.messages],
-  );
+  );*/
+
+
+  const listMessages = () => {
+    return props.messages.map((message, index) => (
+      <ChatMessageComponent key={index} message={message} />
+    ))
+  };
 
   return (
     <div className="chat-body-container">
@@ -25,7 +33,7 @@ const ChatBodyComponent = (props: IProps) => {
             andre ting fra dokumentet som kan indentifisere deg.
           </p>
         </div>
-        {listMessages}
+        {listMessages()}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
 import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
 import ChatInputComponent from '../components/Chat/ChatInputComponent';
@@ -16,6 +16,7 @@ import {
 } from '../services/message-service';
 import { getSocket, socketSend } from '../utils';
 import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
+import { addMessage, addRoomID, chatReducer, readMessages } from '../reducers';
 
 const testQueue: IStudent[] = [
   {
@@ -84,44 +85,48 @@ const testMessageGenerator = (): ITextMessage[] => {
   return textMessages;
 };
 
-const testActiveChats: IChat[] = [
+const initialChats: IChat[] = [
   {
     student: testQueue[0],
     messages: testMessageGenerator(),
     roomID: 'one',
+    unread: 0,
   },
   {
     student: testQueue[1],
     messages: testMessageGenerator(),
     roomID: 'two',
+    unread: 0,
   },
   {
     student: testQueue[2],
     messages: testMessageGenerator(),
     roomID: 'three',
+    unread: 0,
   },
   {
     student: testQueue[3],
     messages: testMessageGenerator(),
     roomID: 'four',
+    unread: 0,
   },
   {
     student: testQueue[4],
     messages: testMessageGenerator(),
     roomID: 'five',
+    unread: 0,
   },
 ];
 
+// main component
 const ChatContainer = () => {
-  const [availableChats, setAvailableChats] = useState<IChat[]>(
-    testActiveChats,
+  const [availableChats, dispatchAvailableChats] = useReducer(
+    chatReducer,
+    initialChats,
   );
-  const [activeMessages, setActiveMessages] = useState<ITextMessage[]>([]);
-  const [activeStudent, setActiveStudent] = useState<IStudent>();
-  const [activeRoomID, setActiveRoomID] = useState<string>('');
-
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>(testQueue);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const generateTextMessageFromPayload = (
     message: ISocketMessage,
@@ -129,39 +134,22 @@ const ChatContainer = () => {
     return message.payload as ITextMessage;
   };
 
-  const placeIncomingTextMessageCorrectly = (message: ISocketMessage): void => {
-    const room = message.payload['roomID'];
-    if (room === activeRoomID) {
-      setActiveMessages(messages => [
-        ...messages,
-        generateTextMessageFromPayload(message),
-      ]);
-    } else {
-      const chats = availableChats;
-      const chat = chats.find(chat => chat.roomID === room);
-      if (chat) chat.messages.push(generateTextMessageFromPayload(message));
-      setAvailableChats(chats);
-    }
-  };
-
-  const setNewRoomID = (message: ISocketMessage): void => {
-    const newAvailableChats = availableChats;
-    const roomToSetID = newAvailableChats.find(
-      chat => chat.student.uniqueID === message.payload['studentID'],
-    );
-    if (roomToSetID) {
-      roomToSetID.roomID = message.payload['roomID'];
-    }
-    setAvailableChats(newAvailableChats);
-  };
-
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
 
     if (parsedMessage.type === 'textMessage') {
-      placeIncomingTextMessageCorrectly(parsedMessage);
+      const action = addMessage(
+        parsedMessage.payload['roomID'],
+        parsedMessage.payload['message'],
+        true,
+      );
+      dispatchAvailableChats(action);
     } else if (parsedMessage.type === 'distributeRoomMessage') {
-      setNewRoomID(parsedMessage);
+      const action = addRoomID(
+        parsedMessage.payload['roomID'],
+        parsedMessage.payload['studentID'],
+      );
+      dispatchAvailableChats(action);
     } else if (parsedMessage.type === 'connectionMessage') {
       setUniqueID(parsedMessage.payload['uniqueID']);
     } else if (parsedMessage.type === 'setQueueMessage') {
@@ -178,17 +166,23 @@ const ChatContainer = () => {
 
   useEffect(() => {
     // Auto scroll down in chat
+    console.log('hei');
     const display = document.querySelector('.display');
     if (display) {
       display.scrollTo(0, display.scrollHeight);
     }
-  }, [activeMessages]);
+    if (availableChats[activeIndex].unread > 0) {
+      dispatchAvailableChats(readMessages(availableChats[activeIndex].roomID));
+    }
+  }, [availableChats]);
 
   const onSendTextAndFileMessage = (message: ISocketMessage): void => {
-    setActiveMessages(messages => [
-      ...messages,
-      generateTextMessageFromPayload(message),
-    ]);
+    dispatchAvailableChats(
+      addMessage(
+        availableChats[activeIndex].roomID,
+        generateTextMessageFromPayload(message),
+      ),
+    );
     socketSend(message);
   };
 
@@ -202,14 +196,14 @@ const ChatContainer = () => {
     // TODO: Happens when queue item is chosen
     const student = queue.find(queueItem => queueItem.uniqueID === studentID);
     if (student) {
-      setAvailableChats(chats => [
+      /*setAvailableChats(chats => [
         ...chats,
         {
           student,
           messages: [],
           roomID: '',
         },
-      ]);
+      ]);*/
     }
     const socketMessage: ISocketMessage = createGenerateRoomMessage(
       uniqueID,
@@ -218,45 +212,29 @@ const ChatContainer = () => {
     socketSend(socketMessage);
   };
 
-  const showMessages = (chat: IChat) => {
-    /*
-     * Updates the list with available chats
-     * Then change chat
-     */
-    if (activeStudent || activeMessages) {
-      const tmpChats = availableChats;
-      const tmpValue = tmpChats.find(chat => chat.student === activeStudent);
-      if (tmpValue) {
-        tmpValue.messages = activeMessages;
-      }
-      setAvailableChats(tmpChats);
-    }
-    setActiveRoomID(chat.roomID);
-    setActiveStudent(chat.student);
-    setActiveMessages(chat.messages);
-  };
-
   return (
     <div className="chat-container">
       <div className="chat-list">
         <ActiveChatsComponent
-          showMessages={showMessages}
+          showMessages={setActiveIndex}
           availableChats={availableChats}
         />
       </div>
       <div className="chat">
         <button onClick={() => toggleQueueMessage()}>Update queue</button>
-        {activeStudent && (
+        {availableChats && (
           <ChatHeaderComponent
-            connectedWith={activeStudent.nickname}
-            course={activeStudent.subject}
+            connectedWith={availableChats[activeIndex].student.nickname}
+            course={availableChats[activeIndex].student.subject}
           />
         )}
-        {activeMessages && <ChatBodyComponent messages={activeMessages} />}
-        {activeMessages && (
+        {availableChats && (
+          <ChatBodyComponent messages={availableChats[activeIndex].messages} />
+        )}
+        {availableChats && (
           <ChatInputComponent
             uniqueID={uniqueID}
-            roomID={activeRoomID}
+            roomID={availableChats[activeIndex].roomID}
             onSend={onSendTextAndFileMessage}
           />
         )}

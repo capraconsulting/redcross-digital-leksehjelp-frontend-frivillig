@@ -8,3 +8,4 @@ export * from './IEnterQueueMessage';
 export * from './ISocketFile';
 export * from './IStudent';
 export * from './IChat';
+export * from './IAction';
