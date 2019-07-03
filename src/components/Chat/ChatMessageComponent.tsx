@@ -1,6 +1,6 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
-import { timeStringFromDate } from '../../services/date-service';
+import { timeStringFromDate } from '../../services';
 
 interface IProps {
   message: ITextMessage;

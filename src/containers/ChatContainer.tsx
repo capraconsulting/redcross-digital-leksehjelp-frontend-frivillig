@@ -1,22 +1,16 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
-import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
-import ChatInputComponent from '../components/Chat/ChatInputComponent';
-import {
-  IGetMessage,
-  ISocketMessage,
-  IStudent,
-  ITextMessage,
-  IChat,
-} from '../interfaces';
-
+import { ChatBody, ChatHeader, ChatInput, ChatQueue } from '../components';
+import { IChat, IGetMessage, ISocketMessage, IStudent, ITextMessage } from '../interfaces';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
 } from '../services/message-service';
 import { getSocket, socketSend } from '../utils';
-import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
 import { addMessage, addRoomID, chatReducer, readMessages } from '../reducers';
+import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
+import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
+import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
+import ChatInputComponent from '../components/Chat/ChatInputComponent';
 
 const testQueue: IStudent[] = [
   {
@@ -186,11 +180,6 @@ const ChatContainer = () => {
     socketSend(message);
   };
 
-  const toggleQueueMessage = (): void => {
-    // TODO: Toggle queue
-    const getMessage: IGetMessage = createGetQueueMessage();
-    socketSend(getMessage);
-  };
 
   const onSendGenerateRoomMessage = (studentID: string): void => {
     // TODO: Happens when queue item is chosen
@@ -221,7 +210,6 @@ const ChatContainer = () => {
         />
       </div>
       <div className="chat">
-        <button onClick={() => toggleQueueMessage()}>Update queue</button>
         {availableChats && (
           <ChatHeaderComponent
             connectedWith={availableChats[activeIndex].student.nickname}
@@ -239,6 +227,7 @@ const ChatContainer = () => {
           />
         )}
       </div>
+
     </div>
   );
 };

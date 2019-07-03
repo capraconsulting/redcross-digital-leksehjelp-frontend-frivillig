@@ -1,5 +1,6 @@
 export * from './IQuestion';
 export * from './IAnswer';
+export * from './ISubjects';
 export * from './ITextMessage';
 export * from './ISocketMessage';
 export * from './IGetMessage';
@@ -9,3 +10,4 @@ export * from './ISocketFile';
 export * from './IStudent';
 export * from './IChat';
 export * from './IAction';
+export * from './IFeedback';

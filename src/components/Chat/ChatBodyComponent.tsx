@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import ChatMessageComponent from './ChatMessageComponent';
+import { ChatMessage } from '../';
 import { ITextMessage } from '../../interfaces';
 
 interface IProps {
@@ -11,7 +11,7 @@ const ChatBodyComponent = (props: IProps) => {
   /*const listMessages = useMemo(
     () =>
       props.messages.map((message, index) => (
-        <ChatMessageComponent key={index} message={message} />
+        <ChatMessage key={index} message={message} />
       )),
     [props.messages],
   );*/
