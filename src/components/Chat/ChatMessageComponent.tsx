@@ -1,14 +1,14 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
 import { timeStringFromDate } from '../../services';
-import { instanceOf } from 'prop-types';
 
 interface IProps {
   message: ITextMessage;
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const authorType = props.message.author === 'frivillig' ? 'self' : 'other';
+  const { message, author } = props.message;
+  const authorType = author === 'frivillig' ? 'self' : 'other';
 
   const downloadFile = file => {
     const downloadLink = document.createElement('a');
@@ -17,26 +17,25 @@ const ChatMessageComponent = (props: IProps) => {
     downloadLink.click();
   };
   const renderMessage = () => {
-    if (typeof props.message.message === 'string' || !props.message.message) {
+    if (typeof message === 'string') {
       return (
         <p className={`chat-message--message chat-message--${authorType}`}>
-          {props.message.message}
+          {message}
         </p>
       );
     } else {
       return (
         <div
           className={`chat-message--${authorType} chat-message--download`}
-          onClick={() => downloadFile(props.message.message)}
+          onClick={() => downloadFile(message)}
         >
           <p className={`chat-message--message`}>
             <span className="chat-message--file-name">
-              {props.message.message['name']} {' | '}
+              {message.name} {' | '}
             </span>
             <span className="chat-message--file-size">
-              {(props.message.message['size'] / 1000000).toPrecision(3)} MB{' '}
-              {' - '}
-              {props.message.message['type']}
+              {(message.size / 1000000).toPrecision(3)} MB {' - '}
+              {message.type}
             </span>
           </p>
           <img

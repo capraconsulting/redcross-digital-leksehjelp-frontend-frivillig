@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
 import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
 import ChatInputComponent from '../components/Chat/ChatInputComponent';
-import { ISocketMessage, ITextMessage } from '../interfaces';
+import { IChat, ISocketMessage, ITextMessage } from '../interfaces';
 
 import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
-import { addMessage, readMessages } from '../reducers';
+import { addMessage, readMessages, setChatFromLocalStorage } from '../reducers';
 import { SocketContext } from '../providers';
 
 // main component
@@ -27,9 +27,6 @@ const ChatContainer = () => {
     if (display) {
       display.scrollTo(0, display.scrollHeight);
     }
-    if (chats.length > 0 && chats[activeIndex].unread > 0) {
-      dispatchChats(readMessages(chats[activeIndex].roomID));
-    }
   }, [chats]);
 
   const onSendTextAndFileMessage = (message: ISocketMessage): void => {
@@ -37,12 +34,17 @@ const ChatContainer = () => {
     socketSend(message);
   };
 
+  const showMessages = (index: number) => {
+    setActiveIndex(index);
+    dispatchChats(readMessages(chats[activeIndex].roomID));
+  };
+
   if (chats.length > 0) {
     return (
       <div className="chat-container">
         <div className="chat-list">
           <ActiveChatsComponent
-            showMessages={setActiveIndex}
+            showMessages={showMessages}
             availableChats={chats}
           />
         </div>

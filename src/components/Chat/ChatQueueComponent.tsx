@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import {
   createGenerateRoomMessage,
   createGetQueueMessage,
-} from '../../services/message-service';
+} from '../../services';
 import { SocketContext } from '../../providers';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
@@ -33,39 +33,44 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         student.course,
       );
       socketSend(socketMessage);
-      //history.push('/messages');
+      history.push('/messages');
     }
   };
 
   const queueElement = useMemo(
     () =>
-      queue.map((student, index) => (
-        <div className="queue-item-container" key={index}>
-          <div className="queue-item">
-            <div className="queue-header">
-              <div className="queue-header-item">{student.course}</div>
-              <div className="queue-header-item">
-                <span className="queue-nickname">{student.nickname}</span>
-                <span className="queue-grade">
-                  <span>Klasse: </span>
-                  <span>{student.grade}</span>
-                </span>
-                <span className="queue-type">
-                  <img
-                    src={require('../../assets/images/chat-icon.svg')}
-                    alt="Text Chat"
-                  />
-                </span>
+      queue.map((student, index) => {
+        const { course, nickname, grade, introText } = student;
+        return (
+          <div className="queue-item-container" key={index}>
+            <div className="queue-item">
+              <div className="queue-header">
+                <div className="queue-header-item">{course}</div>
+                <div className="queue-header-item">
+                  <span className="queue-nickname">{nickname}</span>
+                  <span className="queue-grade">
+                    <span>Klasse: </span>
+                    <span>{grade}</span>
+                  </span>
+                  <span className="queue-type">
+                    <img
+                      src={require('../../assets/images/chat-icon.svg')}
+                      alt="Text Chat"
+                    />
+                  </span>
+                </div>
               </div>
+              <hr />
+              <div className="queue-body">{introText}</div>
+              <hr />
             </div>
-            <hr />
-            <div className="queue-body">{student.introText}</div>
-            <hr />
+            <button>Avslutt Leksehjelp</button>
+            <button onClick={() => createNewChatRoom(student)}>
+              Start chat
+            </button>
           </div>
-          <button>Avslutt Leksehjelp</button>
-          <button onClick={() => createNewChatRoom(student)}>Start chat</button>
-        </div>
-      )),
+        );
+      }),
     [queue],
   );
 
