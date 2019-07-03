@@ -18,6 +18,10 @@ export const addNewChat = createAction('ADD_NEW', cb => {
   return (student: IStudent) => cb({ student });
 });
 
+export const setChatFromLocalStorage = createAction('SET_ALL', cb => {
+  return (chats: IChat[]) => cb({ chats });
+});
+
 export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addRoomID, (state: IChat[], action: IAction) => {
     const roomToSetID = state.find(
@@ -53,4 +57,7 @@ export const chatReducer = createReducer<IChat[], IAction>([])
       unread: 0,
     };
     return [...state, newChat];
+  })
+  .handleAction(setChatFromLocalStorage, (state: IChat[], action: IAction) => {
+    return action.payload.chats;
   });

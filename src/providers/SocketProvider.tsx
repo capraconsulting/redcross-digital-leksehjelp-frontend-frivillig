@@ -1,7 +1,12 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
-import { addMessage, addRoomID, chatReducer } from '../reducers';
+import {
+  addMessage,
+  addRoomID,
+  chatReducer,
+  setChatFromLocalStorage,
+} from '../reducers';
 import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
 
 export const SocketContext = createContext({
@@ -19,7 +24,9 @@ export const SocketContext = createContext({
 let socket;
 
 const getSocket = (): WebSocket => {
-  if (!socket) socket = new WebSocket(CHAT_URL);
+  if (!socket) {
+    socket = new WebSocket(CHAT_URL);
+  }
   return socket;
 };
 
@@ -30,29 +37,27 @@ export const SocketProvider = ({ children }: any) => {
 
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
+    const { payload, type } = parsedMessage;
 
     if (parsedMessage.type === 'textMessage') {
       const action = addMessage(
         {
-          message: parsedMessage.payload['message'],
-          author: parsedMessage.payload['author'],
-          roomID: parsedMessage.payload['roomID'],
-          uniqueID: parsedMessage.payload['uniqueID'],
-          datetime: parsedMessage.payload['datetime'],
+          message: payload['message'],
+          author: payload['author'],
+          roomID: payload['roomID'],
+          uniqueID: payload['uniqueID'],
+          datetime: payload['datetime'],
         },
         true,
       );
       dispatchChats(action);
-    } else if (parsedMessage.type === 'distributeRoomMessage') {
-      const action = addRoomID(
-        parsedMessage.payload['roomID'],
-        parsedMessage.payload['studentID'],
-      );
+    } else if (type === 'distributeRoomMessage') {
+      const action = addRoomID(payload['roomID'], payload['studentID']);
       dispatchChats(action);
-    } else if (parsedMessage.type === 'connectionMessage') {
-      setUniqueID(parsedMessage.payload['uniqueID']);
-    } else if (parsedMessage.type === 'setQueueMessage') {
-      setQueue(parsedMessage.payload['queueMembers']);
+    } else if (type === 'connectionMessage') {
+      setUniqueID(payload['uniqueID']);
+    } else if (type === 'setQueueMessage') {
+      setQueue(payload['queueMembers']);
     }
   };
 
@@ -62,6 +67,37 @@ export const SocketProvider = ({ children }: any) => {
     }
     getSocket().onmessage = socketHandler;
   });
+
+  useEffect(() => {
+    localStorage.setItem('queue', JSON.stringify(queue));
+  }, [queue]);
+  useEffect(() => {
+    localStorage.setItem('uniqueID', uniqueID);
+  }, [uniqueID]);
+  useEffect(() => {
+    localStorage.setItem('chats', JSON.stringify(chats));
+  }, [chats]);
+
+  window.onload = () => {
+    // Set state if stuff in localstorage
+    const queueFromLocalStorage = localStorage.getItem('queue');
+    const uniqueIDFromLocalStorage = localStorage.getItem('uniqueID');
+    const chatsFromLocalStorage = localStorage.getItem('chats');
+
+    if (queueFromLocalStorage) {
+      setQueue(JSON.parse(queueFromLocalStorage));
+    }
+    if (uniqueIDFromLocalStorage) {
+      setUniqueID(uniqueIDFromLocalStorage);
+    }
+    if (chatsFromLocalStorage) {
+      dispatchChats(setChatFromLocalStorage(JSON.parse(chatsFromLocalStorage)));
+    }
+  };
+
+  window.onclose = () => {
+    localStorage.clear();
+  };
 
   const socketSend = (message: ISocketMessage | IGetMessage) => {
     getSocket().send(JSON.stringify(message));
