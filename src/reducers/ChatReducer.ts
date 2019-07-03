@@ -6,10 +6,8 @@ export const addRoomID = createAction('ADD_ROOM_ID', cb => {
 });
 
 export const addMessage = createAction('ADD_MESSAGE', cb => {
-  return (
-    message: ITextMessage,
-    unread: boolean = false,
-  ) => cb({ message, unread });
+  return (message: ITextMessage, unread: boolean = false) =>
+    cb({ message, unread });
 });
 
 export const readMessages = createAction('READ_MESSAGES', cb => {
@@ -23,13 +21,16 @@ export const addNewChat = createAction('ADD_NEW', cb => {
 export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addRoomID, (state: IChat[], action: IAction) => {
     const roomToSetID = state.find(
-      chat => chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
+      chat =>
+        chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
     );
     if (roomToSetID) roomToSetID.roomID = action.payload.roomID;
     return [...state];
   })
   .handleAction(addMessage, (state: IChat[], action: IAction) => {
-    const room = state.find(chat => chat.roomID === action.payload.message.roomID);
+    const room = state.find(
+      chat => chat.roomID === action.payload.message.roomID,
+    );
     if (room) {
       if (action.payload.unread) {
         room.unread += 1;

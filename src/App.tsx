@@ -5,7 +5,7 @@ import { SocketProvider } from './providers';
 
 const App = () => (
   <SocketProvider>
-        <Routes />
+    <Routes />
   </SocketProvider>
 );
 

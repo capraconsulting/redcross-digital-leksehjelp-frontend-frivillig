@@ -3,9 +3,14 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
   HomeComponent,
   HeaderComponent as Header,
-  ChatQueueComponent
+  ChatQueueComponent,
 } from './components';
-import { QuestionContainer, AnswerQuestionContainer, ChatContainer, AdminQuestionsContainer } from './containers';
+import {
+  QuestionContainer,
+  AnswerQuestionContainer,
+  ChatContainer,
+  AdminQuestionsContainer,
+} from './containers';
 
 const Routes = () => {
   return (
@@ -15,7 +20,7 @@ const Routes = () => {
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/messages" component={ChatContainer} />
-        <Route exact path="/queue" component={ChatQueueComponent}/>
+        <Route exact path="/queue" component={ChatQueueComponent} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (

@@ -34,7 +34,8 @@ const ChatMessageComponent = (props: IProps) => {
               {props.message.message['name']} {' | '}
             </span>
             <span className="chat-message--file-size">
-              {(props.message.message['size']/ 1000000).toPrecision(3)} MB {' - '}
+              {(props.message.message['size'] / 1000000).toPrecision(3)} MB{' '}
+              {' - '}
               {props.message.message['type']}
             </span>
           </p>

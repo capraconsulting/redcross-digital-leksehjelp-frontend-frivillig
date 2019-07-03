@@ -1,4 +1,4 @@
-export const timeStringFromDate = (dateString: any): string => {
+export const timeStringFromDate = (dateString: string): string => {
   return dateString.split(' ')[0];
 };
 

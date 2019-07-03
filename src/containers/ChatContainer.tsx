@@ -33,11 +33,7 @@ const ChatContainer = () => {
   }, [chats]);
 
   const onSendTextAndFileMessage = (message: ISocketMessage): void => {
-    dispatchChats(
-      addMessage(
-        generateTextMessageFromPayload(message),
-      ),
-    );
+    dispatchChats(addMessage(generateTextMessageFromPayload(message)));
     socketSend(message);
   };
 

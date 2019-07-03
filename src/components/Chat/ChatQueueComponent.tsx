@@ -2,12 +2,17 @@ import React, { useContext, useMemo } from 'react';
 import { IGetMessage, ISocketMessage, IStudent } from '../../interfaces';
 import { addNewChat } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { createGenerateRoomMessage, createGetQueueMessage } from '../../services/message-service';
+import {
+  createGenerateRoomMessage,
+  createGetQueueMessage,
+} from '../../services/message-service';
 import { SocketContext } from '../../providers';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const {queue, setQueue, uniqueID, dispatchChats, socketSend} = useContext(SocketContext);
+  const { queue, setQueue, uniqueID, dispatchChats, socketSend } = useContext(
+    SocketContext,
+  );
 
   const toggleQueueMessage = (): void => {
     // TODO: Toggle queue
@@ -25,7 +30,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         student.nickname,
         student.grade,
         student.introText,
-        student.course
+        student.course,
       );
       socketSend(socketMessage);
       //history.push('/messages');

@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useReducer, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 import { CHAT_URL } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
 import { addMessage, addRoomID, chatReducer } from '../reducers';
@@ -123,7 +129,7 @@ const getSocket = (): WebSocket => {
   return socket;
 };
 
-export const SocketProvider = ({ children }) => {
+export const SocketProvider = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, initialChats);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>(testQueue);
@@ -139,7 +145,7 @@ export const SocketProvider = ({ children }) => {
           roomID: parsedMessage.payload['roomID'],
           uniqueID: parsedMessage.payload['uniqueID'],
           datetime: parsedMessage.payload['datetime'],
-        } as ITextMessage,
+        },
         true,
       );
       dispatchChats(action);

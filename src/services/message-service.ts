@@ -29,7 +29,7 @@ export const createGenerateRoomMessage = (
   nickname: string,
   grade: string,
   introText: string,
-  course: string
+  course: string,
 ): ISocketMessage => {
   const generateRoomMessage: IGenerateRoomMessage = {
     uniqueID,
@@ -37,7 +37,7 @@ export const createGenerateRoomMessage = (
     nickname,
     grade,
     introText,
-    course
+    course,
   };
   return createMessage(generateRoomMessage, 'generateRoomMessage');
 };
