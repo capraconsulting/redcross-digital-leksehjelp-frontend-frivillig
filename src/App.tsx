@@ -1,13 +1,12 @@
 import React from 'react';
 import Routes from './router';
-
 import './styles/base';
-import { getSocket } from './utils';
+import { SocketProvider } from './providers';
 
 const App = () => (
-  <div>
-    <Routes />
-  </div>
+  <SocketProvider>
+        <Routes />
+  </SocketProvider>
 );
 
 export default App;

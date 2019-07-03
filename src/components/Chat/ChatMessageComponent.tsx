@@ -1,6 +1,7 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
 import { timeStringFromDate } from '../../services';
+import { instanceOf } from 'prop-types';
 
 interface IProps {
   message: ITextMessage;
@@ -16,7 +17,7 @@ const ChatMessageComponent = (props: IProps) => {
     downloadLink.click();
   };
   const renderMessage = () => {
-    if (typeof props.message.message === 'string') {
+    if (typeof props.message.message === 'string' || !props.message.message) {
       return (
         <p className={`chat-message--message chat-message--${authorType}`}>
           {props.message.message}
@@ -30,11 +31,11 @@ const ChatMessageComponent = (props: IProps) => {
         >
           <p className={`chat-message--message`}>
             <span className="chat-message--file-name">
-              {props.message.message.name} {' | '}
+              {props.message.message['name']} {' | '}
             </span>
             <span className="chat-message--file-size">
-              {(props.message.message.size / 1000000).toPrecision(3)} MB {' - '}
-              {props.message.message.type}
+              {(props.message.message['size']/ 1000000).toPrecision(3)} MB {' - '}
+              {props.message.message['type']}
             </span>
           </p>
           <img
