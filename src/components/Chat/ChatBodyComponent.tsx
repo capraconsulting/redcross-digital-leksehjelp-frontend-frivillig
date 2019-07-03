@@ -6,7 +6,6 @@ interface IProps {
   messages: ITextMessage[];
 }
 
-
 const ChatBodyComponent = (props: IProps) => {
   /*const listMessages = useMemo(
     () =>
@@ -16,11 +15,10 @@ const ChatBodyComponent = (props: IProps) => {
     [props.messages],
   );*/
 
-
   const listMessages = () => {
     return props.messages.map((message, index) => (
       <ChatMessageComponent key={index} message={message} />
-    ))
+    ));
   };
 
   return (

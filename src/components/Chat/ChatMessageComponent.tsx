@@ -16,13 +16,14 @@ const ChatMessageComponent = (props: IProps) => {
     downloadLink.click();
   };
   const renderMessage = () => {
-    if (typeof props.message.message === 'string') {
+    console.log(props.message);
+    if (true) {
       return (
         <p className={`chat-message--message chat-message--${authorType}`}>
-          {props.message.message}
+          {props.message.message ? props.message.message : props.message}
         </p>
       );
-    } else {
+    } /*else {
       return (
         <div
           className={`chat-message--${authorType} chat-message--download`}
@@ -44,7 +45,7 @@ const ChatMessageComponent = (props: IProps) => {
           />
         </div>
       );
-    }
+    }*/
   };
   return (
     <div className="chat-message">
