@@ -1,6 +1,12 @@
 import React from 'react';
-import { getQuestion, postAnswer, saveAnswer } from '../services/api-service';
-import { IQuestion } from '../interfaces';
+import {
+  getQuestion,
+  postAnswer,
+  saveAnswer,
+  getFeedbackList,
+  deleteFeedback,
+} from '../services/api-service';
+import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 interface IProps {
@@ -18,11 +24,15 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
   });
-  const [isSaved, setIsSaved] = React.useState(false as boolean);
+  const [isSaved, setIsSaved] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState('' as string);
+  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
+    [] as IFeedback[],
+  );
 
   React.useEffect(() => {
     getQuestion(props.id).then(setQuestion);
+    getFeedbackList(props.id).then(setFeedbackQuestions);
   }, []);
 
   const onSend = event => {
@@ -63,6 +73,22 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setIsSaved(true);
       });
     event.preventDefault();
+  };
+
+  const onDeleteFeedback = (event, value: number) => {
+    event.preventDefault();
+    const id = value.toString();
+    deleteFeedback(id)
+      .then(() => {
+        setModalText('Feedback er nå slettet.');
+        setIsSaved(true);
+        const feedbackList = feedbackQuestions.filter(({ id }) => id !== value);
+        setFeedbackQuestions(feedbackList);
+      })
+      .catch(() => {
+        setModalText('Noe gikk galt. Feedback ble ikke slettet.');
+        setIsSaved(true);
+      });
   };
 
   const { questionText, title, answerText } = question;
@@ -121,9 +147,29 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             </div>
           )}
         </div>
-        <div className="question-answer--container">
-          <h3>Andre spørsmål du kan besvare</h3>
-        </div>
+        {feedbackQuestions.length > 0 && (
+          <div className="question-answer--container">
+            <h3>Tilbakemeldinger</h3>
+            <div className="feedback--list">
+              {feedbackQuestions.map(({ feedbackText, id }, index) => (
+                <div className="feedback--list-row" key={index}>
+                  <div className="feedback--list-element">
+                    <p>{feedbackText}</p>
+                  </div>
+                  <div className="feedback--list-footer">
+                    <button
+                      className="leksehjelp--link-warning"
+                      onClick={e => onDeleteFeedback(e, id)}
+                    >
+                      Slett
+                    </button>
+                    <a className="leksehjelp--link">Resolve</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className={`modal--open-${isSaved}`}>
         <p>{modalText}</p>

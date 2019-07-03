@@ -5,7 +5,7 @@ import {
   HeaderComponent as Header,
   ChatQueueComponent
 } from './components';
-import { QuestionContainer, AnswerQuestionContainer, ChatContainer } from './containers';
+import { QuestionContainer, AnswerQuestionContainer, ChatContainer, AdminQuestionsContainer } from './containers';
 
 const Routes = () => {
   return (
@@ -24,6 +24,11 @@ const Routes = () => {
               type={match.params.type}
             />
           )}
+        />
+        <Route
+          exaxt
+          path="/admin/questions"
+          component={AdminQuestionsContainer}
         />
       </Switch>
     </Router>

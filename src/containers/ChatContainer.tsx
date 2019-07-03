@@ -2,11 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
 import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
 import ChatInputComponent from '../components/Chat/ChatInputComponent';
-import {
-  IGetMessage,
-  ISocketMessage,
-  ITextMessage,
-} from '../interfaces';
+import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 
 import {
   createGenerateRoomMessage,
@@ -19,14 +15,15 @@ import { SocketContext } from '../providers';
 // main component
 const ChatContainer = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { uniqueID, chats, dispatchChats, queue, socketSend } = useContext(SocketContext);
+  const { uniqueID, chats, dispatchChats, queue, socketSend } = useContext(
+    SocketContext,
+  );
 
   const generateTextMessageFromPayload = (
     message: ISocketMessage,
   ): ITextMessage => {
     return message.payload as ITextMessage;
   };
-
 
   useEffect(() => {
     // Auto scroll down in chat

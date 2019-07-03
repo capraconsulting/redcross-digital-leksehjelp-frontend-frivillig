@@ -1,7 +1,11 @@
 import React from 'react';
-import { getQuestionList } from '../services/api-service';
-import { QuestionListComponent } from '../components';
-import { IQuestionMeta } from '../interfaces';
+import {
+  getQuestionList,
+  getQuestion,
+  getFeedbackList,
+} from '../services/api-service';
+import { QuestionListComponent, FeedbackListComponent } from '../components';
+import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
   const [inboxQuestions, setInboxQuestions] = React.useState(
@@ -16,15 +20,38 @@ const QuestionContainer = () => {
     [] as IQuestionMeta[],
   );
 
+  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
+    [] as IFeedbackQuestion[],
+  );
+
+  const setFeedback = async () => {
+    const feedbackList = await getFeedbackList().then(feedbackList =>
+      feedbackList.map(
+        async feedback =>
+          await getQuestion(feedback.questionID.toString()).then(question => {
+            const { studentGrade, subject, questionDate } = question;
+            return {
+              ...feedback,
+              studentGrade,
+              subject,
+              questionDate,
+            };
+          }),
+      ),
+    );
+    Promise.all(feedbackList).then(setFeedbackQuestions);
+  };
+
   React.useEffect(() => {
     getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions);
     getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions);
     getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions);
+    setFeedback();
   }, []);
 
   return (
     <div>
-      <div className="question--header">
+      <div className="container--header">
         <h3>Spørsmål</h3>
       </div>
       <div className="question--container">
@@ -48,7 +75,7 @@ const QuestionContainer = () => {
         </div>
         <div className="question--container-feedback">
           <h5>Tilbakemeldinger</h5>
-          <QuestionListComponent questionList={[]} type="feedback" />
+          <FeedbackListComponent feedbackList={feedbackQuestions} />
         </div>
       </div>
     </div>

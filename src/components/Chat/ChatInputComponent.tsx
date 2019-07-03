@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createTextMessage } from '../../services/message-service';
+import { createTextMessage } from '../../services';
 import { ISocketFile, ISocketMessage } from '../../interfaces';
 
 interface IProps {
