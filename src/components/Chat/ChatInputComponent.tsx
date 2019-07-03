@@ -11,6 +11,7 @@ interface IProps {
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
   const { uniqueID, roomID, onSend } = props;
+  console.log(roomID);
 
   const onSendTextMessage = event => {
     event.preventDefault();

@@ -5,7 +5,6 @@ let socket;
 
 export const getSocket = (): WebSocket => {
   if (!socket) socket = new WebSocket(CHAT_URL);
-  localStorage.setItem('socket', socket);
   return socket;
 };
 

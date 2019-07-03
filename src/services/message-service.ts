@@ -26,10 +26,18 @@ export const createGetQueueMessage = (): IGetMessage => {
 export const createGenerateRoomMessage = (
   uniqueID: string,
   studentID: string,
+  nickname: string,
+  grade: string,
+  introText: string,
+  course: string
 ): ISocketMessage => {
   const generateRoomMessage: IGenerateRoomMessage = {
     uniqueID,
     studentID,
+    nickname,
+    grade,
+    introText,
+    course
   };
   return createMessage(generateRoomMessage, 'generateRoomMessage');
 };

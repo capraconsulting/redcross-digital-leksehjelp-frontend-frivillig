@@ -1,19 +1,44 @@
-import React, { useMemo } from 'react';
-import { IStudent } from '../../interfaces';
+import React, { useContext, useMemo } from 'react';
+import { IGetMessage, ISocketMessage, IStudent } from '../../interfaces';
+import { addNewChat } from '../../reducers';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { createGenerateRoomMessage, createGetQueueMessage } from '../../services/message-service';
+import { SocketContext } from '../../providers';
 
-interface IProps {
-  queueMembers: IStudent[];
-  createRoomWith(studentID: string): void;
-}
+const ChatQueueComponent = (props: RouteComponentProps) => {
+  const { history } = props;
+  const {queue, setQueue, uniqueID, dispatchChats, socketSend} = useContext(SocketContext);
 
-const ChatQueueComponent = (props: IProps) => {
-  const queue = useMemo(
+  const toggleQueueMessage = (): void => {
+    // TODO: Toggle queue
+    const getMessage: IGetMessage = createGetQueueMessage();
+    socketSend(getMessage);
+  };
+
+  const createNewChatRoom = (student: IStudent) => {
+    if (student) {
+      dispatchChats(addNewChat(student));
+      setQueue(queue.filter(studentInQueue => studentInQueue !== student));
+      const socketMessage: ISocketMessage = createGenerateRoomMessage(
+        uniqueID,
+        student.uniqueID,
+        student.nickname,
+        student.grade,
+        student.introText,
+        student.course
+      );
+      socketSend(socketMessage);
+      //history.push('/messages');
+    }
+  };
+
+  const queueElement = useMemo(
     () =>
-      props.queueMembers.map((student, index) => (
+      queue.map((student, index) => (
         <div className="queue-item-container" key={index}>
           <div className="queue-item">
             <div className="queue-header">
-              <div className="queue-header-item">{student.subject}</div>
+              <div className="queue-header-item">{student.course}</div>
               <div className="queue-header-item">
                 <span className="queue-nickname">{student.nickname}</span>
                 <span className="queue-grade">
@@ -28,24 +53,23 @@ const ChatQueueComponent = (props: IProps) => {
                 </span>
               </div>
             </div>
-            <hr/>
+            <hr />
             <div className="queue-body">{student.introText}</div>
-            <hr/>
+            <hr />
           </div>
           <button>Avslutt Leksehjelp</button>
-          <button onClick={() => props.createRoomWith(student.uniqueID)}>
-            Start chat
-          </button>
+          <button onClick={() => createNewChatRoom(student)}>Start chat</button>
         </div>
       )),
-    [props.queueMembers],
+    [queue],
   );
 
   return (
     <div className="queue-container">
-      <div className="queue-category-container">{queue}</div>
+      <button onClick={() => toggleQueueMessage()}>Update queue</button>
+      <div className="queue-category-container">{queueElement}</div>
     </div>
   );
 };
 
-export default ChatQueueComponent;
+export default withRouter(ChatQueueComponent);

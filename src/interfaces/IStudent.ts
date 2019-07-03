@@ -1,6 +1,6 @@
 export interface IStudent {
   nickname: string;
-  subject: string;
+  course: string;
   grade: string;
   uniqueID: string;
   introText: string;
