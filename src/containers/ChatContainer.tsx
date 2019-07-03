@@ -27,7 +27,7 @@ const ChatContainer = () => {
     if (display) {
       display.scrollTo(0, display.scrollHeight);
     }
-    if (chats[activeIndex].unread > 0) {
+    if (chats.length > 0 && chats[activeIndex].unread > 0) {
       dispatchChats(readMessages(chats[activeIndex].roomID));
     }
   }, [chats]);
@@ -37,30 +37,40 @@ const ChatContainer = () => {
     socketSend(message);
   };
 
+  if (chats.length > 0) {
+    return (
+      <div className="chat-container">
+        <div className="chat-list">
+          <ActiveChatsComponent
+            showMessages={setActiveIndex}
+            availableChats={chats}
+          />
+        </div>
+        <div className="chat">
+          {chats && (
+            <ChatHeaderComponent
+              connectedWith={chats[activeIndex].student.nickname}
+              course={chats[activeIndex].student.course}
+            />
+          )}
+          {chats && (
+            <ChatBodyComponent messages={chats[activeIndex].messages} />
+          )}
+          {chats && (
+            <ChatInputComponent
+              uniqueID={uniqueID}
+              roomID={chats[activeIndex].roomID}
+              onSend={onSendTextAndFileMessage}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="chat-container">
-      <div className="chat-list">
-        <ActiveChatsComponent
-          showMessages={setActiveIndex}
-          availableChats={chats}
-        />
-      </div>
-      <div className="chat">
-        {chats && (
-          <ChatHeaderComponent
-            connectedWith={chats[activeIndex].student.nickname}
-            course={chats[activeIndex].student.course}
-          />
-        )}
-        {chats && <ChatBodyComponent messages={chats[activeIndex].messages} />}
-        {chats && (
-          <ChatInputComponent
-            uniqueID={uniqueID}
-            roomID={chats[activeIndex].roomID}
-            onSend={onSendTextAndFileMessage}
-          />
-        )}
-      </div>
+      <div />
+      <div className="no-chat">Ingen chats</div>
     </div>
   );
 };

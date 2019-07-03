@@ -1,114 +1,8 @@
-import React, {
-  createContext,
-  ReactNode,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react';
+import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
 import { addMessage, addRoomID, chatReducer } from '../reducers';
 import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
-
-const testQueue: IStudent[] = [
-  {
-    nickname: 'Bjørn Olav',
-    course: 'Matematikk',
-    grade: '10. klasse',
-    uniqueID: 'fbpfusdbf90åqwdqwhb',
-    introText:
-      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
-  },
-  {
-    nickname: 'Geir Torvald',
-    course: 'Engelsk',
-    grade: '10. klasse',
-    uniqueID: 'ch98fh78dgokndashjbd',
-    introText:
-      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
-  },
-  {
-    nickname: 'Hanna Grostad',
-    course: 'Norsk',
-    grade: '10. klasse',
-    uniqueID: 'dnshaudcasopdja89',
-    introText:
-      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
-  },
-  {
-    nickname: 'Gro Hamstad',
-    course: 'Engelsk',
-    grade: '10. klasse',
-    uniqueID: 'dasdfoiushfwef9qw0',
-    introText:
-      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
-  },
-  {
-    nickname: 'Arya Stark',
-    course: 'Sverddansing',
-    grade: '10. klasse',
-    uniqueID: 'dnh8os7ad9yuqwdjiosh',
-    introText:
-      'Hei. \nKan dere hjelpe meg å forklare begrepene egosentrisk og etnosentrisk? Hvordan kan man bruke disse til å analysere årsaker til konflikter mellom individer og mellom grupper?',
-  },
-];
-
-const testMessageGenerator = (): ITextMessage[] => {
-  const textMessages: ITextMessage[] = [];
-  for (let i = 0; i < 10; i++) {
-    if (i % 2 === 0) {
-      textMessages.push({
-        author: 'frivillig',
-        roomID: 'dasnodas8dasgd87as',
-        uniqueID: 'dashdasudyasd222',
-        message: 'Hei bby kom og si hei',
-        datetime: new Date().toTimeString(),
-      });
-    } else {
-      textMessages.push({
-        author: 'student',
-        roomID: 'dasnodas8dasgd87as',
-        uniqueID: 'dashddsadasudyasd222',
-        message: 'Hei bby kom og si hei',
-        datetime: new Date().toTimeString(),
-      });
-    }
-  }
-  return textMessages;
-};
-
-const initialChats: IChat[] = [
-  {
-    student: testQueue[0],
-    messages: testMessageGenerator(),
-    roomID: 'one',
-    unread: 0,
-  },
-  {
-    student: testQueue[1],
-    messages: testMessageGenerator(),
-    roomID: 'two',
-    unread: 0,
-  },
-  {
-    student: testQueue[2],
-    messages: testMessageGenerator(),
-    roomID: 'three',
-    unread: 0,
-  },
-  {
-    student: testQueue[3],
-    messages: testMessageGenerator(),
-    roomID: 'four',
-    unread: 0,
-  },
-  {
-    student: testQueue[4],
-    messages: testMessageGenerator(),
-    roomID: 'five',
-    unread: 0,
-  },
-];
 
 export const SocketContext = createContext({
   uniqueID: '' as string,
@@ -130,9 +24,9 @@ const getSocket = (): WebSocket => {
 };
 
 export const SocketProvider = ({ children }: any) => {
-  const [chats, dispatchChats] = useReducer(chatReducer, initialChats);
+  const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [uniqueID, setUniqueID] = useState<string>('');
-  const [queue, setQueue] = useState<IStudent[]>(testQueue);
+  const [queue, setQueue] = useState<IStudent[]>([]);
 
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
