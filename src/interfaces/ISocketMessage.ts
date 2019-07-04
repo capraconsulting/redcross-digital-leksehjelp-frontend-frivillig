@@ -2,6 +2,6 @@ import { IGenerateRoomMessage, ITextMessage, IEnterQueueMessage } from '.';
 
 
 export interface ISocketMessage {
-  type: MessageEnum;
+  msgType: string;
   payload: ITextMessage | IGenerateRoomMessage | IEnterQueueMessage | {};
 }

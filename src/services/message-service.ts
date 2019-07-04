@@ -3,36 +3,32 @@ import {
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
-  IGetMessage,
   ISocketFile,
 } from '../interfaces';
-import { useContext } from 'react';
-import { SocketContext } from '../providers';
-
-const { socketSend } = useContext(SocketContext);
+import { MESSAGE_TYPES } from '../config';
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
-  type: MessageEnum,
+  type: string,
 ): ISocketMessage => {
   return {
     payload,
-    type,
+    msgType: type,
   };
 };
 
-export const sendGetQueueMessage = (): void => {
-  socketSend(createMessage({}, MessageEnum.QUEUE_LIST));
+export const createGetQueueMessage = (): ISocketMessage => {
+  return createMessage({}, MESSAGE_TYPES.QUEUE_LIST);
 };
 
-export const sendGenerateRoomMessage = (
+export const createGenerateRoomMessage = (
   uniqueID: string,
   studentID: string,
   nickname: string,
   grade: string,
   introText: string,
   course: string,
-): void => {
+): ISocketMessage => {
   const generateRoomMessage: IGenerateRoomMessage = {
     uniqueID,
     studentID,
@@ -41,14 +37,17 @@ export const sendGenerateRoomMessage = (
     introText,
     course,
   };
-  socketSend(createMessage(generateRoomMessage, MessageEnum.GENERATE_ROOM));
+  return createMessage(generateRoomMessage, MESSAGE_TYPES.GENERATE_ROOM);
 };
 
-export const sendTextMessage = (
+export const createTextMessage = (
   message: string | ISocketFile,
   uniqueID: string,
   roomID: string,
-): ITextMessage => {
+): {
+  textMessage: ITextMessage;
+  socketMessage: ISocketMessage;
+} => {
   const textMessage: ITextMessage = {
     author: 'frivillig',
     uniqueID,
@@ -56,9 +55,11 @@ export const sendTextMessage = (
     message,
     datetime: new Date().toTimeString(),
   };
-  socketSend(createMessage(textMessage, MessageEnum.TEXT));
   /*
-  * Needs to return the entire textMessage to set state when sending messages.
-  */
-  return textMessage;
+   * Needs to return the entire textMessage to set state when sending messages.
+   */
+  return {
+    textMessage,
+    socketMessage: createMessage(textMessage, MESSAGE_TYPES.TEXT),
+  };
 };

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
-import { CHAT_URL } from '../config';
+import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
 import {
   addMessage,
@@ -37,9 +37,9 @@ export const SocketProvider = ({ children }: any) => {
 
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
-    const { payload, type } = parsedMessage;
+    const { payload, msgType } = parsedMessage;
 
-    if (parsedMessage.type === MessageEnum.TEXT) {
+    if (parsedMessage.msgType === MESSAGE_TYPES.TEXT) {
       const action = addMessage(
         {
           message: payload['message'],
@@ -51,12 +51,12 @@ export const SocketProvider = ({ children }: any) => {
         true,
       );
       dispatchChats(action);
-    } else if (type === MessageEnum.DISTRUBUTE_ROOM) {
+    } else if (msgType === MESSAGE_TYPES.DISTRIBUTE_ROOM) {
       const action = addRoomID(payload['roomID'], payload['studentID']);
       dispatchChats(action);
-    } else if (type === MessageEnum.CONNECTION) {
+    } else if (msgType === MESSAGE_TYPES.CONNECTION) {
       setUniqueID(payload['uniqueID']);
-    } else if (type === MessageEnum.QUEUE_LIST) {
+    } else if (msgType === MESSAGE_TYPES.QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     }
   };
