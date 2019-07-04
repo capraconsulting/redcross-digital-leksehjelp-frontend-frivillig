@@ -10,6 +10,8 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
+  const { activeState, setActiveState } = useContext(StateContext);
+
   const setLocationPath = (): void => {
     const { pathname } = props.location;
     const pathList = pathname.split('/');
@@ -20,11 +22,13 @@ const HeaderComponent = (props: RouteComponentProps) => {
     }
   };
 
+  const onSlide = (): void => {
+    setActiveState(!activeState);
+  };
+
   useEffect(() => {
     setLocationPath();
   }, []);
-
-  const { activeState, setActiveState } = useContext(StateContext);
 
   return (
     <Fragment>
@@ -83,10 +87,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
             Min status
             <label className="switch">
               <input type="checkbox" />
-              <span
-                className="slider"
-                onClick={() => setActiveState(!activeState)}
-              />
+              <span className="slider" onClick={() => onSlide()} />
             </label>
           </div>
           <li className="header--list-item">
