@@ -10,9 +10,7 @@ import { SocketContext } from '../providers';
 // main component
 const ChatContainer = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { uniqueID, chats, dispatchChats } = useContext(
-    SocketContext,
-  );
+  const { uniqueID, chats, dispatchChats } = useContext(SocketContext);
 
   useEffect(() => {
     // Auto scroll down in chat

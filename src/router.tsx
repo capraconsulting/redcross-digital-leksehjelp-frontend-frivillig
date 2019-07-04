@@ -15,7 +15,7 @@ import {
 const Routes = () => {
   return (
     <Router>
-      {/*<Header />*/}
+      <Header />
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />

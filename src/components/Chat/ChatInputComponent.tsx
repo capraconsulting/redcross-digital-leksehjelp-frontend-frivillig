@@ -17,7 +17,11 @@ const ChatInputComponent = (props: IProps) => {
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const {textMessage, socketMessage} = createTextMessage(message, uniqueID, roomID);
+      const { textMessage, socketMessage } = createTextMessage(
+        message,
+        uniqueID,
+        roomID,
+      );
       setMessage('');
       socketSend(socketMessage);
       dispatchChats(addMessage(textMessage));
@@ -40,7 +44,7 @@ const ChatInputComponent = (props: IProps) => {
         size: file.size,
         dataURL: String(fr.result),
       };
-      const {textMessage, socketMessage} = createTextMessage(
+      const { textMessage, socketMessage } = createTextMessage(
         socketFile,
         uniqueID,
         roomID,

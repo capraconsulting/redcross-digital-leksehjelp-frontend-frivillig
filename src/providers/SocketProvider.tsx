@@ -68,7 +68,6 @@ export const SocketProvider = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   });
 
-
   // This keeps state persistent while refreshing page (except for the socket)
   useEffect(() => {
     localStorage.setItem('queue', JSON.stringify(queue));

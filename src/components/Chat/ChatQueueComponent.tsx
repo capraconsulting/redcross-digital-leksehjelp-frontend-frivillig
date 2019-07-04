@@ -2,7 +2,10 @@ import React, { useContext, useMemo } from 'react';
 import { IStudent } from '../../interfaces';
 import { addNewChat } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { createGenerateRoomMessage, createGetQueueMessage } from '../../services';
+import {
+  createGenerateRoomMessage,
+  createGetQueueMessage,
+} from '../../services';
 import { SocketContext } from '../../providers';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
