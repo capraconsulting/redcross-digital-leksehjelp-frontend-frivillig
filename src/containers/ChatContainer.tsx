@@ -2,24 +2,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
 import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
 import ChatInputComponent from '../components/Chat/ChatInputComponent';
-import { IChat, ISocketMessage, ITextMessage } from '../interfaces';
 
 import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
-import { addMessage, readMessages, setChatFromLocalStorage } from '../reducers';
+import { readMessages } from '../reducers';
 import { SocketContext } from '../providers';
 
 // main component
 const ChatContainer = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { uniqueID, chats, dispatchChats, socketSend } = useContext(
+  const { uniqueID, chats, dispatchChats } = useContext(
     SocketContext,
   );
-
-  const generateTextMessageFromPayload = (
-    message: ISocketMessage,
-  ): ITextMessage => {
-    return message.payload as ITextMessage;
-  };
 
   useEffect(() => {
     // Auto scroll down in chat
@@ -28,11 +21,6 @@ const ChatContainer = () => {
       display.scrollTo(0, display.scrollHeight);
     }
   }, [chats]);
-
-  const onSendTextAndFileMessage = (message: ISocketMessage): void => {
-    dispatchChats(addMessage(generateTextMessageFromPayload(message)));
-    socketSend(message);
-  };
 
   const showMessages = (index: number) => {
     setActiveIndex(index);
@@ -62,7 +50,6 @@ const ChatContainer = () => {
             <ChatInputComponent
               uniqueID={uniqueID}
               roomID={chats[activeIndex].roomID}
-              onSend={onSendTextAndFileMessage}
             />
           )}
         </div>

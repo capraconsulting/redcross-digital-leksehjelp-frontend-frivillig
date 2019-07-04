@@ -6,31 +6,33 @@ import {
   IGetMessage,
   ISocketFile,
 } from '../interfaces';
+import { useContext } from 'react';
+import { SocketContext } from '../providers';
+
+const { socketSend } = useContext(SocketContext);
 
 const createMessage = (
-  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage,
-  type: string,
+  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
+  type: MessageEnum,
 ): ISocketMessage => {
   return {
-    type,
     payload,
+    type,
   };
 };
 
-export const createGetQueueMessage = (): IGetMessage => {
-  return {
-    type: 'getQueueMessage',
-  };
+export const sendGetQueueMessage = (): void => {
+  socketSend(createMessage({}, MessageEnum.QUEUE_LIST));
 };
 
-export const createGenerateRoomMessage = (
+export const sendGenerateRoomMessage = (
   uniqueID: string,
   studentID: string,
   nickname: string,
   grade: string,
   introText: string,
   course: string,
-): ISocketMessage => {
+): void => {
   const generateRoomMessage: IGenerateRoomMessage = {
     uniqueID,
     studentID,
@@ -39,14 +41,14 @@ export const createGenerateRoomMessage = (
     introText,
     course,
   };
-  return createMessage(generateRoomMessage, 'generateRoomMessage');
+  socketSend(createMessage(generateRoomMessage, MessageEnum.GENERATE_ROOM));
 };
 
-export const createTextMessage = (
+export const sendTextMessage = (
   message: string | ISocketFile,
   uniqueID: string,
   roomID: string,
-): ISocketMessage => {
+): ITextMessage => {
   const textMessage: ITextMessage = {
     author: 'frivillig',
     uniqueID,
@@ -54,5 +56,9 @@ export const createTextMessage = (
     message,
     datetime: new Date().toTimeString(),
   };
-  return createMessage(textMessage, 'textMessage');
+  socketSend(createMessage(textMessage, MessageEnum.TEXT));
+  /*
+  * Needs to return the entire textMessage to set state when sending messages.
+  */
+  return textMessage;
 };

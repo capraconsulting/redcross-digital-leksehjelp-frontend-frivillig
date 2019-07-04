@@ -1,30 +1,21 @@
 import React, { useContext, useMemo } from 'react';
-import { IGetMessage, ISocketMessage, IStudent } from '../../interfaces';
+import { IStudent } from '../../interfaces';
 import { addNewChat } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
-import {
-  createGenerateRoomMessage,
-  createGetQueueMessage,
-} from '../../services';
+import { sendGenerateRoomMessage, sendGetQueueMessage } from '../../services';
 import { SocketContext } from '../../providers';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const { queue, setQueue, uniqueID, dispatchChats, socketSend } = useContext(
+  const { queue, setQueue, uniqueID, dispatchChats } = useContext(
     SocketContext,
   );
-
-  const toggleQueueMessage = (): void => {
-    // TODO: Toggle queue
-    const getMessage: IGetMessage = createGetQueueMessage();
-    socketSend(getMessage);
-  };
 
   const createNewChatRoom = (student: IStudent) => {
     if (student) {
       dispatchChats(addNewChat(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
-      const socketMessage: ISocketMessage = createGenerateRoomMessage(
+      sendGenerateRoomMessage(
         uniqueID,
         student.uniqueID,
         student.nickname,
@@ -32,7 +23,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         student.introText,
         student.course,
       );
-      socketSend(socketMessage);
       history.push('/messages');
     }
   };
@@ -76,7 +66,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   return (
     <div className="queue-container">
-      <button onClick={() => toggleQueueMessage()}>Update queue</button>
+      <button onClick={sendGetQueueMessage}>Update queue</button>
       <div className="queue-category-container">{queueElement}</div>
     </div>
   );

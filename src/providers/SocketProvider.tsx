@@ -7,7 +7,7 @@ import {
   chatReducer,
   setChatFromLocalStorage,
 } from '../reducers';
-import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
+import { IAction, IChat, IStudent } from '../interfaces';
 
 export const SocketContext = createContext({
   uniqueID: '' as string,
@@ -39,7 +39,7 @@ export const SocketProvider = ({ children }: any) => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, type } = parsedMessage;
 
-    if (parsedMessage.type === 'textMessage') {
+    if (parsedMessage.type === MessageEnum.TEXT) {
       const action = addMessage(
         {
           message: payload['message'],
@@ -51,12 +51,12 @@ export const SocketProvider = ({ children }: any) => {
         true,
       );
       dispatchChats(action);
-    } else if (type === 'distributeRoomMessage') {
+    } else if (type === MessageEnum.DISTRUBUTE_ROOM) {
       const action = addRoomID(payload['roomID'], payload['studentID']);
       dispatchChats(action);
-    } else if (type === 'connectionMessage') {
+    } else if (type === MessageEnum.CONNECTION) {
       setUniqueID(payload['uniqueID']);
-    } else if (type === 'setQueueMessage') {
+    } else if (type === MessageEnum.QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     }
   };
@@ -68,6 +68,8 @@ export const SocketProvider = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   });
 
+
+  // This keeps state persistent while refreshing page (except for the socket)
   useEffect(() => {
     localStorage.setItem('queue', JSON.stringify(queue));
   }, [queue]);
