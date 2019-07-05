@@ -18,7 +18,7 @@ const ActiveChatsComponent = (props: IProps) => {
     props.availableChats.map((chat, index) => (
       <div
         onClick={() => onClickHandler(index)}
-        key={index}
+        key={chat.roomID}
         className={`active-chat ${
           index === activeChat ? 'active-chat-active' : 'active-chat-inactive'
         }`}

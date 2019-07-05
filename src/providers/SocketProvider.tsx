@@ -61,11 +61,8 @@ export const SocketProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    if (!getSocket()) {
-      return;
-    }
     getSocket().onmessage = socketHandler;
-  });
+  }, []);
 
   // This keeps state persistent while refreshing page (except for the socket)
   useEffect(() => {
