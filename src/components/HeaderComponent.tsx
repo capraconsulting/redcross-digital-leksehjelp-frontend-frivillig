@@ -1,6 +1,7 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { StateContext } from '../StateProvider';
 
 const HeaderComponent = (props: RouteComponentProps) => {
   const [path, setPath] = useState('' as string);
@@ -8,6 +9,8 @@ const HeaderComponent = (props: RouteComponentProps) => {
   const [subPath, setSubPath] = useState('' as string);
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
+
+  const { activeState, setActiveState } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -17,6 +20,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
     if (pathList[1] === 'admin') {
       setOnDropDown(true);
     }
+  };
+
+  const onSlide = (): void => {
+    setActiveState(!activeState);
   };
 
   useEffect(() => {
@@ -76,9 +83,13 @@ const HeaderComponent = (props: RouteComponentProps) => {
         </ul>
         <div className="header--list-split" />
         <ul className="header--list">
-          <li className={`header--list-item ${path === 'status' && 'active'}`}>
+          <div className="header--list-button">
             Min status
-          </li>
+            <label className="switch">
+              <input type="checkbox" />
+              <span className="slider" onClick={() => onSlide()} />
+            </label>
+          </div>
           <li className="header--list-item">
             <button>Steng Leksehjelp</button>
           </li>
