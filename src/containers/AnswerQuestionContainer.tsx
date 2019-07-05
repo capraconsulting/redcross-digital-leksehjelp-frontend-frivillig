@@ -35,7 +35,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     getFeedbackList(props.id).then(setFeedbackQuestions);
   }, []);
 
-  const onSend = event => {
+  const onSend = async (event) => {
     const { id, type, history } = props;
     const { answerText, title } = question;
     const data = {
@@ -43,7 +43,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       answerText,
       title,
     };
-    postAnswer(data, type).then(() => {
+    const isSaved = await saveAnswer(data).then(() => true).catch(() => false)
+    isSaved && postAnswer(data, type).then(() => {
       setModalText(
         type === 'approval'
           ? 'Svaret er nå sendt til studenten.'
@@ -51,7 +52,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       );
       setIsSaved(true);
       setTimeout(() => history.goBack(), 2000);
-    }); //TODO: Handle error and response-message
+    })
+    .catch(() => {
+      setModalText(
+      type === 'approval'
+        ? 'Svaret er nå sendt til studenten.'
+        : 'Svaret er sendt til godkjenning.',
+    );
+    setIsSaved(true);}); //TODO: Handle error and response-message
     event.preventDefault();
   };
 
