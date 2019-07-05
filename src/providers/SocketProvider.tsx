@@ -30,7 +30,7 @@ const getSocket = (): WebSocket => {
   return socket;
 };
 
-export const SocketProvider = ({ children }: any) => {
+export const SocketProvider: React.FunctionComponent = ({ children }) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
