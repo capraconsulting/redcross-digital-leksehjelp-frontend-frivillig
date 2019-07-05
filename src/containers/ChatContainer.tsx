@@ -25,7 +25,7 @@ const ChatContainer = () => {
     dispatchChats(readMessages(chats[activeIndex].roomID));
   };
 
-  if (chats.length > 0) {
+  if (chats.length <= 0) {
     return (
       <div className="chat-container">
         <div className="chat-list">
