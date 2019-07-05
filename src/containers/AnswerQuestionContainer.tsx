@@ -35,7 +35,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     getFeedbackList(props.id).then(setFeedbackQuestions);
   }, []);
 
-  const onSend = async (event) => {
+  const onSend = async () => {
     const { id, type, history } = props;
     const { answerText, title } = question;
     const data = {
@@ -43,24 +43,28 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       answerText,
       title,
     };
-    const isSaved = await saveAnswer(data).then(() => true).catch(() => false)
-    isSaved && postAnswer(data, type).then(() => {
-      setModalText(
-        type === 'approval'
-          ? 'Svaret er nå sendt til studenten.'
-          : 'Svaret er sendt til godkjenning.',
-      );
-      setIsSaved(true);
-      setTimeout(() => history.goBack(), 2000);
-    })
-    .catch(() => {
-      setModalText(
-      type === 'approval'
-        ? 'Svaret er nå sendt til studenten.'
-        : 'Svaret er sendt til godkjenning.',
-    );
-    setIsSaved(true);}); //TODO: Handle error and response-message
-    event.preventDefault();
+    const isSaved = await saveAnswer(data)
+      .then(() => true)
+      .catch(() => false);
+    isSaved &&
+      postAnswer(data, type)
+        .then(() => {
+          setModalText(
+            type === 'approval'
+              ? 'Svaret er nå sendt til studenten.'
+              : 'Svaret er sendt til godkjenning.',
+          );
+          setIsSaved(true);
+          setTimeout(() => history.goBack(), 2000);
+        })
+        .catch(() => {
+          setModalText(
+            type === 'approval'
+              ? 'Svaret er nå sendt til studenten.'
+              : 'Svaret er sendt til godkjenning.',
+          );
+          setIsSaved(true);
+        });
   };
 
   const onSave = event => {
@@ -146,12 +150,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           </form>
           {type === 'approval' ? (
             <div className="question-form--button">
-              <button onClick={e => onSend(e)}>Godkjenn</button>
+              <button onClick={onSend}>Godkjenn</button>
             </div>
           ) : (
             <div className="question-form--button">
-              <button onClick={e => onSend(e)}>Send til godkjenning</button>
-              <button onClick={e => onSave(e)}>Lagre</button>
+              <button onClick={onSend}>Send til godkjenning</button>
+              <button onClick={onSave}>Lagre</button>
             </div>
           )}
         </div>

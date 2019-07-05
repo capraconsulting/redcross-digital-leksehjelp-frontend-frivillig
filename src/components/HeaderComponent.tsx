@@ -87,7 +87,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
             Min status
             <label className="switch">
               <input type="checkbox" />
-              <span className="slider" onClick={() => onSlide()} />
+              <span className="slider" onClick={onSlide} />
             </label>
           </div>
           <li className="header--list-item">
