@@ -11,9 +11,25 @@ describe('date-service', () => {
     expect(dateString).toEqual(inputValue);
   });
   it('TEST: timeStringFromDate \n Should return time on the form HH:MM:SS', async () => {
-    const inputDate = new Date('Fri Jun 28 2019 10:06:58');
+    const inputDate = {
+      dateTime: {
+        date: {
+          year: 2019,
+          month: 7,
+          day: 5,
+        },
+        time: {
+          hour: 13,
+          minute: 2,
+          second: 32,
+        },
+        zone: {
+          id: 'Europe/Oslo',
+        },
+      },
+    };
     const receivedValue = await timeStringFromDate(inputDate);
-    const expectedValue = '10:06:58';
+    const expectedValue = '13:2';
     expect(receivedValue).toEqual(expectedValue);
   });
 });

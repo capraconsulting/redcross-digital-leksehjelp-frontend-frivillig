@@ -53,7 +53,9 @@ const ChatMessageComponent = (props: IProps) => {
     <div className="chat-message">
       <p className={`chat-message--author-${authorType}`}>
         <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
-        <span>{props.message.datetime && timeStringFromDate(props.message.datetime)}</span>
+        <span>
+          {props.message.datetime && timeStringFromDate(props.message.datetime)}
+        </span>
       </p>
       {renderMessage()}
     </div>

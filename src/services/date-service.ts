@@ -1,7 +1,7 @@
 export const timeStringFromDate = (zonedDateTime): string => {
   // ZonedDateTime object fra java backend
   // const {year, month, day} = zonedDateTime.dateTime.date; // Might need later
-  const {hour, minute, second} = zonedDateTime.dateTime.time;
+  const { hour, minute, second } = zonedDateTime.dateTime.time;
   // const {zone} = zonedDateTime.dateTime; // Might need later
 
   // Might need later

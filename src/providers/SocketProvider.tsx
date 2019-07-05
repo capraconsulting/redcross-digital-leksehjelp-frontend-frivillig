@@ -69,7 +69,6 @@ export const SocketProvider = ({ children }: any) => {
     localStorage.setItem('queue', JSON.stringify(queue));
   }, [queue]);
   useEffect(() => {
-
     localStorage.setItem('uniqueID', uniqueID);
   }, [uniqueID]);
   useEffect(() => {
