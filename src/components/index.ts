@@ -9,3 +9,4 @@ export { default as ChatHeader } from './Chat/ChatHeaderComponent';
 export { default as ChatInput } from './Chat/ChatInputComponent';
 export { default as ChatMessage } from './Chat/ChatMessageComponent';
 export { default as ChatQueue } from './Chat/ChatQueueComponent';
+export {default as ChatQueueHeader} from './Chat/ChatQueueHeaderComponent';

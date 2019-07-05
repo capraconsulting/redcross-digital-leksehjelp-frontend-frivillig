@@ -7,6 +7,7 @@ import {
   createGetQueueMessage,
 } from '../../services';
 import { SocketContext } from '../../providers';
+import { ChatQueueHeader } from '..';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
@@ -18,6 +19,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     if (student) {
       dispatchChats(addNewChat(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
+
       const socketMessage = createGenerateRoomMessage(
         uniqueID,
         student.uniqueID,
@@ -26,8 +28,8 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         student.introText,
         student.course,
       );
+
       socketSend(socketMessage);
-      history.push('/messages');
     }
   };
 
@@ -39,26 +41,11 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
   const queueElement = useMemo(
     () =>
       queue.map((student, index) => {
-        const { course, nickname, grade, introText } = student;
+        const { introText } = student;
         return (
           <div className="queue-item-container" key={index}>
             <div className="queue-item">
-              <div className="queue-header">
-                <div className="queue-header-item">{course}</div>
-                <div className="queue-header-item">
-                  <span className="queue-nickname">{nickname}</span>
-                  <span className="queue-grade">
-                    <span>Klasse: </span>
-                    <span>{grade}</span>
-                  </span>
-                  <span className="queue-type">
-                    <img
-                      src={require('../../assets/images/chat-icon.svg')}
-                      alt="Text Chat"
-                    />
-                  </span>
-                </div>
-              </div>
+              <ChatQueueHeader student={student} />
               <hr />
               <div className="queue-body">{introText}</div>
               <hr />

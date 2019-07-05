@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { createTextMessage } from '../../services';
-import { ISocketFile, ISocketMessage, ITextMessage } from '../../interfaces';
+import { ISocketFile } from '../../interfaces';
 import { addMessage } from '../../reducers';
 import { SocketContext } from '../../providers';
 

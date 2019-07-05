@@ -8,6 +8,8 @@ interface IProps {
 
 const ChatMessageComponent = (props: IProps) => {
   const { message, author } = props.message;
+  // Placeholder for when we get users
+  // TODO: change when we have users, to use the username instead
   const authorType = author === 'frivillig' ? 'self' : 'other';
 
   const downloadFile = file => {
@@ -51,7 +53,7 @@ const ChatMessageComponent = (props: IProps) => {
     <div className="chat-message">
       <p className={`chat-message--author-${authorType}`}>
         <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
-        <span>{timeStringFromDate(props.message.datetime)}</span>
+        <span>{props.message.datetime && timeStringFromDate(props.message.datetime)}</span>
       </p>
       {renderMessage()}
     </div>

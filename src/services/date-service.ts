@@ -1,5 +1,12 @@
-export const timeStringFromDate = (dateString: string): string => {
-  return dateString.split(' ')[0];
+export const timeStringFromDate = (zonedDateTime): string => {
+  // ZonedDateTime object fra java backend
+  // const {year, month, day} = zonedDateTime.dateTime.date; // Might need later
+  const {hour, minute, second} = zonedDateTime.dateTime.time;
+  // const {zone} = zonedDateTime.dateTime; // Might need later
+
+  // Might need later
+  /*const date: Date = new Date(`${month}/${day}/${year} ${hour}:${minute}:${second} (${zone})`);*/
+  return `${hour}:${minute}`;
 };
 
 const formatAsDate = (value: string): string => {

@@ -53,7 +53,6 @@ export const createTextMessage = (
     uniqueID,
     roomID,
     message,
-    datetime: new Date().toTimeString(),
   };
   /*
    * Needs to return the entire textMessage to set state when sending messages.

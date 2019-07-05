@@ -38,7 +38,6 @@ export const SocketProvider = ({ children }: any) => {
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
-
     if (parsedMessage.msgType === MESSAGE_TYPES.TEXT) {
       const action = addMessage(
         {
@@ -73,6 +72,7 @@ export const SocketProvider = ({ children }: any) => {
     localStorage.setItem('queue', JSON.stringify(queue));
   }, [queue]);
   useEffect(() => {
+
     localStorage.setItem('uniqueID', uniqueID);
   }, [uniqueID]);
   useEffect(() => {
@@ -99,7 +99,6 @@ export const SocketProvider = ({ children }: any) => {
   window.onclose = () => {
     localStorage.clear();
   };
-
   const socketSend = (message: ISocketMessage | IGetMessage) => {
     getSocket().send(JSON.stringify(message));
   };

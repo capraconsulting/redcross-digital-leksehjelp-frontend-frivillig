@@ -20,7 +20,7 @@ const ChatBodyComponent = (props: IProps) => {
           <p className="welcome-header">Velkommen til chaten!</p>
           <p className="welcome-body">
             Hvis du sender et vedlegg må du gjerne fjerne navnet ditt eller
-            andre ting fra dokumentet som kan indentifisere deg.
+            andre ting fra dokumentet som kan identifisere deg.
           </p>
         </div>
         {listMessages()}
