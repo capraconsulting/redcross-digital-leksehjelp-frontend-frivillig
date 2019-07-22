@@ -6,7 +6,7 @@ import {
   getFeedbackList,
   deleteFeedback,
   publishQuestion,
-} from '../services/api-service';
+} from '../services';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Modal } from '../components';
@@ -32,20 +32,21 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     false,
   );
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
-  const [modalText, setModalText] = React.useState('' as string);
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
-    [] as IFeedback[],
+  const [modalText, setModalText] = React.useState<string>('');
+  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
+    [],
   );
+  const { id, type, history } = props;
 
   React.useEffect(() => {
-    getQuestion(props.id).then(setQuestion);
-    getFeedbackList(props.id).then(setFeedbackQuestions);
+    getQuestion(id).then(setQuestion);
+    getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
   const createBody = () => {
     const { answerText, title, questionText } = question;
     const data = {
-      questionId: props.id,
+      questionId: id,
       answerText,
       title,
       questionText,
@@ -54,7 +55,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const onSend = async () => {
-    const { type, history } = props;
     if (question.title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
       setModalVisible(true);
@@ -118,10 +118,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const { questionText, title, answerText } = question;
-  const { type, id } = props;
 
   const onPublishQuestion = event => {
-    const { history } = props;
     if (!id) return;
     publishQuestion(id)
       .then(() => {
@@ -137,7 +135,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const onDontPublish = event => {
-    const { history } = props;
     setHideModalButtons(true);
     setModalText(
       'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
