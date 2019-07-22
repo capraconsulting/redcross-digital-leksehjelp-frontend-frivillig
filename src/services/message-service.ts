@@ -21,8 +21,11 @@ export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, MESSAGE_TYPES.QUEUE_LIST);
 };
 
-export const createLeaveChatMessage = (roomID: string, uniqueID: string): ISocketMessage => {
-  return createMessage({roomID, uniqueID}, MESSAGE_TYPES.LEAVE_CHAT);
+export const createLeaveChatMessage = (
+  roomID: string,
+  uniqueID: string,
+): ISocketMessage => {
+  return createMessage({ roomID, uniqueID }, MESSAGE_TYPES.LEAVE_CHAT);
 };
 
 export const createGenerateRoomMessage = (

@@ -49,8 +49,13 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
               <div className="queue-body">{introText}</div>
               <hr />
             </div>
-            <button className="leksehjelp--button-warning">Avslutt Leksehjelp</button>
-            <button className="leksehjelp--button-success" onClick={() => createNewChatRoom(student)}>
+            <button className="leksehjelp--button-warning">
+              Avslutt Leksehjelp
+            </button>
+            <button
+              className="leksehjelp--button-success"
+              onClick={() => createNewChatRoom(student)}
+            >
               Start chat
             </button>
           </div>
@@ -61,7 +66,9 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   return (
     <div className="queue-container">
-      <button className="leksehjelp--button-success" onClick={updateQueue}>Update queue</button>
+      <button className="leksehjelp--button-success" onClick={updateQueue}>
+        Update queue
+      </button>
       <div className="queue-category-container">{queueElement}</div>
     </div>
   );

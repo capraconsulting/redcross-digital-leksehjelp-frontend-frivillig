@@ -5,6 +5,7 @@ import {
   saveAnswer,
   getFeedbackList,
   deleteFeedback,
+  publishQuestion,
 } from '../services/api-service';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -26,6 +27,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     subject: '',
   });
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+  const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
+    false,
+  );
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState('' as string);
   const [feedbackQuestions, setFeedbackQuestions] = React.useState(
@@ -51,35 +55,30 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onSend = async () => {
     const { type, history } = props;
     if (type === 'approval' && question.title === '') {
-      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
-      setModalVisible(true)
+      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
+      setModalVisible(true);
     } else {
-
-    const data = createBody();
-    const isSaved = await saveAnswer(data)
-      .then(() => true)
-      .catch(() => false);
-    isSaved &&
-      postAnswer(data, type)
-        .then(() => {
-          if (type === 'approval') {
-            setModalText(
-              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
-            )
-            setIsPublish(true)
-          } else {
-            setModalText('Svaret er sendt til godkjenning.');
-            setTimeout(() =>
-            history.goBack()
-            , 2000);
-          }
-          setModalVisible(true)
-        })
-        .catch(() => {
-          setModalText(
-            'Noe gikk galt.'
-          )
-        });
+      const data = createBody();
+      const isSaved = await saveAnswer(data)
+        .then(() => true)
+        .catch(() => false);
+      isSaved &&
+        postAnswer(data, type)
+          .then(() => {
+            if (type === 'approval') {
+              setModalText(
+                'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
+              );
+              setIsPublish(true);
+            } else {
+              setModalText('Svaret er sendt til godkjenning.');
+              setTimeout(() => history.goBack(), 2000);
+            }
+            setModalVisible(true);
+          })
+          .catch(() => {
+            setModalText('Noe gikk galt.');
+          });
     }
   };
 
@@ -115,11 +114,49 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const { questionText, title, answerText } = question;
   const { type, id } = props;
+
+  const onPublishQuestion = event => {
+    const { history } = props;
+    if (!id) return;
+    publishQuestion(id)
+      .then(() => {
+        setModalText('Svaret er nå publisert!');
+        setHideModalButtons(true);
+      })
+      .catch(() => {
+        setHideModalButtons(true);
+        setModalText('Noe gikk galt.');
+      });
+    setTimeout(() => history.goBack(), 3000);
+    event.preventDefault();
+  };
+
+  const onDontPublish = event => {
+    const { history } = props;
+    setHideModalButtons(true);
+    setModalText(
+      'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
+    );
+    setTimeout(() => history.goBack(), 3000);
+    event.preventDefault();
+  };
+
   return (
     <div>
       {/*{
         modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
       }*/}
+      {modalVisible && (
+        <Modal
+          content={modalText}
+          successButtonText={isPublish ? 'Publiser svaret' : 'Avbryt'}
+          warningButtonText={isPublish ? 'Ikke publiser' : 'Slett'}
+          successCallback={onPublishQuestion}
+          warningCallback={onDontPublish}
+          hideButtons={hideModalButtons}
+          handleClose={() => setModalVisible(false)}
+        />
+      )}
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>

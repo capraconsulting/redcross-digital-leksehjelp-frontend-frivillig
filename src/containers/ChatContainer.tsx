@@ -35,11 +35,7 @@ const ChatContainer = () => {
           />
         </div>
         <div className="chat">
-          {chats && (
-            <ChatHeaderComponent
-              activeChat={chats[activeIndex]}
-            />
-          )}
+          {chats && <ChatHeaderComponent activeChat={chats[activeIndex]} />}
           {chats && (
             <ChatBodyComponent messages={chats[activeIndex].messages} />
           )}
