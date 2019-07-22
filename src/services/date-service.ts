@@ -1,8 +1,8 @@
-export const timeStringFromDate = (date: Date): string => {
-  const leftPad = (input: number): string =>
-    input < 10 ? `0${input}` : input.toString();
-  return `${leftPad(date.getHours())}:${leftPad(date.getMinutes())}`;
+export const timeStringFromDate = (zonedDateTime): string => {
+  const { hour, minute } = zonedDateTime.dateTime.time;
+  return `${hour}:${minute}`;
 };
+
 const formatAsDate = (value: string): string => {
   return value
     .split('-')

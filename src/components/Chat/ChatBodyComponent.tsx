@@ -1,19 +1,17 @@
-import React, { useMemo } from 'react';
-import { ChatMessage } from '../';
+import React from 'react';
 import { ITextMessage } from '../../interfaces';
+import ChatMessageComponent from './ChatMessageComponent';
 
 interface IProps {
   messages: ITextMessage[];
 }
 
 const ChatBodyComponent = (props: IProps) => {
-  const listMessages = useMemo(
-    () =>
-      props.messages.map((message, index) => (
-        <ChatMessage key={index} message={message} />
-      )),
-    [props.messages],
-  );
+  const listMessages = () => {
+    return props.messages.map((message, index) => (
+      <ChatMessageComponent key={index} message={message} />
+    ));
+  };
 
   return (
     <div className="chat-body-container">
@@ -22,10 +20,10 @@ const ChatBodyComponent = (props: IProps) => {
           <p className="welcome-header">Velkommen til chaten!</p>
           <p className="welcome-body">
             Hvis du sender et vedlegg må du gjerne fjerne navnet ditt eller
-            andre ting fra dokumentet som kan indentifisere deg.
+            andre ting fra dokumentet som kan identifisere deg.
           </p>
         </div>
-        {listMessages}
+        {listMessages()}
       </div>
     </div>
   );

@@ -1,19 +1,13 @@
 import React from 'react';
 import Routes from './router';
-import { StateProvider } from './StateProvider';
 
 import './styles/base';
+import { SocketProvider } from './providers';
 
-interface IState {
-  active: boolean;
-}
-
-const App = () => {
-  return (
-    <StateProvider>
-      <Routes />
-    </StateProvider>
-  );
-};
+const App = () => (
+  <SocketProvider>
+    <Routes />
+  </SocketProvider>
+);
 
 export default App;
