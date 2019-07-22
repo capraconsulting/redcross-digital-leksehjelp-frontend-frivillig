@@ -64,6 +64,12 @@ export const chatReducer = createReducer<IChat[], IAction>([])
     };
     return [...state, newChat];
   })
-  .handleAction(setChatFromLocalStorage, (state: IChat[], action: IAction) => {
-    return action.payload.chats;
-  });
+  .handleAction(leaveChatAction, (state: IChat[], action: IAction) => {
+    return state.filter(chat => chat.roomID !== action.payload.roomID);
+  })
+  .handleAction(
+    setChatFromLocalStorageAction,
+    (state: IChat[], action: IAction) => {
+      return action.payload.chats;
+    },
+  );

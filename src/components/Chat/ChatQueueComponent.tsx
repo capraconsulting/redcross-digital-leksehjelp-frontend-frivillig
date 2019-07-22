@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { IStudent } from '../../interfaces';
-import { addNewChat } from '../../reducers';
+import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
   createGenerateRoomMessage,
@@ -17,7 +17,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   const createNewChatRoom = (student: IStudent) => {
     if (student) {
-      dispatchChats(addNewChat(student));
+      dispatchChats(addNewChatAction(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
 
       const socketMessage = createGenerateRoomMessage(
