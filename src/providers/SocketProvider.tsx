@@ -77,7 +77,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     localStorage.setItem('chats', JSON.stringify(chats));
   }, [chats]);
 
-  /*window.onload = () => {
+  window.onload = () => {
     // Set state if stuff in localstorage
     const queueFromLocalStorage = localStorage.getItem('queue');
     const uniqueIDFromLocalStorage = localStorage.getItem('uniqueID');
@@ -90,7 +90,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       setUniqueID(uniqueIDFromLocalStorage);
     }
     if (chatsFromLocalStorage) {
-      dispatchChats(setChatFromLocalStorage(JSON.parse(chatsFromLocalStorage)));
+      dispatchChats(setChatFromLocalStorageAction(JSON.parse(chatsFromLocalStorage)));
     }
   };
 
