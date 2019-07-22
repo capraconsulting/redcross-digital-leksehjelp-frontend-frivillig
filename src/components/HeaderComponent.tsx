@@ -91,7 +91,9 @@ const HeaderComponent = (props: RouteComponentProps) => {
             </label>
           </div>
           <li className="header--list-item">
-            <button>Steng Leksehjelp</button>
+            <button className="leksehjelp--button-abort">
+              Steng Leksehjelpen
+            </button>
           </li>
         </ul>
       </div>

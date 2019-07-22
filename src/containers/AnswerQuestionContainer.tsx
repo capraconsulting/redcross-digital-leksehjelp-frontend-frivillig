@@ -25,6 +25,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     studentGrade: '',
     questionDate: '',
     subject: '',
+    isPublic: false,
   });
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
@@ -42,19 +43,19 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   }, []);
 
   const createBody = () => {
-    const { answerText, title } = question;
-    const { type } = props;
+    const { answerText, title, questionText } = question;
     const data = {
       questionId: props.id,
       answerText,
       title,
+      questionText,
     };
     return data;
   };
 
   const onSend = async () => {
     const { type, history } = props;
-    if (type === 'approval' && question.title === '') {
+    if (question.title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
       setModalVisible(true);
     } else {
@@ -65,11 +66,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       isSaved &&
         postAnswer(data, type)
           .then(() => {
-            if (type === 'approval') {
+            if (type === 'approval' && question.isPublic) {
               setModalText(
                 'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
               );
               setIsPublish(true);
+            } else if (type === 'approval' && !question.isPublic) {
+              setModalText('Svaret er nå sendt til eleven.');
+              setTimeout(() => history.goBack(), 2000);
             } else {
               setModalText('Svaret er sendt til godkjenning.');
               setTimeout(() => history.goBack(), 2000);
@@ -78,6 +82,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           })
           .catch(() => {
             setModalText('Noe gikk galt.');
+            setModalVisible(true);
           });
     }
   };
@@ -161,20 +166,18 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
           <form className="question-form">
-            {type === 'approval' && (
-              <label className="question-form--item">
-                Tittel
-                <input
-                  className="question-form--input"
-                  value={title}
-                  type="text"
-                  name="title"
-                  onChange={e =>
-                    setQuestion({ ...question, title: e.target.value })
-                  }
-                />
-              </label>
-            )}
+            <label className="question-form--item">
+              Tittel
+              <input
+                className="question-form--input"
+                value={title}
+                type="text"
+                name="title"
+                onChange={e =>
+                  setQuestion({ ...question, title: e.target.value })
+                }
+              />
+            </label>
             <label className="question-form--item">
               Spørsmål
               <textarea
@@ -199,13 +202,19 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             </label>
           </form>
           {type === 'approval' ? (
-            <div className="question-form--button">
-              <button onClick={onSend}>Godkjenn</button>
+            <div className="question-form--button-container">
+              <button className="leksehjelp--button-success" onClick={onSend}>
+                Godkjenn
+              </button>
             </div>
           ) : (
-            <div className="question-form--button">
-              <button onClick={onSend}>Send til godkjenning</button>
-              <button onClick={onSave}>Lagre</button>
+            <div className="question-form--button-container">
+              <button className="leksehjelp--button-success" onClick={onSend}>
+                Godkjenning
+              </button>
+              <button className="leksehjelp--button-success" onClick={onSave}>
+                Lagre
+              </button>
             </div>
           )}
         </div>
