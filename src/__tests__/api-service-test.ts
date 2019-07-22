@@ -48,7 +48,6 @@ describe('api-service', () => {
     });
 
     const call = mocked(mock.post).mock.calls[0];
-    console.log(call)
 
     expect(call[0]).toEqual('questions/:id/edit');
     expect(call[1]).toEqual({
