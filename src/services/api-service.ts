@@ -53,7 +53,7 @@ export async function postAnswer(
   data: IAnswer,
   type?: string,
 ): Promise<IQuestion> {
-  const { questionId, answerText, title } = data;
+  const { questionId } = data;
   let url = '';
   switch (type) {
     case 'inbox':
@@ -76,7 +76,7 @@ export async function postAnswer(
 }
 
 export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
-  const { questionId, questionText, answerText, title } = data;
+  const { questionId } = data;
   return await api
     .post(`questions/${questionId}/edit`, data)
     .then(res => res.data)

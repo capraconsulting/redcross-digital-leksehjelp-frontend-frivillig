@@ -40,7 +40,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const createBody = () => {
     const { answerText, title, questionText } = question;
-    const { type } = props;
     const data = {
       questionId: props.id,
       answerText,
@@ -53,42 +52,34 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onSend = async () => {
     const { type, history } = props;
     if (question.title === '') {
-      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
-      setModalVisible(true)
+      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
+      setModalVisible(true);
     } else {
-
-    const data = createBody();
-    const isSaved = await saveAnswer(data)
-      .then(() => true)
-      .catch(() => false);
-    isSaved &&
-      postAnswer(data, type)
-        .then(() => {
-          if (type === 'approval' && question.isPublic) {
-            setModalText(
-              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
-            )
-            setIsPublish(true)
-          } else if (type === 'approval' && !question.isPublic){
-            setModalText('Svaret er nå sendt til eleven.')
-            setTimeout(() =>
-            history.goBack()
-            , 2000);
-          }
-          else {
-            setModalText('Svaret er sendt til godkjenning.');
-            setTimeout(() =>
-            history.goBack()
-            , 2000);
-          }
-          setModalVisible(true)
-        })
-        .catch(() => {
-          setModalText(
-            'Noe gikk galt.'
-          )
-          setModalVisible(true)
-        });
+      const data = createBody();
+      const isSaved = await saveAnswer(data)
+        .then(() => true)
+        .catch(() => false);
+      isSaved &&
+        postAnswer(data, type)
+          .then(() => {
+            if (type === 'approval' && question.isPublic) {
+              setModalText(
+                'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
+              );
+              setIsPublish(true);
+            } else if (type === 'approval' && !question.isPublic) {
+              setModalText('Svaret er nå sendt til eleven.');
+              setTimeout(() => history.goBack(), 2000);
+            } else {
+              setModalText('Svaret er sendt til godkjenning.');
+              setTimeout(() => history.goBack(), 2000);
+            }
+            setModalVisible(true);
+          })
+          .catch(() => {
+            setModalText('Noe gikk galt.');
+            setModalVisible(true);
+          });
     }
   };
 
@@ -126,25 +117,30 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const { type, id } = props;
   return (
     <div>
-      {
-        modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
-      }
+      {modalVisible && (
+        <Modal
+          text={modalText}
+          isPublish={isPublish}
+          isModalOpen={setModalVisible}
+          id={id}
+        />
+      )}
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
           <form className="question-form">
-              <label className="question-form--item">
-                Tittel
-                <input
-                  className="question-form--input"
-                  value={title}
-                  type="text"
-                  name="title"
-                  onChange={e =>
-                    setQuestion({ ...question, title: e.target.value })
-                  }
-                />
-              </label>
+            <label className="question-form--item">
+              Tittel
+              <input
+                className="question-form--input"
+                value={title}
+                type="text"
+                name="title"
+                onChange={e =>
+                  setQuestion({ ...question, title: e.target.value })
+                }
+              />
+            </label>
             <label className="question-form--item">
               Spørsmål
               <textarea
@@ -170,12 +166,18 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           </form>
           {type === 'approval' ? (
             <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>Godkjenn</button>
+              <button className="leksehjelp--button-success" onClick={onSend}>
+                Godkjenn
+              </button>
             </div>
           ) : (
             <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>Godkjenning</button>
-              <button className="leksehjelp--button-success" onClick={onSave}>Lagre</button>
+              <button className="leksehjelp--button-success" onClick={onSend}>
+                Godkjenning
+              </button>
+              <button className="leksehjelp--button-success" onClick={onSave}>
+                Lagre
+              </button>
             </div>
           )}
         </div>
