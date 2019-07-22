@@ -82,6 +82,40 @@ p {
   padding-bottom: 1rem;
 }
 
+button {
+  border: none;
+  color: white;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0.5rem;
+  width: 9rem;
+}
+
+.leksehjelp--button {
+  &-success {
+    background-color: @secondary-color;
+  }
+  &-warning {
+    background-color: @danger-color;
+  }
+  &-close {
+    right: 0;
+    top: 0;
+    position: fixed;
+    background: none;
+    color: inherit;
+    padding: 0.5rem;
+    font: inherit;
+    outline: inherit;
+    margin: 0;
+    width: auto;
+  }
+ }
+
 .leksehjelp--link {
   color: @link-color;
   margin: 0.5rem;

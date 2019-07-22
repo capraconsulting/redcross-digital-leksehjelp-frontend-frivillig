@@ -8,6 +8,7 @@ import {
 } from '../services/api-service';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { ModalComponent as Modal } from '../components';
 
 interface IProps {
   id: string;
@@ -36,24 +37,50 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     getFeedbackList(props.id).then(setFeedbackQuestions);
   }, []);
 
-  const onSend = event => {
-    const { id, type, history } = props;
+  const createBody = () => {
     const { answerText, title } = question;
+    const { type } = props;
     const data = {
-      questionId: id,
+      questionId: props.id,
       answerText,
       title,
     };
-    postAnswer(data, type).then(() => {
-      setModalText(
-        type === 'approval'
-          ? 'Svaret er nå sendt til studenten.'
-          : 'Svaret er sendt til godkjenning.',
-      );
-      setIsSaved(true);
-      setTimeout(() => history.goBack(), 2000);
-    }); //TODO: Handle error and response-message
-    event.preventDefault();
+    return data;
+  };
+
+  const onSend = async () => {
+    const { type, history } = props;
+    if (type === 'approval' && question.title === '') {
+      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
+      setModalVisible(true)
+    } else {
+
+    const data = createBody();
+    const isSaved = await saveAnswer(data)
+      .then(() => true)
+      .catch(() => false);
+    isSaved &&
+      postAnswer(data, type)
+        .then(() => {
+          if (type === 'approval') {
+            setModalText(
+              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
+            )
+            setIsPublish(true)
+          } else {
+            setModalText('Svaret er sendt til godkjenning.');
+            setTimeout(() =>
+            history.goBack()
+            , 2000);
+          }
+          setModalVisible(true)
+        })
+        .catch(() => {
+          setModalText(
+            'Noe gikk galt.'
+          )
+        });
+    }
   };
 
   const onSend = async () => {
@@ -92,21 +119,15 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const onSave = event => {
-    const { id } = props;
-    const { answerText, title } = question;
-    const data = {
-      questionId: id,
-      answerText,
-      title,
-    };
+    const data = createBody();
     saveAnswer(data)
       .then(() => {
         setModalText('Svaret er nå lagret.');
-        setIsSaved(true);
+        setModalVisible(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Data ble ikke lagret.');
-        setIsSaved(true);
+        setModalVisible(true);
       });
     event.preventDefault();
   };
@@ -117,18 +138,18 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     deleteFeedback(id)
       .then(() => {
         setModalText('Feedback er nå slettet.');
-        setIsSaved(true);
+        setModalVisible(true);
         const feedbackList = feedbackQuestions.filter(({ id }) => id !== value);
         setFeedbackQuestions(feedbackList);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Feedback ble ikke slettet.');
-        setIsSaved(true);
+        setModalVisible(true);
       });
   };
 
   const { questionText, title, answerText } = question;
-  const { type } = props;
+  const { type, id } = props;
   return (
     <div>
       {
@@ -177,12 +198,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           </form>
           {type === 'approval' ? (
             <div className="question-form--button">
-              <button onClick={e => onSend(e)}>Godkjenn</button>
+              <button onClick={onSend}>Godkjenn</button>
             </div>
           ) : (
             <div className="question-form--button">
-              <button onClick={e => onSend(e)}>Send til godkjenning</button>
-              <button onClick={e => onSave(e)}>Lagre</button>
+              <button onClick={onSend}>Send til godkjenning</button>
+              <button onClick={onSave}>Lagre</button>
             </div>
           )}
         </div>
@@ -209,10 +230,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             </div>
           </div>
         )}
-      </div>
-      <div className={`modal--open-${isSaved}`}>
-        <p>{modalText}</p>
-        <button onClick={() => setIsSaved(false)}>x</button>
       </div>
     </div>
   );
