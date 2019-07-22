@@ -83,6 +83,10 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
     .catch(err => err.response);
 }
 
+export async function publishQuestion(id: string): Promise<{}> {
+  return await api.post(`questions/${id}/publish`).then(res => res.data);
+}
+
 export async function deleteFeedback(id: string): Promise<{}> {
   return await api.post(`feedback/${id}/delete`).then(res => res.data);
 }
