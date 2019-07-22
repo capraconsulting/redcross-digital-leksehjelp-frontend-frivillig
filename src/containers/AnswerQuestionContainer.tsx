@@ -169,13 +169,13 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             </label>
           </form>
           {type === 'approval' ? (
-            <div className="question-form--button">
-              <button onClick={onSend}>Godkjenn</button>
+            <div className="question-form--button-container">
+              <button className="leksehjelp--button-success" onClick={onSend}>Godkjenn</button>
             </div>
           ) : (
-            <div className="question-form--button">
-              <button onClick={onSend}>Send til godkjenning</button>
-              <button onClick={onSave}>Lagre</button>
+            <div className="question-form--button-container">
+              <button className="leksehjelp--button-success" onClick={onSend}>Godkjenning</button>
+              <button className="leksehjelp--button-success" onClick={onSave}>Lagre</button>
             </div>
           )}
         </div>

@@ -91,13 +91,17 @@ button {
   font-size: 1rem;
   cursor: pointer;
   margin: 0.5rem;
-  width: 9rem;
+  width: 10rem;
 }
 
 .leksehjelp--button {
   &-success {
     background-color: @secondary-color;
+    &:hover {
+      background-color: @link-hover-color;
+    }
   }
+
   &-warning {
     background-color: @danger-color;
   }
@@ -112,6 +116,12 @@ button {
     outline: inherit;
     margin: 0;
     width: auto;
+  }
+  &-abort {
+    border: thin solid @danger-color;
+    color: @danger-color;
+    padding: 0.5rem;
+    margin: 0;
   }
  }
 

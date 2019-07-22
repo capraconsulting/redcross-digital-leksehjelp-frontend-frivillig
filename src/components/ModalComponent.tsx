@@ -36,7 +36,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
 
   const onAbort = event => {
     setIsVisible(false);
-    setModalText('Svaret er nå publisert!')
+    setModalText('Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no')
     setTimeout(() =>
       history.goBack()
       , 3000);
