@@ -1,27 +1,30 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { createTextMessage } from '../../services';
-import { ISocketFile, ISocketMessage } from '../../interfaces';
+import { ISocketFile } from '../../interfaces';
+import { addMessage } from '../../reducers';
+import { SocketContext } from '../../providers';
 
 interface IProps {
   uniqueID: string;
   roomID: string;
-  onSend(message: ISocketMessage): void;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { uniqueID, roomID, onSend } = props;
+  const { dispatchChats, socketSend } = useContext(SocketContext);
+  const { uniqueID, roomID } = props;
 
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const socketMessage: ISocketMessage = createTextMessage(
+      const { textMessage, socketMessage } = createTextMessage(
         message,
         uniqueID,
         roomID,
       );
       setMessage('');
-      onSend(socketMessage);
+      socketSend(socketMessage);
+      dispatchChats(addMessage(textMessage));
     }
   };
 
@@ -41,12 +44,13 @@ const ChatInputComponent = (props: IProps) => {
         size: file.size,
         dataURL: String(fr.result),
       };
-      const socketMessage: ISocketMessage = createTextMessage(
+      const { textMessage, socketMessage } = createTextMessage(
         socketFile,
         uniqueID,
         roomID,
       );
-      onSend(socketMessage);
+      socketSend(socketMessage);
+      dispatchChats(addMessage(textMessage));
     };
     fr.readAsDataURL(file);
   };

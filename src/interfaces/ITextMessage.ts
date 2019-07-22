@@ -5,5 +5,6 @@ export interface ITextMessage {
   roomID: string;
   uniqueID: string;
   message: string | ISocketFile;
-  datetime: Date;
+  datetime?: Date;
+  unread?: number;
 }

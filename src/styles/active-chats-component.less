@@ -1,0 +1,45 @@
+.active-chat-container {
+  border-right: 1px solid gray;
+  height: 100%;
+  > .active-chat {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    > .dot {
+      margin-top: 65%;
+      position: relative;
+      border-radius: 50%;
+      width: 1rem;
+      height: 1rem;
+      padding: .2rem;
+      background-color: @primary-color;
+      color: white;
+      text-align: center;
+      font: 1rem Arial, sans-serif;
+    }
+    > .chat-info {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      > .subject {
+        padding-top: 0.7rem;
+        font-weight: bold;
+      }
+    }
+    &:hover {
+      background-color: @secondary-color;
+      filter: brightness(80%);
+    }
+    &:not(:last-of-type) {
+      border-bottom: 1px solid gray;
+    }
+  }
+}
+
+.active-chat-active {
+  background-color: @secondary-color;
+}
+.active-chat-inactive {
+
+}
+

@@ -4,3 +4,14 @@ export const HEADERS = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
 };
+
+export const MESSAGE_TYPES = {
+  CONNECTION: 'CONNECTION',
+  ENTER_QUEUE: 'ENTER_QUEUE',
+  DISTRIBUTE_ROOM: 'DISTRIBUTE_ROOM',
+  GENERATE_ROOM: 'GENERATE_ROOM',
+  QUEUE_LIST: 'QUEUE_LIST',
+  TEXT: 'TEXT',
+  JOIN_CHAT: 'JOIN_CHAT',
+  LEAVE_CHAT: 'LEAVE_CHAT',
+};
