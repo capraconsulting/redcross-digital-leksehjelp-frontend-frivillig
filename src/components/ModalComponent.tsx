@@ -1,51 +1,57 @@
-import React, {useState, useEffect} from 'react';
+import React, {
+  useState,
+  MouseEvent,
+  forwardRef,
+  useImperativeHandle,
+  RefObject,
+} from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { publishQuestion } from '../services/api-service';
 
 interface IProps {
-  text: string;
-  id?: string;
-  isDelete?: boolean;
-  isPublish?: boolean;
-  isModalOpen(value: boolean);
+  content: string;
+  successButtonText?: string;
+  warningButtonText?: string;
+  successCallback?(e: MouseEvent): void;
+  warningCallback?(e: MouseEvent): void;
+  handleClose(): void;
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
-  const { isPublish, isDelete, isModalOpen, text, id, history } = props;
-  const [modalText, setModalText] = useState<string>(text);
-  const [isVisible, setIsVisible] = useState<boolean | undefined>(isPublish || isDelete);
-
-  const onPublishQuestion = event => {
-    if (!id) return
-    publishQuestion(id)
-      .then(() => {
-        setModalText('Svaret er nå publisert!')
-        setIsVisible(false)
-      })
-      .catch(() => {
-        setIsVisible(false)
-        setModalText(
-          'Noe gikk galt.'
-        )
-      });
-    setTimeout(() =>
-      history.goBack()
-      , 3000);
-    event.preventDefault()
-  }
+  const {
+    content,
+    successButtonText,
+    warningButtonText,
+    successCallback,
+    warningCallback,
+    handleClose
+  } = props;
 
   return (
-    <div className={`modal`}>
-      <p>{modalText}</p>
-      <button className="leksehjelp--button-close" onClick={() => isModalOpen(false)}>x</button>
-      {isVisible &&
-        <div className="modal--button-container">
-          <button className="leksehjelp--button-warning">{isPublish ? "Ikke publiser" : "Slett"}</button>
-          <button className="leksehjelp--button-success" onClick={(e) => onPublishQuestion(e)}>{isPublish ? "Publiser svaret" : "Avbryt"}</button>
-        </div>
-      }
+    <div className="modal">
+      <p>{content}</p>
+      <button className="leksehjelp--button-close" onClick={handleClose}>
+        x
+      </button>
+      <div className="modal--button-container">
+        {successButtonText && (
+          <button
+            onClick={successCallback}
+            className="leksehjelp--button-success"
+          >
+            {successButtonText}
+          </button>
+        )}
+        {warningButtonText && (
+          <button
+            onClick={warningCallback}
+            className="leksehjelp--button-warning"
+          >
+            {warningButtonText}
+          </button>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default withRouter(ModalComponent);

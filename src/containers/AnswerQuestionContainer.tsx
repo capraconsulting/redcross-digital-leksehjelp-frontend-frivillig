@@ -8,7 +8,7 @@ import {
 } from '../services/api-service';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { ModalComponent as Modal } from '../components';
+import { Modal } from '../components';
 
 interface IProps {
   id: string;
@@ -83,41 +83,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     }
   };
 
-  const onSend = async () => {
-    const { type, history } = props;
-    if (type === 'approval' && question.title === '') {
-      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
-      setModalVisible(true)
-    } else {
-
-    const data = createBody();
-    const isSaved = await saveAnswer(data)
-      .then(() => true)
-      .catch(() => false);
-    isSaved &&
-      postAnswer(data, type)
-        .then(() => {
-          if (type === 'approval') {
-            setModalText(
-              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
-            )
-            setIsPublish(true)
-          } else {
-            setModalText('Svaret er sendt til godkjenning.');
-            setTimeout(() =>
-            history.goBack()
-            , 2000);
-          }
-          setModalVisible(true)
-        })
-        .catch(() => {
-          setModalText(
-            'Noe gikk galt.'
-          )
-        });
-    }
-  };
-
   const onSave = event => {
     const data = createBody();
     saveAnswer(data)
@@ -152,9 +117,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const { type, id } = props;
   return (
     <div>
-      {
+      {/*{
         modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
-      }
+      }*/}
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
