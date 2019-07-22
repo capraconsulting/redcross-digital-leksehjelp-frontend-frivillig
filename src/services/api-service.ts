@@ -27,10 +27,10 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
       url = '/unanswered';
       break;
     case 'started':
-      url = '/edit';
+      url = '/inprogress';
       break;
     case 'approval':
-      url = '/approve';
+      url = '/unapproved';
       break;
     case 'public':
       url = '/public';

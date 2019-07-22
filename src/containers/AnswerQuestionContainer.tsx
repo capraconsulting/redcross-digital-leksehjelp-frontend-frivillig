@@ -24,7 +24,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
   });
-  const [isSaved, setIsSaved] = React.useState<boolean>(false);
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+  const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState('' as string);
   const [feedbackQuestions, setFeedbackQuestions] = React.useState(
     [] as IFeedback[],
@@ -53,6 +54,41 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       setTimeout(() => history.goBack(), 2000);
     }); //TODO: Handle error and response-message
     event.preventDefault();
+  };
+
+  const onSend = async () => {
+    const { type, history } = props;
+    if (type === 'approval' && question.title === '') {
+      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
+      setModalVisible(true)
+    } else {
+
+    const data = createBody();
+    const isSaved = await saveAnswer(data)
+      .then(() => true)
+      .catch(() => false);
+    isSaved &&
+      postAnswer(data, type)
+        .then(() => {
+          if (type === 'approval') {
+            setModalText(
+              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
+            )
+            setIsPublish(true)
+          } else {
+            setModalText('Svaret er sendt til godkjenning.');
+            setTimeout(() =>
+            history.goBack()
+            , 2000);
+          }
+          setModalVisible(true)
+        })
+        .catch(() => {
+          setModalText(
+            'Noe gikk galt.'
+          )
+        });
+    }
   };
 
   const onSave = event => {
@@ -95,6 +131,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const { type } = props;
   return (
     <div>
+      {
+        modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
+      }
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
