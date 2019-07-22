@@ -28,7 +28,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         student.introText,
         student.course,
       );
-
       socketSend(socketMessage);
     }
   };

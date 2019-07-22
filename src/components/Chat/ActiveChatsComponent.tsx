@@ -15,21 +15,24 @@ const ActiveChatsComponent = (props: IProps) => {
   };
 
   const activeChatList = () =>
-    props.availableChats.map((chat, index) => (
-      <div
-        onClick={() => onClickHandler(index)}
-        key={chat.roomID}
-        className={`active-chat ${
-          index === activeChat ? 'active-chat-active' : 'active-chat-inactive'
-        }`}
-      >
-        <div className="chat-info">
-          <span className="name">{chat.student.nickname}</span>
-          <span className="subject">{chat.student.course}</span>
+    props.availableChats.map((chat, index) => {
+      console.log('hei');
+      return (
+        <div
+          onClick={() => onClickHandler(index)}
+          key={chat.roomID}
+          className={`active-chat ${
+            index === activeChat ? 'active-chat-active' : 'active-chat-inactive'
+          }`}
+        >
+          <div className="chat-info">
+            <span className="name">{chat.student.nickname}</span>
+            <span className="subject">{chat.student.course}</span>
+          </div>
+          <span className="dot">{chat.unread}</span>
         </div>
-        <span className="dot">{chat.unread}</span>
-      </div>
-    ));
+      );
+    });
 
   return <div className="active-chat-container">{activeChatList()}</div>;
 };

@@ -38,7 +38,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
-    if (parsedMessage.msgType === MESSAGE_TYPES.TEXT) {
+    if (msgType === MESSAGE_TYPES.TEXT) {
       const action = addMessage(
         {
           message: payload['message'],
@@ -51,6 +51,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       );
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.DISTRIBUTE_ROOM) {
+      console.log(payload);
       const action = addRoomID(payload['roomID'], payload['studentID']);
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.CONNECTION) {
@@ -75,7 +76,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     localStorage.setItem('chats', JSON.stringify(chats));
   }, [chats]);
 
-  window.onload = () => {
+  /*window.onload = () => {
     // Set state if stuff in localstorage
     const queueFromLocalStorage = localStorage.getItem('queue');
     const uniqueIDFromLocalStorage = localStorage.getItem('uniqueID');
@@ -94,7 +95,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
 
   window.onclose = () => {
     localStorage.clear();
-  };
+  };*/
   const socketSend = (message: ISocketMessage | IGetMessage) => {
     getSocket().send(JSON.stringify(message));
   };

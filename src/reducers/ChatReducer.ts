@@ -28,7 +28,9 @@ export const chatReducer = createReducer<IChat[], IAction>([])
       chat =>
         chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
     );
-    if (roomToSetID) roomToSetID.roomID = action.payload.roomID;
+    if (roomToSetID) {
+      roomToSetID.roomID = action.payload.roomID
+    };
     return [...state];
   })
   .handleAction(addMessage, (state: IChat[], action: IAction) => {
