@@ -44,6 +44,7 @@ describe('api-service', () => {
       questionId: ':id',
       answerText: 'answer',
       title: 'title',
+      questionText: 'text',
     });
 
     const call = mocked(mock.post).mock.calls[0];

@@ -24,6 +24,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     studentGrade: '',
     questionDate: '',
     subject: '',
+    isPublic: false,
   });
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
@@ -38,19 +39,20 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   }, []);
 
   const createBody = () => {
-    const { answerText, title } = question;
+    const { answerText, title, questionText } = question;
     const { type } = props;
     const data = {
       questionId: props.id,
       answerText,
       title,
+      questionText,
     };
     return data;
   };
 
   const onSend = async () => {
     const { type, history } = props;
-    if (type === 'approval' && question.title === '') {
+    if (question.title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
       setModalVisible(true)
     } else {
@@ -62,12 +64,18 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     isSaved &&
       postAnswer(data, type)
         .then(() => {
-          if (type === 'approval') {
+          if (type === 'approval' && question.isPublic) {
             setModalText(
               'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
             )
             setIsPublish(true)
-          } else {
+          } else if (type === 'approval' && !question.isPublic){
+            setModalText('Svaret er nå sendt til eleven.')
+            setTimeout(() =>
+            history.goBack()
+            , 2000);
+          }
+          else {
             setModalText('Svaret er sendt til godkjenning.');
             setTimeout(() =>
             history.goBack()
@@ -79,6 +87,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           setModalText(
             'Noe gikk galt.'
           )
+          setModalVisible(true)
         });
     }
   };
@@ -124,7 +133,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
           <form className="question-form">
-            {type === 'approval' && (
               <label className="question-form--item">
                 Tittel
                 <input
@@ -137,7 +145,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
                   }
                 />
               </label>
-            )}
             <label className="question-form--item">
               Spørsmål
               <textarea

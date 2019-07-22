@@ -57,28 +57,28 @@ export async function postAnswer(
   let url = '';
   switch (type) {
     case 'inbox':
-      url = '/answer';
+      url = '/submit';
       break;
     case 'started':
-      url = '/answer';
+      url = '/submit';
       break;
     case 'approval':
       return await api
-        .post(`questions/${questionId}/approve`, { title })
+        .post(`questions/${questionId}/send`)
         .then(res => res.data);
     default:
       url = '';
       break;
   }
   return await api
-    .post(`questions/${questionId}${url}`, { answerText })
+    .post(`questions/${questionId}${url}`, data)
     .then(res => res.data);
 }
 
 export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
-  const { questionId, answerText } = data;
+  const { questionId, questionText, answerText, title } = data;
   return await api
-    .post(`questions/${questionId}/edit`, { answerText: answerText })
+    .post(`questions/${questionId}/edit`, data)
     .then(res => res.data)
     .catch(err => err.response);
 }

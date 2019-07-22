@@ -25,7 +25,7 @@ const AdminQuestionListComponent = (props: IProps) => {
             <div className="item-footer">
               <Link
                 className="leksehjelp--link"
-                to={`/questions/${id}/approval`}
+                to={`/questions/${id}/edit`}
               >
                 Vis
               </Link>

@@ -34,13 +34,21 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     event.preventDefault()
   }
 
+  const onAbort = event => {
+    setIsVisible(false);
+    setModalText('Svaret er nå publisert!')
+    setTimeout(() =>
+      history.goBack()
+      , 3000);
+  }
+
   return (
     <div className={`modal`}>
       <p>{modalText}</p>
       <button className="leksehjelp--button-close" onClick={() => isModalOpen(false)}>x</button>
       {isVisible &&
         <div className="modal--button-container">
-          <button className="leksehjelp--button-warning">{isPublish ? "Ikke publiser" : "Slett"}</button>
+          <button className="leksehjelp--button-warning" onClick={(e) => onAbort(e)}>{isPublish ? "Ikke publiser" : "Slett"}</button>
           <button className="leksehjelp--button-success" onClick={(e) => onPublishQuestion(e)}>{isPublish ? "Publiser svaret" : "Avbryt"}</button>
         </div>
       }
