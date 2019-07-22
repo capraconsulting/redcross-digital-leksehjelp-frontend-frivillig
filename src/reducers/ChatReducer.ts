@@ -1,39 +1,43 @@
 import { createAction, createReducer } from 'typesafe-actions';
 import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
 
-export const addRoomID = createAction('ADD_ROOM_ID', cb => {
+export const addRoomIDAction = createAction('ADD_ROOM_ID', cb => {
   return (roomID: string, studentID: string) => cb({ roomID, studentID });
 });
 
-export const addMessage = createAction('ADD_MESSAGE', cb => {
+export const addMessageAction = createAction('ADD_MESSAGE', cb => {
   return (message: ITextMessage, unread: boolean = false) =>
     cb({ message, unread });
 });
 
-export const readMessages = createAction('READ_MESSAGES', cb => {
+export const readMessagesAction = createAction('READ_MESSAGES', cb => {
   return (roomID: string) => cb({ roomID });
 });
 
-export const addNewChat = createAction('ADD_NEW', cb => {
+export const addNewChatAction = createAction('ADD_NEW', cb => {
   return (student: IStudent) => cb({ student });
 });
 
-export const setChatFromLocalStorage = createAction('SET_ALL', cb => {
+export const setChatFromLocalStorageAction = createAction('SET_ALL', cb => {
   return (chats: IChat[]) => cb({ chats });
 });
 
+export const leaveChatAction = createAction('LEAVE_CHAT', cb => {
+  return (roomID: string) => cb({ roomID });
+});
+
 export const chatReducer = createReducer<IChat[], IAction>([])
-  .handleAction(addRoomID, (state: IChat[], action: IAction) => {
+  .handleAction(addRoomIDAction, (state: IChat[], action: IAction) => {
     const roomToSetID = state.find(
       chat =>
         chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
     );
     if (roomToSetID) {
-      roomToSetID.roomID = action.payload.roomID
-    };
+      roomToSetID.roomID = action.payload.roomID;
+    }
     return [...state];
   })
-  .handleAction(addMessage, (state: IChat[], action: IAction) => {
+  .handleAction(addMessageAction, (state: IChat[], action: IAction) => {
     const room = state.find(
       chat => chat.roomID === action.payload.message.roomID,
     );
@@ -46,12 +50,12 @@ export const chatReducer = createReducer<IChat[], IAction>([])
     }
     return [...state];
   })
-  .handleAction(readMessages, (state: IChat[], action: IAction) => {
+  .handleAction(readMessagesAction, (state: IChat[], action: IAction) => {
     const chat = state.find(chat => chat.roomID === action.payload.roomID);
     if (chat) chat.unread = 0;
     return [...state];
   })
-  .handleAction(addNewChat, (state: IChat[], action: IAction) => {
+  .handleAction(addNewChatAction, (state: IChat[], action: IAction) => {
     const newChat: IChat = {
       student: action.payload.student,
       messages: [],

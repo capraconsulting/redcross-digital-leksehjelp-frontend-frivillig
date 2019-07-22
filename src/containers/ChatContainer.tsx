@@ -4,7 +4,7 @@ import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
 import ChatInputComponent from '../components/Chat/ChatInputComponent';
 
 import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
-import { readMessages } from '../reducers';
+import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 
 // main component
@@ -22,7 +22,7 @@ const ChatContainer = () => {
 
   const showMessages = (index: number) => {
     setActiveIndex(index);
-    dispatchChats(readMessages(chats[activeIndex].roomID));
+    dispatchChats(readMessagesAction(chats[activeIndex].roomID));
   };
 
   if (chats.length >= 1) {
@@ -37,8 +37,7 @@ const ChatContainer = () => {
         <div className="chat">
           {chats && (
             <ChatHeaderComponent
-              connectedWith={chats[activeIndex].student.nickname}
-              course={chats[activeIndex].student.course}
+              activeChat={chats[activeIndex]}
             />
           )}
           {chats && (

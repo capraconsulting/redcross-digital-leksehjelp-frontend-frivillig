@@ -2,10 +2,10 @@ import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
 import {
-  addMessage,
-  addRoomID,
+  addMessageAction,
+  addRoomIDAction,
   chatReducer,
-  setChatFromLocalStorage,
+  setChatFromLocalStorageAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
@@ -39,7 +39,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
     if (msgType === MESSAGE_TYPES.TEXT) {
-      const action = addMessage(
+      const action = addMessageAction(
         {
           message: payload['message'],
           author: payload['author'],
@@ -52,7 +52,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.DISTRIBUTE_ROOM) {
       console.log(payload);
-      const action = addRoomID(payload['roomID'], payload['studentID']);
+      const action = addRoomIDAction(payload['roomID'], payload['studentID']);
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.CONNECTION) {
       setUniqueID(payload['uniqueID']);
@@ -65,6 +65,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   }, []);
 
+  /*
   // This keeps state persistent while refreshing page (except for the socket)
   useEffect(() => {
     localStorage.setItem('queue', JSON.stringify(queue));
