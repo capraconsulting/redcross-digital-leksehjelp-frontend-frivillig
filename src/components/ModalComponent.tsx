@@ -11,15 +11,14 @@ interface IProps {
 
 const ModalComponent = (props: IProps) => {
   const { isPublish, isDelete, isModalOpen, text } = props;
-
   return (
     <div className={`modal`}>
       <p>{text}</p>
-      <button className="modal--close-button" onClick={() => isModalOpen(false)}>x</button>
-      {isPublish || isDelete &&
+      <button className="leksehjelp--button-close" onClick={() => isModalOpen(false)}>x</button>
+      {(isPublish || isDelete) &&
         <div className="modal--button-container">
-          <button className="leksehjelp--button-danger">{isDelete ? "Ikke publiser" : "Slett"}</button>
-          <button className="leksehjelp--button">{isPublish ? "Publiser svaret" : "Avbryt"}</button>
+          <button className="leksehjelp--button-warning">{isPublish ? "Ikke publiser" : "Slett"}</button>
+          <button className="leksehjelp--button-success">{isPublish ? "Publiser svaret" : "Avbryt"}</button>
         </div>
       }
     </div>

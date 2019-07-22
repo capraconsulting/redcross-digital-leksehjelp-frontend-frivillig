@@ -26,8 +26,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
   });
-  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
-  const [isPublish, setIsPublish] = React.useState<boolean>(false);
+  const [modalVisible, setModalVisible] = React.useState<boolean>(true);
+  const [isPublish, setIsPublish] = React.useState<boolean>(true);
   const [modalText, setModalText] = React.useState('' as string);
   const [feedbackQuestions, setFeedbackQuestions] = React.useState(
     [] as IFeedback[],
@@ -40,7 +40,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const createBody = () => {
     const { answerText, title } = question;
-    console.log(title)
+    const { type } = props;
     const data = {
       questionId: props.id,
       answerText,
@@ -51,6 +51,11 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onSend = async () => {
     const { type, history } = props;
+    if (type === 'approval' && question.title === '') {
+      setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet')
+      setModalVisible(true)
+    } else {
+
     const data = createBody();
     const isSaved = await saveAnswer(data)
       .then(() => true)
@@ -76,6 +81,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             'Noe gikk galt.'
           )
         });
+    }
   };
 
   const onSave = event => {
@@ -94,6 +100,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onPublishQuestion = async () => {
     const { id } = question;
+    const { history } = props;
     publishQuestion(id)
       .then(() => {
         setModalText(
