@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { publishQuestion } from '../services/api-service';
 
 interface IProps {
@@ -9,20 +10,42 @@ interface IProps {
   isModalOpen(value: boolean);
 }
 
-const ModalComponent = (props: IProps) => {
-  const { isPublish, isDelete, isModalOpen, text } = props;
+const ModalComponent = (props: IProps & RouteComponentProps) => {
+  const { isPublish, isDelete, isModalOpen, text, id, history } = props;
+  const [modalText, setModalText] = useState<string>(text);
+  const [isVisible, setIsVisible] = useState<boolean | undefined>(isPublish || isDelete);
+
+  const onPublishQuestion = event => {
+    if (!id) return
+    publishQuestion(id)
+      .then(() => {
+        setModalText('Svaret er nå publisert!')
+        setIsVisible(false)
+      })
+      .catch(() => {
+        setIsVisible(false)
+        setModalText(
+          'Noe gikk galt.'
+        )
+      });
+    setTimeout(() =>
+      history.goBack()
+      , 3000);
+    event.preventDefault()
+  }
+
   return (
     <div className={`modal`}>
-      <p>{text}</p>
+      <p>{modalText}</p>
       <button className="leksehjelp--button-close" onClick={() => isModalOpen(false)}>x</button>
-      {(isPublish || isDelete) &&
+      {isVisible &&
         <div className="modal--button-container">
           <button className="leksehjelp--button-warning">{isPublish ? "Ikke publiser" : "Slett"}</button>
-          <button className="leksehjelp--button-success">{isPublish ? "Publiser svaret" : "Avbryt"}</button>
+          <button className="leksehjelp--button-success" onClick={(e) => onPublishQuestion(e)}>{isPublish ? "Publiser svaret" : "Avbryt"}</button>
         </div>
       }
     </div>
   )
 }
 
-export default ModalComponent;
+export default withRouter(ModalComponent);

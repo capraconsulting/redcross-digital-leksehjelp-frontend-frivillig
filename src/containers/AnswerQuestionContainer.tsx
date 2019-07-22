@@ -5,7 +5,6 @@ import {
   saveAnswer,
   getFeedbackList,
   deleteFeedback,
-  publishQuestion,
 } from '../services/api-service';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -26,8 +25,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
   });
-  const [modalVisible, setModalVisible] = React.useState<boolean>(true);
-  const [isPublish, setIsPublish] = React.useState<boolean>(true);
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+  const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState('' as string);
   const [feedbackQuestions, setFeedbackQuestions] = React.useState(
     [] as IFeedback[],
@@ -65,7 +64,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         .then(() => {
           if (type === 'approval') {
             setModalText(
-              'Svaret er nå sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
+              'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?'
             )
             setIsPublish(true)
           } else {
@@ -98,27 +97,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     event.preventDefault();
   };
 
-  const onPublishQuestion = async () => {
-    const { id } = question;
-    const { history } = props;
-    publishQuestion(id)
-      .then(() => {
-        setModalText(
-          'Svaret er nå lagret.'
-        )
-        setIsPublish(false)
-        setModalVisible(true)
-        setTimeout(() =>
-          history.goBack()
-          , 2000);
-      })
-      .catch(() => {
-        setModalText(
-          'Noe gikk galt.'
-        )
-      });
-  }
-
   const onDeleteFeedback = (event, value: number) => {
     event.preventDefault();
     const id = value.toString();
@@ -140,7 +118,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   return (
     <div>
       {
-        modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} />
+        modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
       }
       <div className="question-answer">
         <div className="question-answer--container">
