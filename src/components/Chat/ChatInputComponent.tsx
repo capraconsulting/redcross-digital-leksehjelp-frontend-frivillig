@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { createTextMessage } from '../../services';
-import { ISocketFile } from '../../interfaces';
-import { addMessage } from '../../reducers';
+import { createAvailableChatMessage, createJoinMessage, createTextMessage } from '../../services';
+import { ISocketFile, IStudent } from '../../interfaces';
+import { addMessage, addNewChat } from '../../reducers';
 import { SocketContext } from '../../providers';
 
 interface IProps {
@@ -27,6 +27,23 @@ const ChatInputComponent = (props: IProps) => {
       dispatchChats(addMessage(textMessage));
     }
   };
+
+  const onAddUser = event => {
+    event.preventDefault();
+    const socketMessage = createJoinMessage(
+      message,
+      roomID,
+    );
+
+    socketSend(socketMessage);
+  }
+
+  const getAvailableChat = event => {
+    event.preventDefault();
+    const socketMessage = createAvailableChatMessage();
+    socketSend(socketMessage);
+
+  }
 
   const onFileUploadClick = () => {
     const fileInput = document.getElementById('msg-file-input');
@@ -92,6 +109,8 @@ const ChatInputComponent = (props: IProps) => {
             alt="Send"
           />
         </button>
+        <button onClick={getAvailableChat}> Se alle tilgjengelige </button>
+        <button onClick={onAddUser}> Legg til bruker </button>
       </form>
     </div>
   );

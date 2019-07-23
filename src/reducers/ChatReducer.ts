@@ -22,6 +22,20 @@ export const setChatFromLocalStorage = createAction('SET_ALL', cb => {
   return (chats: IChat[]) => cb({ chats });
 });
 
+export const joinChatAction = createAction('JOIN_CHAT', cb => {
+  return (student: IStudent, roomID: string) => cb({student, roomID});
+});
+
+const joinChatHandler = (state: IChat[], action: IAction) => {
+  const newChat: IChat = {
+    student: action.payload.student,
+    messages: [],
+    roomID: action.payload.roomID,
+    unread: 0,
+  };
+  return [...state, newChat];
+};
+
 export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addRoomID, (state: IChat[], action: IAction) => {
     const roomToSetID = state.find(
@@ -62,4 +76,5 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   })
   .handleAction(setChatFromLocalStorage, (state: IChat[], action: IAction) => {
     return action.payload.chats;
-  });
+  })
+  .handleAction(joinChatAction, joinChatHandler);

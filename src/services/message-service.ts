@@ -6,9 +6,10 @@ import {
   ISocketFile,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
+import { IJoin } from '../interfaces/IJoin';
 
 const createMessage = (
-  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
+  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | IJoin | {},
   type: string,
 ): ISocketMessage => {
   return {
@@ -20,6 +21,20 @@ const createMessage = (
 export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, MESSAGE_TYPES.QUEUE_LIST);
 };
+
+export const createAvailableChatMessage = (): ISocketMessage => {
+  return createMessage({}, MESSAGE_TYPES.AVAILABLE_CHAT);
+}
+export const createJoinMessage = (
+  uniqueID: string,
+  roomID: string,
+): ISocketMessage => {
+  const generateJoinMessage: IJoin = {
+    uniqueID,
+    roomID
+  };
+  return createMessage(generateJoinMessage, MESSAGE_TYPES.JOIN_CHAT);
+}
 
 export const createGenerateRoomMessage = (
   uniqueID: string,
