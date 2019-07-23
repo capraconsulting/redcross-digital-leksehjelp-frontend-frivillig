@@ -36,7 +36,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
     [],
   );
-  const { id, type, history } = props;
+  const { questionText, title, answerText, isPublic } = question;
+  const { type, id, history } = props;
 
   React.useEffect(() => {
     getQuestion(id).then(setQuestion);
@@ -44,7 +45,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   }, []);
 
   const createBody = () => {
-    const { answerText, title, questionText } = question;
     const data = {
       questionId: id,
       answerText,
@@ -55,7 +55,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const onSend = async () => {
-    if (question.title === '') {
+    if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
       setModalVisible(true);
     } else {
@@ -66,12 +66,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       isSaved &&
         postAnswer(data, type)
           .then(() => {
-            if (type === 'approval' && question.isPublic) {
+            if (type === 'approval' && isPublic) {
               setModalText(
                 'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
               );
               setIsPublish(true);
-            } else if (type === 'approval' && !question.isPublic) {
+            } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
               setTimeout(() => history.goBack(), 2000);
             } else {
