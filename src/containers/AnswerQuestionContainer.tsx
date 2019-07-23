@@ -28,20 +28,19 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   });
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
-  const [modalText, setModalText] = React.useState('' as string);
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
-    [] as IFeedback[],
-  );
+  const [modalText, setModalText] = React.useState<string>('');
+  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>([]);
+  const { questionText, title, answerText, isPublic } = question;
+  const { type, id, history } = props;
 
   React.useEffect(() => {
-    getQuestion(props.id).then(setQuestion);
-    getFeedbackList(props.id).then(setFeedbackQuestions);
+    getQuestion(id).then(setQuestion);
+    getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
   const createBody = () => {
-    const { answerText, title, questionText } = question;
     const data = {
-      questionId: props.id,
+      questionId: id,
       answerText,
       title,
       questionText,
@@ -50,8 +49,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   const onSend = async () => {
-    const { type, history } = props;
-    if (question.title === '') {
+    if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
       setModalVisible(true);
     } else {
@@ -62,12 +60,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       isSaved &&
         postAnswer(data, type)
           .then(() => {
-            if (type === 'approval' && question.isPublic) {
+            if (type === 'approval' && isPublic) {
               setModalText(
                 'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
               );
               setIsPublish(true);
-            } else if (type === 'approval' && !question.isPublic) {
+            } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
               setTimeout(() => history.goBack(), 2000);
             } else {
@@ -113,8 +111,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       });
   };
 
-  const { questionText, title, answerText } = question;
-  const { type, id } = props;
+
   return (
     <div>
       {modalVisible && (
