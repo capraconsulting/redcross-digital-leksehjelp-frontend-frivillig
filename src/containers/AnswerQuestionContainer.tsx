@@ -117,8 +117,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       });
   };
 
-  const { questionText, title, answerText } = question;
-
   const onPublishQuestion = event => {
     if (!id) return;
     publishQuestion(id)
