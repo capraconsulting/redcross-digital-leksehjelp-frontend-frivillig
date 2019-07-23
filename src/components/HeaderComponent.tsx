@@ -10,7 +10,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
-  const { activeState, setActiveState } = useContext(StateContext);
+  const { activeState, setActiveState, setLoggedInState } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -77,7 +77,9 @@ const HeaderComponent = (props: RouteComponentProps) => {
           >
             Admin
           </li>
-          <li className={`header--list-item ${path === 'logout' && 'active'}`}>
+          <li className={`header--list-item ${path === 'logout' && 'active'}`}
+              onClick={() => setLoggedInState(true)}
+          >
             Logg ut
           </li>
         </ul>

@@ -65,37 +65,6 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   }, []);
 
-  // This keeps state persistent while refreshing page (except for the socket)
-  useEffect(() => {
-    localStorage.setItem('queue', JSON.stringify(queue));
-  }, [queue]);
-  useEffect(() => {
-    localStorage.setItem('uniqueID', uniqueID);
-  }, [uniqueID]);
-  useEffect(() => {
-    localStorage.setItem('chats', JSON.stringify(chats));
-  }, [chats]);
-
-  /*window.onload = () => {
-    // Set state if stuff in localstorage
-    const queueFromLocalStorage = localStorage.getItem('queue');
-    const uniqueIDFromLocalStorage = localStorage.getItem('uniqueID');
-    const chatsFromLocalStorage = localStorage.getItem('chats');
-
-    if (queueFromLocalStorage) {
-      setQueue(JSON.parse(queueFromLocalStorage));
-    }
-    if (uniqueIDFromLocalStorage) {
-      setUniqueID(uniqueIDFromLocalStorage);
-    }
-    if (chatsFromLocalStorage) {
-      dispatchChats(setChatFromLocalStorage(JSON.parse(chatsFromLocalStorage)));
-    }
-  };
-
-  window.onclose = () => {
-    localStorage.clear();
-  };*/
   const socketSend = (message: ISocketMessage | IGetMessage) => {
     getSocket().send(JSON.stringify(message));
   };
