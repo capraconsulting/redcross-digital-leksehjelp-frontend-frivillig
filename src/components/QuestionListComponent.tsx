@@ -24,8 +24,9 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
             <h4>{subject}</h4>
             <p>Klasse: {studentGradeFormat(studentGrade)}</p>
             <p>Sendt inn: {dateStringFormat(questionDate)}</p>
-            <div className="question--list-button">
+            <div className="question--list-button-container">
               <button
+                className="leksehjelp--button-success"
                 onClick={() => props.history.push(`questions/${id}/${type}`)}
               >
                 {' '}

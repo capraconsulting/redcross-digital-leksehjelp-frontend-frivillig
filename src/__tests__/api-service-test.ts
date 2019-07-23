@@ -15,17 +15,17 @@ describe('api-service', () => {
     const question = await getQuestion('1');
     expect(question.id).toEqual(1);
   });
-  it('TEST: getQuestionList \n Should create request on the form: "questions/unanswered", input: unanswered', async () => {
+  it('TEST: getQuestionList \n Should create request on the form: "questions/unanswered", input: inbox', async () => {
     const url = await getQuestionList('inbox');
     expect(url).toEqual('questions/unanswered');
   });
-  it('TEST: getQuestionList \n Should create request on the form: "questions/edit", input: edit', async () => {
+  it('TEST: getQuestionList \n Should create request on the form: "questions/inprogress", input: started', async () => {
     const url = await getQuestionList('started');
-    expect(url).toEqual('questions/edit');
+    expect(url).toEqual('questions/inprogress');
   });
-  it('TEST: getQuestionList \n Should create request on the form: "questions/approve", input: approve', async () => {
+  it('TEST: getQuestionList \n Should create request on the form: "questions/approve", input: approval', async () => {
     const url = await getQuestionList('approval');
-    expect(url).toEqual('questions/approve');
+    expect(url).toEqual('questions/unapproved');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions", input: test', async () => {
     const url = await getQuestionList('test');
@@ -44,11 +44,17 @@ describe('api-service', () => {
       questionId: ':id',
       answerText: 'answer',
       title: 'title',
+      questionText: 'question',
     });
 
     const call = mocked(mock.post).mock.calls[0];
 
     expect(call[0]).toEqual('questions/:id/edit');
-    expect(call[1]).toEqual({ answerText: 'answer' });
+    expect(call[1]).toEqual({
+      questionId: ':id',
+      answerText: 'answer',
+      title: 'title',
+      questionText: 'question',
+    });
   });
 });
