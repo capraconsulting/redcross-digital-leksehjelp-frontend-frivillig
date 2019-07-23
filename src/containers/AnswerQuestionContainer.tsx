@@ -29,7 +29,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState<string>('');
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>([]);
+  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
+    [],
+  );
   const { questionText, title, answerText, isPublic } = question;
   const { type, id, history } = props;
 
@@ -110,7 +112,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setModalVisible(true);
       });
   };
-
 
   return (
     <div>
