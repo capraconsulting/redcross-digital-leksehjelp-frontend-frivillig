@@ -18,6 +18,7 @@ const ChatHeaderComponent = (props: IProps) => {
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
     socketSend(createLeaveChatMessage(roomID, uniqueID));
+    setIsModalOpen(false);
   };
 
   const handleCloseModal = (): void => {

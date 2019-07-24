@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActiveChats, ChatInput, ChatBody, ChatHeader } from '../components';
+import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 
