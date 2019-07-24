@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    env_file: .env
+    build: .
+    image: react-cli
+    container_name: react-cli
+    expose:
+      - ${REACT_APP_PORT}
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - .:/app
+    command: npm run start

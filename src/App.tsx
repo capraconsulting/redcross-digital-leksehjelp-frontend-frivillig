@@ -15,9 +15,8 @@ const App = () => {
   };
 
   const authenticatedFunction = logout => {
-    console.log("AUTH")
+    //console.log(sessionStorage)
     if (loggedInState && accountInfo) {
-      console.log("AUTH")
       logout();
       return logout;
     } return false;
