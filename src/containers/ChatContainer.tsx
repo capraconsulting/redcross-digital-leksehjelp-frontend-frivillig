@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ChatBodyComponent from '../components/Chat/ChatBodyComponent';
-import ChatHeaderComponent from '../components/Chat/ChatHeaderComponent';
-import ChatInputComponent from '../components/Chat/ChatInputComponent';
-
-import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
+import { ActiveChats, ChatInput, ChatBody, ChatHeader } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 
@@ -29,21 +25,13 @@ const ChatContainer = () => {
     return (
       <div className="chat-container">
         <div className="chat-list">
-          <ActiveChatsComponent
-            showMessages={showMessages}
-            availableChats={chats}
-          />
+          <ActiveChats showMessages={showMessages} availableChats={chats} />
         </div>
         <div className="chat">
-          {chats && <ChatHeaderComponent activeChat={chats[activeIndex]} />}
+          {chats && <ChatHeader activeChat={chats[activeIndex]} />}
+          {chats && <ChatBody messages={chats[activeIndex].messages} />}
           {chats && (
-            <ChatBodyComponent messages={chats[activeIndex].messages} />
-          )}
-          {chats && (
-            <ChatInputComponent
-              uniqueID={uniqueID}
-              roomID={chats[activeIndex].roomID}
-            />
+            <ChatInput uniqueID={uniqueID} roomID={chats[activeIndex].roomID} />
           )}
         </div>
       </div>
