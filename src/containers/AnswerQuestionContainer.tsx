@@ -147,7 +147,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         <Modal
           content={modalText}
           successButtonText={isPublish ? 'Publiser svaret' : 'Avbryt'}
-          warningButtonText={isPublish ? 'Ikke publiser' : 'Slett'}
+          successButtonText={'Publiser svaret'}
+          warningButtonText={'Ikke publiser'}
           successCallback={onPublishQuestion}
           warningCallback={onDontPublish}
           hideButtons={hideModalButtons}
