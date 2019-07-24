@@ -56,7 +56,7 @@ const QuestionContainer = () => {
       <div className="container--header">
         <h3>Spørsmål</h3>
       </div>
-      {!apiFail &&
+      {!apiFail? (
         <div className="question--container">
         <div className="question--container-inbox">
         <h5>Innboks</h5>
@@ -81,8 +81,10 @@ const QuestionContainer = () => {
         <FeedbackListComponent feedbackList={feedbackQuestions} />
         </div>
         </div>
+      ) : (
+        <p>Noe gikk galt</p>
+      )
       }
-      <p>Noe gikk galt</p>
     </div>
   );
 };
