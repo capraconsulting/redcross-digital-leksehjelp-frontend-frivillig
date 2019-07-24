@@ -7,7 +7,7 @@ import {
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 
-const {QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT} = MESSAGE_TYPES;
+const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT } = MESSAGE_TYPES;
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
