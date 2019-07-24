@@ -143,9 +143,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   return (
     <div>
-      {/*{
-        modalVisible && <Modal text={modalText}  isPublish={isPublish} isModalOpen={setModalVisible} id={id}/>
-      }*/}
       {modalVisible && (
         <Modal
           content={modalText}
