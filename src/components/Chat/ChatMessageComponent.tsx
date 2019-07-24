@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { ITextMessage } from '../../interfaces';
 import { timeStringFromDate } from '../../services';
+import { SocketContext } from '../../providers';
 
 interface IProps {
   message: ITextMessage;
@@ -8,16 +9,20 @@ interface IProps {
 
 const ChatMessageComponent = (props: IProps) => {
   const { message, author } = props.message;
+  const {name} = useContext(SocketContext);
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
-  const authorType = author === 'frivillig' ? 'self' : 'other';
-
+  console.log(author);
+  const authorType = author === name ? 'self' : 'other';
+  const time = useMemo(() => new Date().getHours() + ':' + new Date().getMinutes(), []);
   const downloadFile = file => {
     const downloadLink = document.createElement('a');
     downloadLink.href = String(file.dataURL);
     downloadLink['download'] = file.name;
     downloadLink.click();
   };
+
+
   const renderMessage = () => {
     if (typeof message === 'string') {
       return (
@@ -52,7 +57,7 @@ const ChatMessageComponent = (props: IProps) => {
   return (
     <div className="chat-message">
       <p className={`chat-message--author-${authorType}`}>
-        <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
+        <span>{authorType === 'self' ? 'Deg' : author}</span>, kl.{time}
         <span>
           {props.message.datetime && timeStringFromDate(props.message.datetime)}
         </span>

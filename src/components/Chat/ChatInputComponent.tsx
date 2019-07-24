@@ -7,12 +7,13 @@ import { SocketContext } from '../../providers';
 interface IProps {
   uniqueID: string;
   roomID: string;
+  student: IStudent;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend } = useContext(SocketContext);
-  const { uniqueID, roomID } = props;
+  const { dispatchChats, socketSend, name} = useContext(SocketContext);
+  const { uniqueID, roomID, student} = props;
 
   const onSendTextMessage = event => {
     event.preventDefault();
@@ -21,6 +22,7 @@ const ChatInputComponent = (props: IProps) => {
         message,
         uniqueID,
         roomID,
+        name,
       );
       setMessage('');
       socketSend(socketMessage);
@@ -33,6 +35,7 @@ const ChatInputComponent = (props: IProps) => {
     const socketMessage = createJoinMessage(
       message,
       roomID,
+      student
     );
 
     socketSend(socketMessage);
@@ -65,6 +68,7 @@ const ChatInputComponent = (props: IProps) => {
         socketFile,
         uniqueID,
         roomID,
+        name,
       );
       socketSend(socketMessage);
       dispatchChats(addMessage(textMessage));

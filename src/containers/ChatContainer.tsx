@@ -26,7 +26,6 @@ const ChatContainer = () => {
   };
 
   if (chats.length >= 1) {
-    console.log(chats.length);
     return (
       <div className="chat-container">
         <div className="chat-list">
@@ -43,12 +42,15 @@ const ChatContainer = () => {
             />
           )}
           {chats && (
-            <ChatBodyComponent messages={chats[activeIndex].messages} />
+            <ChatBodyComponent
+              messages={chats[activeIndex].messages}
+            />
           )}
           {chats && (
             <ChatInputComponent
               uniqueID={uniqueID}
               roomID={chats[activeIndex].roomID}
+              student={chats[activeIndex].student}
             />
           )}
         </div>
