@@ -6,11 +6,14 @@ import ChatInputComponent from '../components/Chat/ChatInputComponent';
 import ActiveChatsComponent from '../components/Chat/ActiveChatsComponent';
 import { readMessages } from '../reducers';
 import { SocketContext } from '../providers';
+import AvailableVolunteersComponent from '../components/Chat/AvailableVolunteersComponent';
 
 // main component
 const ChatContainer = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { uniqueID, chats, dispatchChats } = useContext(SocketContext);
+  const { uniqueID, chats, dispatchChats, availableVolunteers } = useContext(SocketContext);
+  const [popup, setPopup] = useState<boolean>(false);
+
 
   useEffect(() => {
     // Auto scroll down in chat
@@ -25,8 +28,22 @@ const ChatContainer = () => {
     dispatchChats(readMessages(chats[activeIndex].roomID));
   };
 
+  const func = () => {
+    setPopup(true);
+  }
+
+  const close = () => {
+    setPopup(false);
+  }
+
+  if(popup){
+    return(
+      <AvailableVolunteersComponent
+        availableVolunteers={availableVolunteers}
+        closePopup={close}/>
+    )
+  }
   if (chats.length >= 1) {
-    console.log(chats.length);
     return (
       <div className="chat-container">
         <div className="chat-list">
@@ -43,12 +60,16 @@ const ChatContainer = () => {
             />
           )}
           {chats && (
-            <ChatBodyComponent messages={chats[activeIndex].messages} />
+            <ChatBodyComponent
+              messages={chats[activeIndex].messages}
+            />
           )}
           {chats && (
             <ChatInputComponent
               uniqueID={uniqueID}
               roomID={chats[activeIndex].roomID}
+              student={chats[activeIndex].student}
+              popUp={func}
             />
           )}
         </div>

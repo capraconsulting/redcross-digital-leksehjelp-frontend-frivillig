@@ -42,6 +42,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       questionId: id,
       answerText,
       title,
+      questionText
     };
     postAnswer(data, type).then(() => {
       setModalText(
@@ -62,6 +63,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       questionId: id,
       answerText,
       title,
+      questionText,
     };
     saveAnswer(data)
       .then(() => {

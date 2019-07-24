@@ -19,6 +19,10 @@ export const SocketContext = createContext({
   setQueue(state: IStudent[]) {},
 
   socketSend(message: ISocketMessage | IGetMessage): void {},
+
+  name: '' as string,
+
+  availableVolunteers: [] as string[],
 });
 
 let socket;
@@ -34,6 +38,8 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
+  const [name, setName] = useState<string>('');
+  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
 
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
@@ -56,15 +62,15 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.CONNECTION) {
       setUniqueID(payload['uniqueID']);
+      setName(Math.random().toString(36).substring(7));
     } else if (msgType === MESSAGE_TYPES.QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     } else if(msgType === MESSAGE_TYPES.JOIN_CHAT){
-      console.log("Noen ville legge meg til i chatten!");
-      console.log(payload['roomID']);
-      const student:IStudent = {nickname: "", course: "", grade: "", uniqueID: "", introText:""};
+      const student:IStudent = payload['studentInfo'];
       const action = joinChatAction(student, payload['roomID'])
       dispatchChats(action);
-
+    } else if(msgType === MESSAGE_TYPES.AVAILABLE_CHAT){
+      setAvailableVolunteers(payload['queueMembers']);
     }
   };
 
@@ -108,7 +114,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
   };
   return (
     <SocketContext.Provider
-      value={{ uniqueID, chats, dispatchChats, queue, setQueue, socketSend }}
+      value={{ uniqueID, chats, dispatchChats, queue, setQueue, socketSend, name, availableVolunteers}}
     >
       {children}
     </SocketContext.Provider>

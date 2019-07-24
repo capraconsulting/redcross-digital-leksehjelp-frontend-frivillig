@@ -16,7 +16,6 @@ const ActiveChatsComponent = (props: IProps) => {
 
   const activeChatList = () =>
     props.availableChats.map((chat, index) => {
-      console.log('hei');
       return (
         <div
           onClick={() => onClickHandler(index)}

@@ -3,7 +3,7 @@ import {
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
-  ISocketFile,
+  ISocketFile, IStudent,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 import { IJoin } from '../interfaces/IJoin';
@@ -28,10 +28,12 @@ export const createAvailableChatMessage = (): ISocketMessage => {
 export const createJoinMessage = (
   uniqueID: string,
   roomID: string,
+  studentInfo: IStudent,
 ): ISocketMessage => {
   const generateJoinMessage: IJoin = {
     uniqueID,
-    roomID
+    roomID,
+    studentInfo
   };
   return createMessage(generateJoinMessage, MESSAGE_TYPES.JOIN_CHAT);
 }
@@ -59,12 +61,13 @@ export const createTextMessage = (
   message: string | ISocketFile,
   uniqueID: string,
   roomID: string,
+  author: string,
 ): {
   textMessage: ITextMessage;
   socketMessage: ISocketMessage;
 } => {
   const textMessage: ITextMessage = {
-    author: 'frivillig',
+    author,
     uniqueID,
     roomID,
     message,

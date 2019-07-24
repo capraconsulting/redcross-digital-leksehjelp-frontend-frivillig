@@ -3,16 +3,20 @@ import { createAvailableChatMessage, createJoinMessage, createTextMessage } from
 import { ISocketFile, IStudent } from '../../interfaces';
 import { addMessage, addNewChat } from '../../reducers';
 import { SocketContext } from '../../providers';
+import AvailableVolunteersComponent from './AvailableVolunteersComponent';
 
 interface IProps {
   uniqueID: string;
   roomID: string;
+  student: IStudent;
+  popUp(): any;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend } = useContext(SocketContext);
-  const { uniqueID, roomID } = props;
+  const { dispatchChats, socketSend, name, availableVolunteers} = useContext(SocketContext);
+  const { uniqueID, roomID, student} = props;
+
 
   const onSendTextMessage = event => {
     event.preventDefault();
@@ -21,6 +25,7 @@ const ChatInputComponent = (props: IProps) => {
         message,
         uniqueID,
         roomID,
+        name,
       );
       setMessage('');
       socketSend(socketMessage);
@@ -33,6 +38,7 @@ const ChatInputComponent = (props: IProps) => {
     const socketMessage = createJoinMessage(
       message,
       roomID,
+      student
     );
 
     socketSend(socketMessage);
@@ -42,7 +48,7 @@ const ChatInputComponent = (props: IProps) => {
     event.preventDefault();
     const socketMessage = createAvailableChatMessage();
     socketSend(socketMessage);
-
+    props.popUp();
   }
 
   const onFileUploadClick = () => {
@@ -65,6 +71,7 @@ const ChatInputComponent = (props: IProps) => {
         socketFile,
         uniqueID,
         roomID,
+        name,
       );
       socketSend(socketMessage);
       dispatchChats(addMessage(textMessage));
@@ -73,6 +80,7 @@ const ChatInputComponent = (props: IProps) => {
   };
 
   return (
+
     <div className="message-form-container">
       <form className="message-form">
         <input
