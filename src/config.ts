@@ -3,6 +3,7 @@ export const CHAT_URL = 'ws://localhost:3002/events';
 export const HEADERS = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
+  Authorization: `Bearer ${sessionStorage.getItem('msal.idtoken')}`,
 };
 
 export const MESSAGE_TYPES = {

@@ -52,6 +52,8 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "dotenv": "^8.0.0",
+    "dotenv-webpack": "^1.7.0",
     "react": "16.8.6",
     "react-aad-msal": "^0.4.9",
     "react-dom": "16.8.6",

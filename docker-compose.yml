@@ -5,10 +5,8 @@ services:
     build: .
     image: react-cli
     container_name: react-cli
-    expose:
-      - ${REACT_APP_PORT}
     ports:
-      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+      - "127.0.0.1:${REACT_APP_PORT}:${REACT_APP_PORT}"
     volumes:
       - .:/app
     command: npm run start

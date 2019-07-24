@@ -13,6 +13,6 @@ RUN npm install
 
 COPY . /app
 
-EXPOSE $REACT_APP_PORT
+#EXPOSE $REACT_APP_PORT
 
-CMD ["npm", "start", "-s"]
+CMD ["npm", "start"]

@@ -22,6 +22,8 @@ const App = () => {
     } return false;
   };
 
+  console.log(process.env.AAD_APP_CLIENT_ID)
+
   return (
     <div>
     <AzureAD
@@ -29,8 +31,8 @@ const App = () => {
         new MsalAuthProviderFactory(
           {
             auth: {
-              authority: process.env.REACT_APP_AUTHORITY || '',
-              clientId: process.env.REACT_APP_AAD_APP_CLIENT_ID || '',
+              authority: process.env.AUTHORITY,
+              clientId: process.env.AAD_APP_CLIENT_ID || '',
               redirectUri: window.location.origin,
               postLogoutRedirectUri: window.location.origin,
             },

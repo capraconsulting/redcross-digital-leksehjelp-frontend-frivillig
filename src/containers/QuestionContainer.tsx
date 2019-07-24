@@ -24,6 +24,8 @@ const QuestionContainer = () => {
     [] as IFeedbackQuestion[],
   );
 
+  const [ apiFail, setApiFail ] = React.useState<boolean>(false)
+
   const setFeedback = async () => {
     const feedbackList = await getFeedbackList().then(feedbackList =>
       feedbackList.map(
@@ -39,13 +41,13 @@ const QuestionContainer = () => {
           }),
       ),
     );
-    Promise.all(feedbackList).then(setFeedbackQuestions);
+    Promise.all(feedbackList).then(setFeedbackQuestions).catch(() => setApiFail(true));
   };
 
   React.useEffect(() => {
-    getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions);
-    getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions);
-    getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions);
+    getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions).catch(() => setApiFail(true));
+    getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions).catch(() => setApiFail(true));
+    getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions).catch(() => setApiFail(true));
     setFeedback();
   }, []);
 
@@ -54,30 +56,33 @@ const QuestionContainer = () => {
       <div className="container--header">
         <h3>Spørsmål</h3>
       </div>
-      <div className="question--container">
+      {!apiFail &&
+        <div className="question--container">
         <div className="question--container-inbox">
-          <h5>Innboks</h5>
-          <QuestionListComponent questionList={inboxQuestions} type="inbox" />
+        <h5>Innboks</h5>
+        <QuestionListComponent questionList={inboxQuestions} type="inbox" />
         </div>
         <div className="question--container-started">
-          <h5>Påbegynt</h5>
-          <QuestionListComponent
-            questionList={startedQuestions}
-            type="started"
-          />
+        <h5>Påbegynt</h5>
+        <QuestionListComponent
+        questionList={startedQuestions}
+        type="started"
+        />
         </div>
         <div className="question--container-aproval">
-          <h5>Til godkjenning</h5>
-          <QuestionListComponent
-            questionList={approvalQuestions}
-            type="approval"
-          />
+        <h5>Til godkjenning</h5>
+        <QuestionListComponent
+        questionList={approvalQuestions}
+        type="approval"
+        />
         </div>
         <div className="question--container-feedback">
-          <h5>Tilbakemeldinger</h5>
-          <FeedbackListComponent feedbackList={feedbackQuestions} />
+        <h5>Tilbakemeldinger</h5>
+        <FeedbackListComponent feedbackList={feedbackQuestions} />
         </div>
-      </div>
+        </div>
+      }
+      <p>Noe gikk galt</p>
     </div>
   );
 };
