@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { createTextMessage } from '../../services';
 import { ISocketFile } from '../../interfaces';
-import { addMessage } from '../../reducers';
+import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 
 interface IProps {
@@ -24,7 +24,7 @@ const ChatInputComponent = (props: IProps) => {
       );
       setMessage('');
       socketSend(socketMessage);
-      dispatchChats(addMessage(textMessage));
+      dispatchChats(addMessageAction(textMessage));
     }
   };
 
@@ -50,7 +50,7 @@ const ChatInputComponent = (props: IProps) => {
         roomID,
       );
       socketSend(socketMessage);
-      dispatchChats(addMessage(textMessage));
+      dispatchChats(addMessageAction(textMessage));
     };
     fr.readAsDataURL(file);
   };
