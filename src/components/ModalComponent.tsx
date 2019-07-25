@@ -10,10 +10,10 @@ interface IProps {
   handleClose(): void;
   hideButtons?: boolean;
   inputFields?: {
-    inputText: string
-    buttonText: string
+    inputText: string;
+    buttonText: string;
+    cb(): void;
   }[];
-  
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
@@ -33,8 +33,17 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
       return inputFields.map((inputField, index) => {
         return (
           <div className="input-field" key={index}>
-            <input className="text" type="text" defaultValue={inputField.inputText} />
-            <button className="button leksehjelp--button-success">{inputField.buttonText}</button>
+            <input
+              className="text"
+              type="text"
+              defaultValue={inputField.inputText}
+            />
+            <button
+              onClick={() => inputField.cb()}
+              className="button leksehjelp--button-success"
+            >
+              {inputField.buttonText}
+            </button>
           </div>
         );
       });

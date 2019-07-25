@@ -14,27 +14,14 @@ import {
 } from './containers';
 
 const Routes = () => {
+
+  const tf = (str: string) => {
+    console.log(str);
+  };
+
   return (
     <Router>
       <Header />
-      <Modal
-        content="TestContent"
-        successButtonText="success"
-        successCallback={e => console.log('success')}
-        warningButtonText="warning"
-        warningCallback={e => console.log('warning')}
-        handleClose={() => console.log('hei')}
-        inputFields={[
-          { buttonText: 'oneB', inputText: 'oneT' },
-          { buttonText: 'twoB', inputText: 'twoT' },
-          { buttonText: 'oneB', inputText: 'oneT' },
-          { buttonText: 'twoB', inputText: 'twoT' },
-          { buttonText: 'oneB', inputText: 'oneT' },
-          { buttonText: 'twoB', inputText: 'twoT' },
-          { buttonText: 'oneB', inputText: 'oneT' },
-          { buttonText: 'twoB', inputText: 'twoT' },
-        ]}
-      />
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
