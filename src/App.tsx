@@ -20,7 +20,8 @@ const App = () => {
       </SocketProvider>
     )
   }
-
+  const { AUTHORITY, AAD_APP_CLIENT_ID } = process.env;
+  const { origin } = window.location;
   return (
     <div>
       <AzureAD
@@ -28,10 +29,10 @@ const App = () => {
           new MsalAuthProviderFactory(
             {
               auth: {
-                authority: process.env.AUTHORITY,
-                clientId: process.env.AAD_APP_CLIENT_ID || '',
-                redirectUri: window.location.origin,
-                postLogoutRedirectUri: window.location.origin,
+                authority: AUTHORITY,
+                clientId: AAD_APP_CLIENT_ID || '',
+                redirectUri: origin,
+                postLogoutRedirectUri: origin,
               },
               cache: {
                 cacheLocation: 'sessionStorage',
