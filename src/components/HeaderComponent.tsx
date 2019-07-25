@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { StateContext } from '../StateProvider';
 
-const HeaderComponent = (props: RouteComponentProps) => {
+interface IProps {
+  onLogout(): void;
+}
+
+const HeaderComponent = (props: RouteComponentProps & IProps) => {
   const [path, setPath] = useState('' as string);
 
   const [subPath, setSubPath] = useState('' as string);
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
-  const { activeState, setActiveState, setLoggedInState } = useContext(
-    StateContext,
-  );
+  const { activeState, setActiveState } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -26,6 +28,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const onSlide = (): void => {
     setActiveState(!activeState);
+  };
+
+  const onLogout = (): void => {
+    props.onLogout();
   };
 
   useEffect(() => {
@@ -81,7 +87,7 @@ const HeaderComponent = (props: RouteComponentProps) => {
           </li>
           <li
             className={`header--list-item ${path === 'logout' && 'active'}`}
-            onClick={() => setLoggedInState(true)}
+            onClick={onLogout}
           >
             Logg ut
           </li>

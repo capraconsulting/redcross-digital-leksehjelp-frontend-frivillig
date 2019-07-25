@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   getQuestionList,
   getQuestion,
@@ -8,23 +8,15 @@ import { QuestionListComponent, FeedbackListComponent } from '../components';
 import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [inboxQuestions, setInboxQuestions] = React.useState(
-    [] as IQuestionMeta[],
+  const [inboxQuestions, setInboxQuestions] = useState<IQuestionMeta[]>([]);
+  const [startedQuestions, setStartedQuestions] = useState<IQuestionMeta[]>([]);
+  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestionMeta[]>(
+    [],
   );
-
-  const [startedQuestions, setStartedQuestions] = React.useState(
-    [] as IQuestionMeta[],
-  );
-
-  const [approvalQuestions, setAnsweredQuestions] = React.useState(
-    [] as IQuestionMeta[],
-  );
-
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
-    [] as IFeedbackQuestion[],
-  );
-
-  const [apiFail, setApiFail] = React.useState<boolean>(false);
+  const [feedbackQuestions, setFeedbackQuestions] = useState<
+    IFeedbackQuestion[]
+  >([]);
+  const [apiFail, setApiFail] = useState<boolean>(false);
 
   const setFeedback = async () => {
     const feedbackList = await getFeedbackList().then(feedbackList =>
@@ -46,7 +38,7 @@ const QuestionContainer = () => {
       .catch(() => setApiFail(true));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getQuestionList<IQuestionMeta[]>('inbox')
       .then(setInboxQuestions)
       .catch(() => setApiFail(true));
