@@ -51,7 +51,6 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       );
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.DISTRIBUTE_ROOM) {
-      console.log(payload);
       const action = addRoomID(payload['roomID'], payload['studentID']);
       dispatchChats(action);
     } else if (msgType === MESSAGE_TYPES.CONNECTION) {

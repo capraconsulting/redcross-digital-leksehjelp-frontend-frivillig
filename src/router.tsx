@@ -12,10 +12,14 @@ import {
   AdminQuestionsContainer,
 } from './containers';
 
-const Routes = () => {
+interface IProps {
+  onLogout(): void;
+}
+
+const Routes = ({ onLogout }: IProps) => {
   return (
     <Router>
-      <Header />
+      <Header onLogout={onLogout}/>
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />

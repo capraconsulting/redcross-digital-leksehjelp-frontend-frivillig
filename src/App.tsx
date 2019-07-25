@@ -8,19 +8,18 @@ import { StateContext } from './StateProvider';
 
 const App = () => {
   const [accountInfo, setAccountInfo] = useState<any>(null);
-  const { loggedInState } = useContext(StateContext);
 
   const accountInfoCallback = info => {
     setAccountInfo({ info });
   };
 
   const authenticatedFunction = logout => {
-    if (loggedInState && accountInfo) {
-      logout();
-      return logout;
-    }
-    return false;
-  };
+    return (
+      <SocketProvider>
+        <Routes onLogout={logout}/>
+      </SocketProvider>
+    )
+  }
 
   return (
     <div>
@@ -49,11 +48,6 @@ const App = () => {
         accountInfoCallback={accountInfoCallback}
         authenticatedFunction={authenticatedFunction}
       />
-      {accountInfo && (
-        <SocketProvider>
-          <Routes />
-        </SocketProvider>
-      )}
     </div>
   );
 };
