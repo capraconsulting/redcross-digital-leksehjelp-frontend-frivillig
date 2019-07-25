@@ -13,6 +13,7 @@ interface IProps {
     inputText: string;
     buttonText: string;
     cb(): void;
+    isDisabled?: boolean;
   }[];
 }
 
@@ -37,6 +38,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
               className="text"
               type="text"
               defaultValue={inputField.inputText}
+              disabled={inputField.isDisabled}
             />
             <button
               onClick={() => inputField.cb()}
