@@ -6,41 +6,40 @@ import './styles/base';
 import { SocketProvider } from './providers';
 
 const App = () => {
-
   const authenticatedFunction = logout => {
     return (
       <SocketProvider>
-        <Routes onLogout={logout}/>
+        <Routes onLogout={logout} />
       </SocketProvider>
-    )
-  }
+    );
+  };
   const { origin } = window.location;
 
   return (
-      <AzureAD
-        provider={
-          new MsalAuthProviderFactory(
-            {
-              auth: {
-                authority: process.env.AUTHORITY,
-                clientId: process.env.AAD_APP_CLIENT_ID || '',
-                redirectUri: origin,
-                postLogoutRedirectUri: origin,
-              },
-              cache: {
-                cacheLocation: 'sessionStorage',
-                storeAuthStateInCookie: true,
-              },
+    <AzureAD
+      provider={
+        new MsalAuthProviderFactory(
+          {
+            auth: {
+              authority: process.env.AUTHORITY,
+              clientId: process.env.AAD_APP_CLIENT_ID || '',
+              redirectUri: origin,
+              postLogoutRedirectUri: origin,
             },
-            {
-              scopes: ['openid'],
+            cache: {
+              cacheLocation: 'sessionStorage',
+              storeAuthStateInCookie: true,
             },
-            LoginType.Redirect,
-          )
-        }
-        forceLogin={true}
-        authenticatedFunction={authenticatedFunction}
-      />
+          },
+          {
+            scopes: ['openid'],
+          },
+          LoginType.Redirect,
+        )
+      }
+      forceLogin={true}
+      authenticatedFunction={authenticatedFunction}
+    />
   );
 };
 

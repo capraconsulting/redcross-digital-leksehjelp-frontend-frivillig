@@ -19,7 +19,7 @@ interface IProps {
 const Routes = ({ onLogout }: IProps) => {
   return (
     <Router>
-      <Header onLogout={onLogout}/>
+      <Header onLogout={onLogout} />
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />

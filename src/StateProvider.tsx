@@ -9,9 +9,7 @@ export const StateProvider = ({ children }: any) => {
   const [activeState, setActiveState] = useState<boolean>(false);
 
   return (
-    <StateContext.Provider
-      value={{ activeState, setActiveState }}
-    >
+    <StateContext.Provider value={{ activeState, setActiveState }}>
       {children}
     </StateContext.Provider>
   );

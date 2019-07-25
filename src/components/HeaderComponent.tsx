@@ -32,7 +32,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const onLogout = (): void => {
     props.onLogout();
-  }
+  };
 
   useEffect(() => {
     setLocationPath();

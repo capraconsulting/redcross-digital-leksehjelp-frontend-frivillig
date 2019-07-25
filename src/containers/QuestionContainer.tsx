@@ -8,9 +8,7 @@ import { QuestionListComponent, FeedbackListComponent } from '../components';
 import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [inboxQuestions, setInboxQuestions] = useState(
-    [] as IQuestionMeta[],
-  );
+  const [inboxQuestions, setInboxQuestions] = useState([] as IQuestionMeta[]);
 
   const [startedQuestions, setStartedQuestions] = useState(
     [] as IQuestionMeta[],
