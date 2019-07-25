@@ -27,10 +27,10 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
       url = '/unanswered';
       break;
     case 'started':
-      url = '/edit';
+      url = '/inprogress';
       break;
     case 'approval':
-      url = '/approve';
+      url = '/unapproved';
       break;
     case 'public':
       url = '/public';
@@ -53,34 +53,38 @@ export async function postAnswer(
   data: IAnswer,
   type?: string,
 ): Promise<IQuestion> {
-  const { questionId, answerText, title } = data;
+  const { questionId } = data;
   let url = '';
   switch (type) {
     case 'inbox':
-      url = '/answer';
+      url = '/submit';
       break;
     case 'started':
-      url = '/answer';
+      url = '/submit';
       break;
     case 'approval':
       return await api
-        .post(`questions/${questionId}/approve`, { title })
+        .post(`questions/${questionId}/send`)
         .then(res => res.data);
     default:
       url = '';
       break;
   }
   return await api
-    .post(`questions/${questionId}${url}`, { answerText })
+    .post(`questions/${questionId}${url}`, data)
     .then(res => res.data);
 }
 
 export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
-  const { questionId, answerText } = data;
+  const { questionId } = data;
   return await api
-    .post(`questions/${questionId}/edit`, { answerText: answerText })
+    .post(`questions/${questionId}/edit`, data)
     .then(res => res.data)
     .catch(err => err.response);
+}
+
+export async function publishQuestion(id: string): Promise<{}> {
+  return await api.post(`questions/${id}/approve`).then(res => res.data);
 }
 
 export async function deleteFeedback(id: string): Promise<{}> {

@@ -21,20 +21,12 @@
     border-color: @input-border-color;
   }
 
-  &-button {
+  &-button-container {
     border-top: thin solid @input-border-color;
     padding-top: 0.5rem;
     button {
-      background-color: @secondary-color;
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
       width: 100%;
-      cursor: pointer;
+      margin: 0;
     }
   }
   &-feedback {
@@ -76,23 +68,11 @@
     height: 5rem;
     margin-top: 0.5rem;
   }
-  &--button {
+  &--button-container {
     display: flex;
     flex-direction: row-reverse;
     padding-top: 1rem;
-    button {
-      background-color: @secondary-color;
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      width: 10rem;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
+    margin-right: -0.5rem;
   }
 }
 

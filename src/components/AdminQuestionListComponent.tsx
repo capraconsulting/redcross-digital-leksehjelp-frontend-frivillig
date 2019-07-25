@@ -23,10 +23,7 @@ const AdminQuestionListComponent = (props: IProps) => {
               <p>Sendt inn:</p> {dateStringFormat(questionDate)}
             </div>
             <div className="item-footer">
-              <Link
-                className="leksehjelp--link"
-                to={`/questions/${id}/approval`}
-              >
+              <Link className="leksehjelp--link" to={`/questions/${id}/edit`}>
                 Vis
               </Link>
               <Link

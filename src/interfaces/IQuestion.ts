@@ -2,6 +2,7 @@ export interface IQuestion extends IQuestionMeta {
   title: string;
   questionText: string;
   answerText: string;
+  isPublic: boolean;
 }
 
 export interface IQuestionMeta {

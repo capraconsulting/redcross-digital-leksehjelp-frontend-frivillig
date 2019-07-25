@@ -29,7 +29,7 @@ const ChatInputComponent = (props: IProps) => {
       );
       setMessage('');
       socketSend(socketMessage);
-      dispatchChats(addMessage(textMessage));
+      dispatchChats(addMessageAction(textMessage));
     }
   };
 
@@ -74,7 +74,7 @@ const ChatInputComponent = (props: IProps) => {
         name,
       );
       socketSend(socketMessage);
-      dispatchChats(addMessage(textMessage));
+      dispatchChats(addMessageAction(textMessage));
     };
     fr.readAsDataURL(file);
   };
