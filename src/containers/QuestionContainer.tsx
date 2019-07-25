@@ -8,10 +8,14 @@ import { QuestionListComponent, FeedbackListComponent } from '../components';
 import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [inboxQuestions, setInboxQuestions] = useState<IQuestionMeta[]>([])
-  const [startedQuestions, setStartedQuestions] = useState<IQuestionMeta[]>([])
-  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestionMeta[]>([])
-  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedbackQuestion[]>([])
+  const [inboxQuestions, setInboxQuestions] = useState<IQuestionMeta[]>([]);
+  const [startedQuestions, setStartedQuestions] = useState<IQuestionMeta[]>([]);
+  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestionMeta[]>(
+    [],
+  );
+  const [feedbackQuestions, setFeedbackQuestions] = useState<
+    IFeedbackQuestion[]
+  >([]);
   const [apiFail, setApiFail] = useState<boolean>(false);
 
   const setFeedback = async () => {
