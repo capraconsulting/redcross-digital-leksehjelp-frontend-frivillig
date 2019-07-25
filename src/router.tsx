@@ -26,11 +26,7 @@ const Routes = ({ onLogout }: IProps) => {
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/messages" component={ChatContainer} />
         <Route exact path="/queue" component={ChatQueueComponent} />
-        <Route
-        exaxt
-        path="/profile"
-        component={ProfileContainer}
-        />
+        <Route exaxt path="/profile" component={ProfileContainer} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (
