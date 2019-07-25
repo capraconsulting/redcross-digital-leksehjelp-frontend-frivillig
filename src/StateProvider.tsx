@@ -12,7 +12,9 @@ export const StateProvider = ({ children }: any) => {
   const [loggedInState, setLoggedInState] = useState<boolean>(false);
 
   return (
-    <StateContext.Provider value={{ activeState, setActiveState, loggedInState, setLoggedInState }}>
+    <StateContext.Provider
+      value={{ activeState, setActiveState, loggedInState, setLoggedInState }}
+    >
       {children}
     </StateContext.Provider>
   );

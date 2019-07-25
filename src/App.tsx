@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import Routes from './router';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
@@ -19,45 +19,46 @@ const App = () => {
     if (loggedInState && accountInfo) {
       logout();
       return logout;
-    } return false;
+    }
+    return false;
   };
 
-  console.log(process.env.AAD_APP_CLIENT_ID)
+  console.log(process.env.AAD_APP_CLIENT_ID);
 
   return (
     <div>
-    <AzureAD
-      provider={
-        new MsalAuthProviderFactory(
-          {
-            auth: {
-              authority: process.env.AUTHORITY,
-              clientId: process.env.AAD_APP_CLIENT_ID || '',
-              redirectUri: window.location.origin,
-              postLogoutRedirectUri: window.location.origin,
+      <AzureAD
+        provider={
+          new MsalAuthProviderFactory(
+            {
+              auth: {
+                authority: process.env.AUTHORITY,
+                clientId: process.env.AAD_APP_CLIENT_ID || '',
+                redirectUri: window.location.origin,
+                postLogoutRedirectUri: window.location.origin,
+              },
+              cache: {
+                cacheLocation: 'sessionStorage',
+                storeAuthStateInCookie: true,
+              },
             },
-            cache: {
-              cacheLocation: 'sessionStorage',
-              storeAuthStateInCookie: true,
+            {
+              scopes: ['openid'],
             },
-          },
-          {
-            scopes: ['openid'],
-          },
-          LoginType.Redirect,
-        )
-      }
-      forceLogin={true}
-      accountInfoCallback={accountInfoCallback}
-      authenticatedFunction={authenticatedFunction}
-    />
-    {accountInfo &&
-      <SocketProvider>
-        <Routes />
-      </SocketProvider>
-    }
-  </div>
+            LoginType.Redirect,
+          )
+        }
+        forceLogin={true}
+        accountInfoCallback={accountInfoCallback}
+        authenticatedFunction={authenticatedFunction}
+      />
+      {accountInfo && (
+        <SocketProvider>
+          <Routes />
+        </SocketProvider>
+      )}
+    </div>
   );
-}
+};
 
 export default App;
