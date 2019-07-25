@@ -41,8 +41,7 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   }
   return await api
     .get(parameter !== undefined ? `questions${url}` : 'questions')
-    .then(res => res.data)
-    .catch(err => err);
+    .then(res => res.data);
 }
 
 export async function getSubjectList(): Promise<ISubject[]> {
