@@ -76,7 +76,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             className={`header--list-item ${path === 'profile' && 'active'}`}
             onClick={() => setPath('profile')}
           >
-            Min profil
+            <Link to="/profile">Min profil</Link>
           </li>
           <li
             className={`header--list-item ${path === 'admin' && 'active'}`}
