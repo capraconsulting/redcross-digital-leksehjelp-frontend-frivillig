@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { IStudent } from '../../interfaces';
-import { addNewChat } from '../../reducers';
+import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
   createGenerateRoomMessage,
@@ -17,7 +17,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   const createNewChatRoom = (student: IStudent) => {
     if (student) {
-      dispatchChats(addNewChat(student));
+      dispatchChats(addNewChatAction(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
 
       const socketMessage = createGenerateRoomMessage(
@@ -49,8 +49,13 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
               <div className="queue-body">{introText}</div>
               <hr />
             </div>
-            <button>Avslutt Leksehjelp</button>
-            <button onClick={() => createNewChatRoom(student)}>
+            <button className="leksehjelp--button-warning">
+              Avslutt Leksehjelp
+            </button>
+            <button
+              className="leksehjelp--button-success"
+              onClick={() => createNewChatRoom(student)}
+            >
               Start chat
             </button>
           </div>
@@ -61,7 +66,9 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   return (
     <div className="queue-container">
-      <button onClick={updateQueue}>Update queue</button>
+      <button className="leksehjelp--button-success" onClick={updateQueue}>
+        Update queue
+      </button>
       <div className="queue-category-container">{queueElement}</div>
     </div>
   );

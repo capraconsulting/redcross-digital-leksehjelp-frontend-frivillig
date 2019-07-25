@@ -1,12 +1,7 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
-import {
-  addMessage,
-  addRoomID,
-  chatReducer,
-  setChatFromLocalStorage,
-} from '../reducers';
+import { addMessageAction, addRoomIDAction, chatReducer } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
 export const SocketContext = createContext({
@@ -34,12 +29,13 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
+  const { DISTRIBUTE_ROOM, CONNECTION, QUEUE_LIST, TEXT } = MESSAGE_TYPES;
 
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
-    if (msgType === MESSAGE_TYPES.TEXT) {
-      const action = addMessage(
+    if (msgType === TEXT) {
+      const action = addMessageAction(
         {
           message: payload['message'],
           author: payload['author'],
@@ -50,12 +46,12 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
         true,
       );
       dispatchChats(action);
-    } else if (msgType === MESSAGE_TYPES.DISTRIBUTE_ROOM) {
-      const action = addRoomID(payload['roomID'], payload['studentID']);
+    } else if (msgType === DISTRIBUTE_ROOM) {
+      const action = addRoomIDAction(payload['roomID'], payload['studentID']);
       dispatchChats(action);
-    } else if (msgType === MESSAGE_TYPES.CONNECTION) {
+    } else if (msgType === CONNECTION) {
       setUniqueID(payload['uniqueID']);
-    } else if (msgType === MESSAGE_TYPES.QUEUE_LIST) {
+    } else if (msgType === QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     }
   };

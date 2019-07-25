@@ -1,17 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import Routes from './router';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 import './styles/base';
 import { SocketProvider } from './providers';
-import { StateContext } from './StateProvider';
 
 const App = () => {
-  const [accountInfo, setAccountInfo] = useState<any>(null);
-
-  const accountInfoCallback = info => {
-    setAccountInfo({ info });
-  };
 
   const authenticatedFunction = logout => {
     return (
@@ -20,17 +14,16 @@ const App = () => {
       </SocketProvider>
     )
   }
-  const { AUTHORITY, AAD_APP_CLIENT_ID } = process.env;
   const { origin } = window.location;
+
   return (
-    <div>
       <AzureAD
         provider={
           new MsalAuthProviderFactory(
             {
               auth: {
-                authority: AUTHORITY,
-                clientId: AAD_APP_CLIENT_ID || '',
+                authority: process.env.AUTHORITY,
+                clientId: process.env.AAD_APP_CLIENT_ID || '',
                 redirectUri: origin,
                 postLogoutRedirectUri: origin,
               },
@@ -46,10 +39,8 @@ const App = () => {
           )
         }
         forceLogin={true}
-        accountInfoCallback={accountInfoCallback}
         authenticatedFunction={authenticatedFunction}
       />
-    </div>
   );
 };
 

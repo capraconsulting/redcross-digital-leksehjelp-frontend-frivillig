@@ -14,9 +14,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
-  const { activeState, setActiveState } = useContext(
-    StateContext,
-  );
+  const { activeState, setActiveState } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;

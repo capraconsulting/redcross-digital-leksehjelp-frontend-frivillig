@@ -7,6 +7,8 @@ import {
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 
+const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT } = MESSAGE_TYPES;
+
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
   type: string,
@@ -18,7 +20,14 @@ const createMessage = (
 };
 
 export const createGetQueueMessage = (): ISocketMessage => {
-  return createMessage({}, MESSAGE_TYPES.QUEUE_LIST);
+  return createMessage({}, QUEUE_LIST);
+};
+
+export const createLeaveChatMessage = (
+  roomID: string,
+  uniqueID: string,
+): ISocketMessage => {
+  return createMessage({ roomID, uniqueID }, LEAVE_CHAT);
 };
 
 export const createGenerateRoomMessage = (
@@ -37,7 +46,7 @@ export const createGenerateRoomMessage = (
     introText,
     course,
   };
-  return createMessage(generateRoomMessage, MESSAGE_TYPES.GENERATE_ROOM);
+  return createMessage(generateRoomMessage, GENERATE_ROOM);
 };
 
 export const createTextMessage = (
@@ -59,6 +68,6 @@ export const createTextMessage = (
    */
   return {
     textMessage,
-    socketMessage: createMessage(textMessage, MESSAGE_TYPES.TEXT),
+    socketMessage: createMessage(textMessage, TEXT),
   };
 };

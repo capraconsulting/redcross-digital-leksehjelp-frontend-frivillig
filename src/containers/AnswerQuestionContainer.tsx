@@ -5,10 +5,11 @@ import {
   saveAnswer,
   getFeedbackList,
   deleteFeedback,
-} from '../services/api-service';
+  publishQuestion,
+} from '../services';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { ModalComponent as Modal } from '../components';
+import { Modal } from '../components';
 
 interface IProps {
   id: string;
@@ -27,6 +28,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     isPublic: false,
   });
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+  const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
+    false,
+  );
   const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState<string>('');
   const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
@@ -113,14 +117,41 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       });
   };
 
+  const onPublishQuestion = event => {
+    if (!id) return;
+    publishQuestion(id)
+      .then(() => {
+        setModalText('Svaret er nå publisert!');
+        setHideModalButtons(true);
+      })
+      .catch(() => {
+        setHideModalButtons(true);
+        setModalText('Noe gikk galt.');
+      });
+    setTimeout(() => history.goBack(), 3000);
+    event.preventDefault();
+  };
+
+  const onDontPublish = event => {
+    setHideModalButtons(true);
+    setModalText(
+      'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
+    );
+    setTimeout(() => history.goBack(), 3000);
+    event.preventDefault();
+  };
+
   return (
     <div>
       {modalVisible && (
         <Modal
-          text={modalText}
-          isPublish={isPublish}
-          isModalOpen={setModalVisible}
-          id={id}
+          content={modalText}
+          successButtonText={'Publiser svaret'}
+          warningButtonText={'Ikke publiser'}
+          successCallback={onPublishQuestion}
+          warningCallback={onDontPublish}
+          hideButtons={hideModalButtons}
+          handleClose={() => setModalVisible(false)}
         />
       )}
       <div className="question-answer">
