@@ -12,6 +12,7 @@ const configProdJson = require('./config/prod.json');
 
 module.exports = env => {
   const isProd = env && env.production;
+  
   const release = `${
     packageJson.version
   }-${new GitRevisionPlugin().commithash()}`;

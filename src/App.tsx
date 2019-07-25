@@ -15,15 +15,12 @@ const App = () => {
   };
 
   const authenticatedFunction = logout => {
-    //console.log(sessionStorage)
     if (loggedInState && accountInfo) {
       logout();
       return logout;
     }
     return false;
   };
-
-  console.log(process.env.AAD_APP_CLIENT_ID);
 
   return (
     <div>

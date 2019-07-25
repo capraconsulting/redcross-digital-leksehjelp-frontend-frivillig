@@ -21,7 +21,6 @@ export async function getFeedbackList(id?: string): Promise<IFeedback[]> {
 }
 
 export async function getQuestionList<T>(parameter?: string): Promise<T> {
-  console.log(HEADERS);
   let url = '';
   switch (parameter) {
     case 'inbox':
@@ -42,14 +41,7 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   }
   return await api
     .get(parameter !== undefined ? `questions${url}` : 'questions')
-    .then(res => {
-      console.log(res);
-      return res.data;
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+    .then(res => res.data);
 }
 
 export async function getSubjectList(): Promise<ISubject[]> {
