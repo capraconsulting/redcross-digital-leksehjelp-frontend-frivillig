@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { IChat } from '../../interfaces';
+import { SocketContext } from '../../providers';
 
 interface IProps {
   availableChats: IChat[];
@@ -7,21 +8,24 @@ interface IProps {
 }
 
 const ActiveChatsComponent = (props: IProps) => {
-  const [activeChat, setActiveChat] = useState<number>(0);
+  const { activeChatIndex, setActiveChatIndex } = useContext(SocketContext);
+  const {showMessages, availableChats} = props;
 
   const onClickHandler = (index: number): void => {
-    props.showMessages(index);
-    setActiveChat(index);
+    showMessages(index);
+    setActiveChatIndex(index);
   };
 
   const activeChatList = () =>
-    props.availableChats.map((chat, index) => {
+    availableChats.map((chat, index) => {
       return (
         <div
           onClick={() => onClickHandler(index)}
           key={chat.roomID}
           className={`active-chat ${
-            index === activeChat ? 'active-chat-active' : 'active-chat-inactive'
+            index === activeChatIndex
+              ? 'active-chat-active'
+              : 'active-chat-inactive'
           }`}
         >
           <div className="chat-info">

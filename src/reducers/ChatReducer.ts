@@ -26,6 +26,10 @@ export const leaveChatAction = createAction('LEAVE_CHAT', cb => {
   return (roomID: string) => cb({ roomID });
 });
 
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
+  return (roomID: string, name: string) => cb({ roomID, name });
+});
+
 const handleAddRoomID = (state: IChat[], action: IAction) => {
   const roomToSetID = state.find(
     chat => chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
@@ -74,10 +78,26 @@ const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
   return action.payload.chats;
 };
 
+const handleHasLeftChat = (state: IChat[], action: IAction) => {
+  const chatWhereAUserLeaves: IChat | undefined = state.find(
+    chat => chat.roomID === action.payload.roomID,
+  );
+  if (chatWhereAUserLeaves) {
+    chatWhereAUserLeaves.messages.push({
+      author: action.payload.name,
+      message: 'Har forlatt rommet',
+      roomID: action.payload.roomID,
+      uniqueID: 'NOTIFICATION',
+    });
+  }
+  return [...state];
+};
+
 export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addRoomIDAction, handleAddRoomID)
   .handleAction(addMessageAction, handleAddMessage)
   .handleAction(readMessagesAction, handleReadMessages)
   .handleAction(addNewChatAction, handleAddNewChat)
   .handleAction(leaveChatAction, handleLeaveChat)
+  .handleAction(hasLeftChatAction, handleHasLeftChat)
   .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage);

@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const { message, author } = props.message;
+  const { message, author, uniqueID } = props.message;
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
   const authorType = author === 'frivillig' ? 'self' : 'other';
@@ -49,17 +49,30 @@ const ChatMessageComponent = (props: IProps) => {
       );
     }
   };
-  return (
-    <div className="chat-message">
-      <p className={`chat-message--author-${authorType}`}>
-        <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>, kl.{' '}
-        <span>
-          {props.message.datetime && timeStringFromDate(props.message.datetime)}
-        </span>
-      </p>
-      {renderMessage()}
-    </div>
-  );
+
+  if (uniqueID === 'NOTIFICATION') {
+    return (
+      <div className="chat-message">
+        <p className="chat-message--notification">
+          {author} {message}
+        </p>
+      </div>
+    );
+  } else {
+    return (
+      <div className="chat-message">
+        <p className={`chat-message--author-${authorType}`}>
+          <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>,
+          kl.{' '}
+          <span>
+            {props.message.datetime &&
+              timeStringFromDate(props.message.datetime)}
+          </span>
+        </p>
+        {renderMessage()}
+      </div>
+    );
+  }
 };
 
 export default ChatMessageComponent;
