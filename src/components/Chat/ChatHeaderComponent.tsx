@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
-import { createLeaveChatMessage } from '../../services';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
 import { ModalContext } from '../../providers/ModalProvider';
+import { LeaveChatMessageBuilder } from '../../services';
 
 interface IProps {
   activeChat: IChat;
@@ -18,13 +18,11 @@ const ChatHeaderComponent = (props: IProps) => {
 
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
-    socketSend(createLeaveChatMessage(roomID, uniqueID));
-    setIsModalOpen(false);
+    const msg = new LeaveChatMessageBuilder(uniqueID).toRoom(roomID).build();
+    socketSend(msg.createMessage);
+    setIsOpen(false);
   };
 
-  const handleCloseModal = (): void => {
-    setIsModalOpen(false);
-  };
 
   return (
     <div className="chat-header">

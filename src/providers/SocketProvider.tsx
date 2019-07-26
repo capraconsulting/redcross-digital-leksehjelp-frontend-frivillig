@@ -25,15 +25,15 @@ export const SocketContext = createContext({
   uniqueID: '' as string,
 
   chats: [{}] as IChat[],
-  dispatchChats(action: IAction) {},
+  dispatchChats(action: IAction): void {},
 
   queue: [] as IStudent[],
-  setQueue(state: IStudent[]) {},
+  setQueue(state: IStudent[]): void {},
 
   socketSend(message: ISocketMessage | IGetMessage): void {},
 
   activeChatIndex: 0 as number,
-  setActiveChatIndex(index: number) {},
+  setActiveChatIndex(index: number): void {},
 });
 
 let socket;
