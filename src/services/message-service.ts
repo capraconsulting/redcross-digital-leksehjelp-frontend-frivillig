@@ -49,6 +49,9 @@ export const createJoinMessage = (
   return createMessage(generateJoinMessage, MESSAGE_TYPES.JOIN_CHAT);
 }
 
+export const createPingMessage = (): ISocketMessage => {
+  return createMessage({}, MESSAGE_TYPES.PING);
+}
 export const createGenerateRoomMessage = (
   uniqueID: string,
   studentID: string,

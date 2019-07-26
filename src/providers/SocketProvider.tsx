@@ -7,6 +7,7 @@ import {
   chatReducer, joinChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
+import { createPingMessage } from '../services';
 
 export const SocketContext = createContext({
   uniqueID: '' as string,
@@ -64,6 +65,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     } else if (msgType === CONNECTION) {
       setUniqueID(payload['uniqueID']);
       setName(Math.random().toString(36).substring(7));
+      setInterval((() => socketSend(createPingMessage())), 300000);
     } else if (msgType === QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     } else if(msgType === JOIN_CHAT){
