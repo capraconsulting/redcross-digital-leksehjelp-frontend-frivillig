@@ -38,7 +38,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   );
   const { questionText, title, answerText, isPublic } = question;
   const { type, id, history } = props;
-  const {setIsOpen} = useContext(ModalContext);
+  const { setIsOpen } = useContext(ModalContext);
 
   React.useEffect(() => {
     getQuestion(id).then(setQuestion);

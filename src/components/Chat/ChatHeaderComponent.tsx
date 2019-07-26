@@ -14,7 +14,7 @@ const ChatHeaderComponent = (props: IProps) => {
   const { roomID } = props.activeChat;
   const { nickname, course } = props.activeChat.student;
   const { socketSend, dispatchChats, uniqueID } = useContext(SocketContext);
-  const {setIsOpen} = useContext(ModalContext);
+  const { setIsOpen } = useContext(ModalContext);
 
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
@@ -22,7 +22,6 @@ const ChatHeaderComponent = (props: IProps) => {
     socketSend(msg.createMessage);
     setIsOpen(false);
   };
-
 
   return (
     <div className="chat-header">
@@ -40,12 +39,12 @@ const ChatHeaderComponent = (props: IProps) => {
           </button>
         </span>
       </div>
-        <Modal
-          content="Er du sikker på at du vil forlate chaten?"
-          warningButtonText="Forlat Chatten"
-          warningCallback={leaveChat}
-          successButtonText="Bli i Chatten"
-        />
+      <Modal
+        content="Er du sikker på at du vil forlate chaten?"
+        warningButtonText="Forlat Chatten"
+        warningCallback={leaveChat}
+        successButtonText="Bli i Chatten"
+      />
     </div>
   );
 };

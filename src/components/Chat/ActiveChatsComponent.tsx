@@ -9,7 +9,7 @@ interface IProps {
 
 const ActiveChatsComponent = (props: IProps) => {
   const { activeChatIndex, setActiveChatIndex } = useContext(SocketContext);
-  const {showMessages, availableChats} = props;
+  const { showMessages, availableChats } = props;
 
   const onClickHandler = (index: number): void => {
     showMessages(index);

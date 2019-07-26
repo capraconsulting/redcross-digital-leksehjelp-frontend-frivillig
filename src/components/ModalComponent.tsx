@@ -27,7 +27,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     hideButtons,
     inputFields,
   } = props;
-  const {isOpen, setIsOpen} = useContext(ModalContext);
+  const { isOpen, setIsOpen } = useContext(ModalContext);
 
   const createInputFields = () => {
     if (inputFields) {

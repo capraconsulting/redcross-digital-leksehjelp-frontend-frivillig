@@ -3,7 +3,8 @@ import { IStudent } from '../../interfaces';
 import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
-  createGetQueueMessage, GenerateRoomMessageBuilder,
+  createGetQueueMessage,
+  GenerateRoomMessageBuilder,
 } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
@@ -24,7 +25,8 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withNickname(student.nickname)
         .withGrade(student.grade)
         .withCourse(student.course)
-        .withIntroText(student.introText).build();
+        .withIntroText(student.introText)
+        .build();
       socketSend(msg.createMessage);
     }
   };

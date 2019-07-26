@@ -27,7 +27,7 @@ class LeaveChatMessage {
   private readonly roomID: string;
   private readonly uniqueID: string;
 
-  constructor(leaveChatMessageBuilder: LeaveChatMessageBuilder) {
+  public constructor(leaveChatMessageBuilder: LeaveChatMessageBuilder) {
     this.roomID = leaveChatMessageBuilder.roomID;
     this.uniqueID = leaveChatMessageBuilder.uniqueID;
   }
@@ -105,7 +105,7 @@ export class GenerateRoomMessageBuilder {
   private _introText: string;
   private _course: string;
 
-  constructor(uniqueID: string) {
+  public constructor(uniqueID: string) {
     this._uniqueID = uniqueID;
     return this;
   }

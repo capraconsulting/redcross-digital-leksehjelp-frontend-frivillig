@@ -16,9 +16,11 @@ const ChatInputComponent = (props: IProps) => {
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-
-      const msg = new TextMessageBuilder(uniqueID).withMessage(message).toRoom(roomID).build();
-      const {textMessage, socketMessage} = msg.createMessage;
+      const msg = new TextMessageBuilder(uniqueID)
+        .withMessage(message)
+        .toRoom(roomID)
+        .build();
+      const { textMessage, socketMessage } = msg.createMessage;
       setMessage('');
       socketSend(socketMessage);
       dispatchChats(addMessageAction(textMessage));
