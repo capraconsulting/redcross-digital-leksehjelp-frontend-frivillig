@@ -54,7 +54,7 @@ export async function getVolunteerSubjectList<T>(): Promise<T> {
   return await api.get('volunteers/subjects').then(res => res.data);
 }
 
-export async function getSubjectList(): Promise<ISubject[]> {
+export async function getSubjectList<T>(): Promise<T> {
   return await api.get('subjects').then(res => res.data);
 }
 

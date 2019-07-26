@@ -1,6 +1,6 @@
 export interface ISubject {
-  id: string;
-  subject: string;
+  id: number;
+  subjectTitle: string;
   themes: ITheme[];
 }
 

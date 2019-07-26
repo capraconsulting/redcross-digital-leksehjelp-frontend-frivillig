@@ -1,5 +1,5 @@
 export interface IVolunteerSubject {
   subject: string;
-  isMestring: boolean;
+  isMestring: number;
   id: number;
 }
