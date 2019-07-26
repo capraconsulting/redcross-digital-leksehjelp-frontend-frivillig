@@ -1,10 +1,11 @@
-import { ISocketFile } from '.';
+import { ISocketFile, IFile } from '.';
 
 export interface ITextMessage {
   author: string;
   roomID: string;
   uniqueID: string;
-  message: string | ISocketFile;
+  message?: string;
+  files?: IFile[];
   datetime?: Date;
   unread?: number;
 }

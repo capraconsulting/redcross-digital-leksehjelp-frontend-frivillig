@@ -4,7 +4,6 @@ import {
   HomeComponent,
   HeaderComponent as Header,
   ChatQueueComponent,
-  Modal,
 } from './components';
 import {
   QuestionContainer,
@@ -14,7 +13,6 @@ import {
 } from './containers';
 
 const Routes = () => {
-
   const tf = (str: string) => {
     console.log(str);
   };

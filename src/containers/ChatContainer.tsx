@@ -1,11 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 
 // main component
 const ChatContainer = () => {
-  const { uniqueID, chats, dispatchChats, activeChatIndex, setActiveChatIndex } = useContext(SocketContext);
+  const {
+    uniqueID,
+    chats,
+    dispatchChats,
+    activeChatIndex,
+    setActiveChatIndex,
+  } = useContext(SocketContext);
 
   useEffect(() => {
     // Auto scroll down in chat
@@ -27,10 +33,17 @@ const ChatContainer = () => {
           <ActiveChats showMessages={showMessages} availableChats={chats} />
         </div>
         <div className="chat">
-          {(chats && chats[activeChatIndex]) && <ChatHeader activeChat={chats[activeChatIndex]} />}
-          {(chats && chats[activeChatIndex]) && <ChatBody messages={chats[activeChatIndex].messages} />}
-          {(chats && chats[activeChatIndex]) && (
-            <ChatInput uniqueID={uniqueID} roomID={chats[activeChatIndex].roomID} />
+          {chats && chats[activeChatIndex] && (
+            <ChatHeader activeChat={chats[activeChatIndex]} />
+          )}
+          {chats && chats[activeChatIndex] && (
+            <ChatBody messages={chats[activeChatIndex].messages} />
+          )}
+          {chats && chats[activeChatIndex] && (
+            <ChatInput
+              uniqueID={uniqueID}
+              roomID={chats[activeChatIndex].roomID}
+            />
           )}
         </div>
       </div>

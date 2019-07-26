@@ -4,6 +4,7 @@ import {
   ISocketMessage,
   ITextMessage,
   ISocketFile,
+  IFile,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 
@@ -50,9 +51,10 @@ export const createGenerateRoomMessage = (
 };
 
 export const createTextMessage = (
-  message: string | ISocketFile,
+  message: string,
   uniqueID: string,
   roomID: string,
+  files: IFile[],
 ): {
   textMessage: ITextMessage;
   socketMessage: ISocketMessage;
@@ -62,6 +64,7 @@ export const createTextMessage = (
     uniqueID,
     roomID,
     message,
+    files,
   };
   /*
    * Needs to return the entire textMessage to set state when sending messages.

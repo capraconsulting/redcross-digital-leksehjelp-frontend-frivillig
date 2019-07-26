@@ -11,3 +11,4 @@ export * from './IStudent';
 export * from './IChat';
 export * from './IAction';
 export * from './IFeedback';
+export * from './IFile';

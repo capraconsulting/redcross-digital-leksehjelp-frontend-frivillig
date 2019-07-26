@@ -1,5 +1,5 @@
 import { createAction, createReducer } from 'typesafe-actions';
-import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
+import { IAction, IChat, IStudent, ITextMessage, IFile } from '../interfaces';
 
 export const addRoomIDAction = createAction('ADD_ROOM_ID', cb => {
   return (roomID: string, studentID: string) => cb({ roomID, studentID });
@@ -88,6 +88,7 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
       message: 'Har forlatt rommet',
       roomID: action.payload.roomID,
       uniqueID: 'NOTIFICATION',
+      files: [] as IFile[],
     });
   }
   return [...state];

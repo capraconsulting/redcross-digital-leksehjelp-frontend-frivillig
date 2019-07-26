@@ -70,6 +70,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
           roomID: payload['roomID'],
           uniqueID: payload['uniqueID'],
           datetime: payload['datetime'],
+          files: payload['files'],
         },
         true,
       );

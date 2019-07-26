@@ -1,3 +1,5 @@
+@import 'colors';
+
 .chat-message {
   margin: 0.5rem;
   display: flex;
@@ -11,32 +13,37 @@
   }
 
   &--file-name {
-    font-weight: bold;
+    font-weight: 550;
     font-size: 1rem;
+    color: @black;
   }
   &--file-size {
     font-size: 0.8rem;
+    color: @black;
   }
 
   &:hover {
     filter: brightness(120%);
   }
+
   &--message {
     margin: 0;
     font-size: 1rem;
     padding: 0.3rem;
     overflow-wrap: break-spaces;
   }
-  &--download {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    cursor: pointer;
-  }
+
   &--self {
     background-color: gray;
     color: white;
     margin-left: 10%;
+  }
+  &--download {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+    border: solid 1px @select-color;
   }
   &--other {
     background-color: @primary-color--light;
@@ -59,4 +66,5 @@
 .svg-download {
   height: 1.5rem;
   padding: 0.6rem;
+  cursor: pointer;
 }
