@@ -24,6 +24,7 @@ const ChatMessageComponent = (props: IProps) => {
 
 
   const renderMessage = () => {
+    console.log("Skal renders");
     if (typeof message === 'string') {
       return (
         <p className={`chat-message--message chat-message--${authorType}`}>

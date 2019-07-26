@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { createAvailableChatMessage, createJoinMessage, createTextMessage } from '../../services';
-import { ISocketFile, IStudent } from '../../interfaces';
-import { addMessage, addNewChat } from '../../reducers';
+import { ISocketFile, IStudent, ITextMessage } from '../../interfaces';
+import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
-import AvailableVolunteersComponent from './AvailableVolunteersComponent';
 
 interface IProps {
   uniqueID: string;
@@ -14,7 +13,7 @@ interface IProps {
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend, name, availableVolunteers} = useContext(SocketContext);
+  const { dispatchChats, socketSend, name} = useContext(SocketContext);
   const { uniqueID, roomID, student} = props;
 
 
@@ -35,10 +34,20 @@ const ChatInputComponent = (props: IProps) => {
 
   const onAddUser = event => {
     event.preventDefault();
+    let temp:ITextMessage = {
+      author: '',
+      roomID: '',
+      uniqueID: '',
+      message: '',
+    };
+
+    let lol:ITextMessage[] = [temp];
+
     const socketMessage = createJoinMessage(
       message,
       roomID,
-      student
+      student,
+      lol
     );
 
     socketSend(socketMessage);
@@ -117,8 +126,8 @@ const ChatInputComponent = (props: IProps) => {
             alt="Send"
           />
         </button>
-        <button onClick={getAvailableChat}> Se alle tilgjengelige </button>
-        <button onClick={onAddUser}> Legg til bruker </button>
+        <button className="leksehjelp--button-success" onClick={getAvailableChat}> Se alle tilgjengelige </button>
+        <button className="leksehjelp--button-success" onClick={onAddUser}> Legg til bruker </button>
       </form>
     </div>
   );

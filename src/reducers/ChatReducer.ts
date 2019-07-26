@@ -23,40 +23,26 @@ export const setChatFromLocalStorageAction = createAction('SET_ALL', cb => {
 });
 
 export const joinChatAction = createAction('JOIN_CHAT', cb => {
-  return (student: IStudent, roomID: string) => cb({student, roomID});
+  return (student: IStudent, messages:ITextMessage[], roomID: string) => cb({student, messages, roomID});
 });
 
+
 const joinChatHandler = (state: IChat[], action: IAction) => {
+
+  let chatHistory:ITextMessage[] = [];
+  action.payload.messages.forEach((message: ITextMessage) => {
+    chatHistory.push(message);
+    });
+
   const newChat: IChat = {
     student: action.payload.student,
-    messages: [],
+    messages: chatHistory,
     roomID: action.payload.roomID,
     unread: 0,
   };
   return [...state, newChat];
 };
 
-export const chatReducer = createReducer<IChat[], IAction>([])
-  .handleAction(addRoomID, (state: IChat[], action: IAction) => {
-    const roomToSetID = state.find(
-      chat =>
-        chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
-    );
-    if (roomToSetID) {
-      roomToSetID.roomID = action.payload.roomID
-    };
-    return [...state];
-  })
-  .handleAction(addMessage, (state: IChat[], action: IAction) => {
-    const room = state.find(
-      chat => chat.roomID === action.payload.message.roomID,
-    );
-    if (room) {
-      if (action.payload.unread) {
-        room.unread += 1;
-      }
-      const message: ITextMessage = action.payload.message;
-      room.messages.push(message);
 export const leaveChatAction = createAction('LEAVE_CHAT', cb => {
   return (roomID: string) => cb({ roomID });
 });
@@ -79,28 +65,7 @@ const handleAddMessage = (state: IChat[], action: IAction) => {
     if (action.payload.unread) {
       room.unread += 1;
     }
-    return [...state];
-  })
-  .handleAction(readMessages, (state: IChat[], action: IAction) => {
-    const chat = state.find(chat => chat.roomID === action.payload.roomID);
-    if (chat) chat.unread = 0;
-    return [...state];
-  })
-  .handleAction(addNewChat, (state: IChat[], action: IAction) => {
-    const newChat: IChat = {
-      student: action.payload.student,
-      messages: [],
-      roomID: '',
-      unread: 0,
-    };
-    return [...state, newChat];
-  })
-  .handleAction(setChatFromLocalStorage, (state: IChat[], action: IAction) => {
-    return action.payload.chats;
-  })
-  .handleAction(joinChatAction, joinChatHandler);
-    const message: ITextMessage = action.payload.message;
-    room.messages.push(message);
+    room.messages.push(action.payload.message);
   }
   return [...state];
 };
@@ -135,4 +100,5 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(readMessagesAction, handleReadMessages)
   .handleAction(addNewChatAction, handleAddNewChat)
   .handleAction(leaveChatAction, handleLeaveChat)
+  .handleAction(joinChatAction, joinChatHandler)
   .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage);

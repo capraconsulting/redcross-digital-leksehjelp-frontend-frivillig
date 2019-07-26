@@ -1,11 +1,10 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
-import { IGetMessage, ISocketMessage } from '../interfaces';
+import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
-  addMessage, addNewChat,
-  addRoomID,
+  addMessageAction,
+  addRoomIDAction,
   chatReducer, joinChatAction,
-  setChatFromLocalStorage,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
@@ -38,7 +37,7 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
-  const { DISTRIBUTE_ROOM, CONNECTION, QUEUE_LIST, TEXT } = MESSAGE_TYPES;
+  const { DISTRIBUTE_ROOM, CONNECTION, QUEUE_LIST, TEXT, JOIN_CHAT, AVAILABLE_CHAT } = MESSAGE_TYPES;
   const [name, setName] = useState<string>('');
   const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
 
@@ -56,20 +55,23 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
         },
         true,
       );
+      console.log(action);
       dispatchChats(action);
+      console.log(chats);
     } else if (msgType === DISTRIBUTE_ROOM) {
       const action = addRoomIDAction(payload['roomID'], payload['studentID']);
       dispatchChats(action);
     } else if (msgType === CONNECTION) {
       setUniqueID(payload['uniqueID']);
       setName(Math.random().toString(36).substring(7));
-    } else if (msgType === MESSAGE_TYPES.QUEUE_LIST) {
+    } else if (msgType === QUEUE_LIST) {
       setQueue(payload['queueMembers']);
-    } else if(msgType === MESSAGE_TYPES.JOIN_CHAT){
+    } else if(msgType === JOIN_CHAT){
       const student:IStudent = payload['studentInfo'];
-      const action = joinChatAction(student, payload['roomID'])
+      const messages:ITextMessage[] = payload['chatHistory'];
+      const action = joinChatAction(student, messages, payload['roomID']);
       dispatchChats(action);
-    } else if(msgType === MESSAGE_TYPES.AVAILABLE_CHAT){
+    } else if(msgType === AVAILABLE_CHAT){
       setAvailableVolunteers(payload['queueMembers']);
     }
   };

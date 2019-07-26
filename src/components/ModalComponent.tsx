@@ -1,5 +1,8 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useContext } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { IChat, IStudent, ITextMessage } from '../interfaces';
+import { createJoinMessage } from '../services';
+import { SocketContext } from '../providers';
 
 interface IProps {
   content: string;
@@ -9,9 +12,16 @@ interface IProps {
   warningCallback?(e: MouseEvent): void;
   handleClose(): void;
   hideButtons?: boolean;
+  volunteers?: string[];
+  roomID?: string;
+  student?: IStudent;
+  messages?: ITextMessage[];
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
+
+  const {socketSend} = useContext(SocketContext);
+
   const {
     content,
     successButtonText,
@@ -20,14 +30,42 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     warningCallback,
     handleClose,
     hideButtons,
+    volunteers,
+    roomID,
+    student
   } = props;
+
+  const selectUser = (name) => {
+
+    const socketMessage = createJoinMessage(
+      name,
+      props.roomID!,
+      props.student!,
+      props.messages!,
+    );
+
+    socketSend(socketMessage);
+    handleClose();
+  }
+
+  const mapAvailable = () => {
+    console.log("Meldinger sendt");
+  if (props.volunteers !== undefined) {
+    return props.volunteers.map((name, message) => (
+      <div className={"available-volunteers"} key={name}>
+        <p>{name}</p>
+        <div className={"modal--button-container"}>
+          <button className={"modal-button-success"}onClick={() => selectUser(name)}>Select</button>
+        </div>
+      </div>
+      ))
+    }
+  };
 
   return (
     <div className="modal">
       <p>{content}</p>
-      <button className="leksehjelp--button-close" onClick={handleClose}>
-        x
-      </button>
+      {mapAvailable()}
       {!hideButtons && (
         <div className="modal--button-container">
           {successButtonText && (

@@ -38,11 +38,13 @@ export const createJoinMessage = (
   uniqueID: string,
   roomID: string,
   studentInfo: IStudent,
+  chatHistory: ITextMessage[]
 ): ISocketMessage => {
   const generateJoinMessage: IJoin = {
     uniqueID,
     roomID,
-    studentInfo
+    studentInfo,
+    chatHistory
   };
   return createMessage(generateJoinMessage, MESSAGE_TYPES.JOIN_CHAT);
 }

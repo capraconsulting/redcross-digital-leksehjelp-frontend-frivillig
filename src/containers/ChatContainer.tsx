@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActiveChats, ChatInput, ChatBody, ChatHeader } from '../components';
+import { ActiveChats, ChatInput, ChatBody, ChatHeader, Modal } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 import AvailableVolunteersComponent from '../components/Chat/AvailableVolunteersComponent';
+import ModalComponent from '../components/ModalComponent';
+import { act } from 'react-dom/test-utils';
 
 // main component
 const ChatContainer = () => {
@@ -20,6 +22,7 @@ const ChatContainer = () => {
   }, [chats]);
 
   const showMessages = (index: number) => {
+    console.log("Leser meldiger nå");
     setActiveIndex(index);
     dispatchChats(readMessagesAction(chats[activeIndex].roomID));
   };
@@ -33,13 +36,32 @@ const ChatContainer = () => {
   }
 
   if(popup){
+    console.log(availableVolunteers)
     return(
+
+      <Modal
+        content={"Tilgjengelige frivillige"}
+        successButtonText={'Publiser svaret'}
+        warningButtonText={'Ikke publiser'}
+        successCallback={close}
+        warningCallback={close}
+        hideButtons={false}
+        handleClose={() => setPopup(false)}
+        volunteers={availableVolunteers}
+        roomID={chats[activeIndex].roomID}
+        student={chats[activeIndex].student}
+        messages={chats[activeIndex].messages}
+      />
+      /*
       <AvailableVolunteersComponent
         availableVolunteers={availableVolunteers}
         closePopup={close}/>
+      */
     )
   }
   if (chats.length >= 1) {
+    console.log("antall chats");
+    console.log(chats.length);
     return (
       <div className="chat-container">
         <div className="chat-list">
@@ -49,7 +71,12 @@ const ChatContainer = () => {
           {chats && <ChatHeader activeChat={chats[activeIndex]} />}
           {chats && <ChatBody messages={chats[activeIndex].messages} />}
           {chats && (
-            <ChatInput uniqueID={uniqueID} roomID={chats[activeIndex].roomID} />
+            <ChatInput
+              uniqueID={uniqueID}
+              roomID={chats[activeIndex].roomID}
+              student={chats[activeIndex].student}
+              popUp={func}
+            />
           )}
         </div>
       </div>
