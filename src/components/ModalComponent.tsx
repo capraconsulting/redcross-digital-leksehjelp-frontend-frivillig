@@ -1,4 +1,10 @@
-import React, { MouseEvent, useContext, useEffect, useState } from 'react';
+import React, {
+  MouseEvent,
+  KeyboardEvent,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { ModalContext } from '../providers/ModalProvider';
 
