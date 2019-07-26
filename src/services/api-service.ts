@@ -99,3 +99,7 @@ export async function publishQuestion(id: string): Promise<{}> {
 export async function deleteFeedback(id: string): Promise<{}> {
   return await api.post(`feedback/${id}/delete`).then(res => res.data);
 }
+
+export async function saveSubjects(list: number[]): Promise<{}> {
+  return await api.post('volunteers/subjects', {subjects: list}).then(res => res.data);
+}
