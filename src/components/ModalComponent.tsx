@@ -1,5 +1,6 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useContext, useEffect, useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { ModalContext } from '../providers/ModalProvider';
 
 interface IProps {
   content: string;
@@ -7,7 +8,6 @@ interface IProps {
   warningButtonText?: string;
   successCallback?(e: MouseEvent): void;
   warningCallback?(e: MouseEvent): void;
-  handleClose(): void;
   hideButtons?: boolean;
   inputFields?: {
     inputText: string;
@@ -24,10 +24,10 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     warningButtonText,
     successCallback,
     warningCallback,
-    handleClose,
     hideButtons,
     inputFields,
   } = props;
+  const {isOpen, setIsOpen} = useContext(ModalContext);
 
   const createInputFields = () => {
     if (inputFields) {
@@ -52,45 +52,49 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     }
   };
 
-  return (
-    <div className="modal-container">
-      <div className="backdrop" />
-      <div className="modal">
-        <div className="x-container">
-          <div className="x t medium">
-            <b></b>
-            <b></b>
-            <b></b>
-            <b></b>
+  if (!isOpen) {
+    return null;
+  } else {
+    return (
+      <div className="modal-container">
+        <div className="backdrop" onClick={() => setIsOpen(false)} />
+        <div className="modal">
+          <div className="x-container" onClick={() => setIsOpen(false)}>
+            <div className="x t medium">
+              <b></b>
+              <b></b>
+              <b></b>
+              <b></b>
+            </div>
+          </div>
+          <p className="content-text">{content}</p>
+          <div className="input-field-container">{createInputFields()}</div>
+          <div className="button-container">
+            {!hideButtons && (
+              <div className="modal--button-container">
+                {successButtonText && (
+                  <button
+                    onClick={successCallback}
+                    className="leksehjelp--button-success"
+                  >
+                    {successButtonText}
+                  </button>
+                )}
+                {warningButtonText && (
+                  <button
+                    onClick={warningCallback}
+                    className="leksehjelp--button-warning"
+                  >
+                    {warningButtonText}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
-        <p className="content-text">{content}</p>
-        <div className="input-field-container">{createInputFields()}</div>
-        <div className="button-container">
-          {!hideButtons && (
-            <div className="modal--button-container">
-              {successButtonText && (
-                <button
-                  onClick={successCallback}
-                  className="leksehjelp--button-success"
-                >
-                  {successButtonText}
-                </button>
-              )}
-              {warningButtonText && (
-                <button
-                  onClick={warningCallback}
-                  className="leksehjelp--button-warning"
-                >
-                  {warningButtonText}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default withRouter(ModalComponent);
