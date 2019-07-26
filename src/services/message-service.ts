@@ -6,8 +6,9 @@ import {
   ISocketFile,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
+import { IReconnectMessage } from '../interfaces/IReconnectMessage';
 
-const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT } = MESSAGE_TYPES;
+const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT, RECONNECT } = MESSAGE_TYPES;
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
@@ -22,6 +23,66 @@ const createMessage = (
 export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, QUEUE_LIST);
 };
+
+class ReconnectMessage {
+  private readonly oldUniqueID: string;
+  private readonly uniqueID: string;
+  private readonly roomIDs: string[];
+
+  public constructor(reconnectMessageBuilder: ReconnectMessageBuilder) {
+    this.oldUniqueID = reconnectMessageBuilder.oldUniqueID;
+    this.uniqueID = reconnectMessageBuilder.uniqueID;
+    this.roomIDs = reconnectMessageBuilder.roomIDs;
+  }
+
+  public get createMessage(): ISocketMessage {
+    const msg: IReconnectMessage = {
+      oldUniqueID: this.oldUniqueID,
+      uniqueID: this.uniqueID,
+      roomIDs: this.roomIDs
+    };
+    return createMessage(msg, RECONNECT);
+  }
+}
+
+export class ReconnectMessageBuilder {
+  private readonly _uniqueID: string;
+  private _oldUniqueID: string;
+  private _roomIDs: string[];
+
+  public constructor(uniqueID: string) {
+    this._uniqueID = uniqueID;
+    return this;
+  }
+
+
+  public withOldUniqueID(value: string): ReconnectMessageBuilder {
+    this._oldUniqueID = value;
+    return this;
+  }
+
+  public withRoomIDs(value: string[]): ReconnectMessageBuilder {
+    this._roomIDs = value;
+    return this;
+  }
+
+  public build(): ReconnectMessage {
+    return new ReconnectMessage(this);
+  }
+
+
+  public get uniqueID(): string {
+    return this._uniqueID;
+  }
+
+  public get oldUniqueID(): string {
+    return this._oldUniqueID;
+  }
+
+  public get roomIDs(): string[] {
+    return this._roomIDs;
+  }
+}
 
 class LeaveChatMessage {
   private readonly roomID: string;

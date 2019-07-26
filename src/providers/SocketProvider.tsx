@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useReducer, useState } from 'react';
+import React, {
+  createContext,
+  useEffect,
+  useReducer,
+  useState,
+  FunctionComponent,
+} from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import { IGetMessage, ISocketMessage } from '../interfaces';
 import {
@@ -7,6 +13,7 @@ import {
   chatReducer,
   hasLeftChatAction,
   leaveChatAction,
+  reconnectChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
@@ -45,7 +52,7 @@ const getSocket = (): WebSocket => {
   return socket;
 };
 
-export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
+export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [activeChatIndex, setActiveChatIndex] = useState<number>(0);
   const [uniqueID, setUniqueID] = useState<string>('');
@@ -98,7 +105,30 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
 
   useEffect(() => {
     getSocket().onmessage = socketHandler;
+
+    // Get chats from sessionStorage and send Reconnect Message to backend
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    if (chatsFromSessionStorage) {
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+      // TODO: send message to backend
+      dispatchChats(reconnectChatAction(parsedChatsFromSessionStorage));
+    }
   }, []);
+
+  useEffect(() => {
+    if (chats.length > 0) {
+      // Don't set sessionStorage if chats are reset because of reload
+      sessionStorage.setItem('chats', JSON.stringify(chats));
+    }
+  }, [chats]);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('oldUniqueID')) {
+      sessionStorage.setItem('oldUniqueID', uniqueID);
+    }
+  }, [uniqueID]);
 
   const socketSend = (message: ISocketMessage | IGetMessage) => {
     getSocket().send(JSON.stringify(message));
