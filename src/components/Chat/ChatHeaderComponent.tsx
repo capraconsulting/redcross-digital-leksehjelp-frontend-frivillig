@@ -3,7 +3,7 @@ import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
-import { ModalContext } from '../../providers/ModalProvider';
+import { ModalContext } from '../../providers';
 import { LeaveChatMessageBuilder } from '../../services';
 
 interface IProps {
