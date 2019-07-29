@@ -58,6 +58,10 @@ export async function getSubjectList<T>(): Promise<T> {
   return await api.get('subjects').then(res => res.data);
 }
 
+export async function getMestringSubjectList<T>(): Promise<T> {
+  return await api.get('subjects?isMestring=1').then(res => res.data);
+}
+
 export async function postAnswer(
   data: IAnswer,
   type?: string,
@@ -101,5 +105,7 @@ export async function deleteFeedback(id: string): Promise<{}> {
 }
 
 export async function saveSubjects(list: number[]): Promise<{}> {
-  return await api.post('volunteers/subjects', {subjects: list}).then(res => res.data);
+  return await api
+    .post('volunteers/subjects', { subjects: list })
+    .then(res => res.data);
 }
