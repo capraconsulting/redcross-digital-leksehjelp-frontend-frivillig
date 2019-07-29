@@ -68,7 +68,7 @@ const ProfileContainer = () => {
     })();
   }, []);
 
-  const addSubject = (subject, type: string): void => {
+  const addSubject = (subject: IOption, type: string): void => {
     const { value, label } = subject;
     if (type === 'fag') {
       const course = { subject: label, id: Number(value), isMestring: 0 };
@@ -94,7 +94,7 @@ const ProfileContainer = () => {
     subject: string,
     type: string,
     e: MouseEvent,
-  ) => {
+  ): void => {
     if (type === 'fag') {
       const list = courseList.filter(({ id }) => id !== Number(item));
       setCourseList(list);
@@ -122,7 +122,7 @@ const ProfileContainer = () => {
       });
   };
 
-  const onCloseModal = () => {
+  const onCloseModal = (): void => {
     setOnModal(false);
   };
 

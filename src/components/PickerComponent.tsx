@@ -1,17 +1,12 @@
 import React, { MouseEvent } from 'react';
-import Dropdown from 'react-dropdown';
+import Dropdown, { Option } from 'react-dropdown';
 import Cross from '../assets/Cross';
 import { IVolunteerSubject } from '../interfaces';
 
-interface IOption {
-  value: string;
-  label: string;
-}
-
 interface IProps {
-  optionList: IOption[];
+  optionList: Option[];
   selectedList: IVolunteerSubject[];
-  addSubject(option, type: string): void;
+  addSubject(option: Option, type: string): void;
   removeSubject(
     id: number,
     subject: string,

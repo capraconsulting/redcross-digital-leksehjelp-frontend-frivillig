@@ -76,8 +76,8 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             className={`header--list-item ${path === 'profile' && 'active'}`}
             onClick={() => {
               setPath('profile');
-              setOnDropDown(false);}
-            }
+              setOnDropDown(false);
+            }}
           >
             <Link to="/profile">Min profil</Link>
           </li>
