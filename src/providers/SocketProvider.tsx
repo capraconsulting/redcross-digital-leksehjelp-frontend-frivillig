@@ -19,6 +19,7 @@ import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
 import { number } from 'prop-types';
+import { ReconnectMessageBuilder } from '../services';
 
 toast.configure({
   autoClose: 5000,
@@ -111,18 +112,35 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     }
   };
 
-  useEffect(() => {
-    getSocket().onmessage = socketHandler;
+  const getRoomNumbersFromChat = (chats: IChat[]): string[] => {
+    return chats.map(chat => chat.roomID);
+  };
 
-    // Get chats from sessionStorage and send Reconnect Message to backend
+  const reconnectHandler = () => {
     const chatsFromSessionStorage = localStorage.getItem('chats');
-    if (chatsFromSessionStorage) {
+    const oldUniqueID = sessionStorage.getItem('oldUniqueID');
+
+    if (chatsFromSessionStorage && oldUniqueID) {
+      /*
+       * If not both chatsFromSessionStorage and oldUniqueID is present
+       * then there is no point in reconnecting.
+       */
       const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
         chatsFromSessionStorage,
       );
-      // TODO: send message to backend
       dispatchChats(reconnectChatAction(parsedChatsFromSessionStorage));
+      const msg = new ReconnectMessageBuilder(uniqueID)
+        .withRoomIDs(getRoomNumbersFromChat(parsedChatsFromSessionStorage))
+        .withOldUniqueID(oldUniqueID)
+        .build();
+      socketSend(msg.createMessage);
     }
+  };
+
+  useEffect(() => {
+    getSocket().onmessage = socketHandler;
+
+    reconnectHandler();
   }, []);
 
   useEffect(() => {
