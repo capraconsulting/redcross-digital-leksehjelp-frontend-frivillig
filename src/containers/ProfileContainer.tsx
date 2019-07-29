@@ -112,11 +112,11 @@ const ProfileContainer = () => {
   const onSave = (): void => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
     saveSubjects(list)
-      .then(e => {
+      .then(() => {
         setModalText('Dine kunnskaper er oppdatert!');
         setOnModal(true);
       })
-      .catch(e => {
+      .catch(() => {
         setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
         setOnModal(true);
       });
