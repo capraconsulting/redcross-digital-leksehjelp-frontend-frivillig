@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import Dropdown from 'react-dropdown';
+import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
 import {
   getVolunteerSubjectList,
   getSubjectList,
@@ -7,10 +6,9 @@ import {
   getMestringSubjectList,
 } from '../services';
 import { IVolunteerSubject, ISubject } from '../interfaces';
-import Cross from '../assets/Cross';
-import { Picker } from '../components';
+import { Picker, Modal } from '../components';
 
-interface IOptions {
+interface IOption {
   value: string;
   label: string;
 }
@@ -18,20 +16,22 @@ interface IOptions {
 const ProfileContainer = () => {
   const [courseList, setCourseList] = useState<IVolunteerSubject[]>([]);
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
-  const [subjectList, setSubjectList] = useState<IOptions[]>([]);
-  const [mestringSubjectList, setMestringSubjectList] = useState<IOptions[]>([]);
+  const [subjectList, setSubjectList] = useState<IOption[]>([]);
+  const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
+  const [onModal, setOnModal] = useState<boolean>(false);
+  const [modalText, setModalText] = useState<string>('');
 
   useEffect(() => {
     (async () => {
-      const volunteerSubjectList = await getVolunteerSubjectList<IVolunteerSubject[]>().then(
-        data => {
-          const themes = data.filter(e => e.isMestring === 1);
-          const courses = data.filter(e => e.isMestring !== 1);
-          setCourseList(courses);
-          setThemeList(themes);
-          return { courses, themes };
-        },
-      );
+      const volunteerSubjectList = await getVolunteerSubjectList<
+        IVolunteerSubject[]
+      >().then(data => {
+        const themes = data.filter(e => e.isMestring === 1);
+        const courses = data.filter(e => e.isMestring !== 1);
+        setCourseList(courses);
+        setThemeList(themes);
+        return { courses, themes };
+      });
       volunteerSubjectList &&
         getSubjectList<ISubject[]>().then(list => {
           const filteredList = list
@@ -49,27 +49,26 @@ const ProfileContainer = () => {
             .map(e => ({ value: e.id.toString(), label: e.subjectTitle }));
           setSubjectList(filteredList);
         });
-      volunteerSubjectList && getMestringSubjectList<ISubject[]>().then(list => {
-        const filteredList = list
-        .filter(e => {
-          const { themes } = volunteerSubjectList;
-          if (
-            !(
-              themes.filter(course => e.id === Number(course.id)).length >
-              0
-            )
-          ) {
-            return true;
-          }
-        })
-        .map(e => ({ value: e.id.toString(), label: e.subjectTitle }));
-        setMestringSubjectList(filteredList);
-
-      });
+      volunteerSubjectList &&
+        getMestringSubjectList<ISubject[]>().then(list => {
+          const filteredList = list
+            .filter(e => {
+              const { themes } = volunteerSubjectList;
+              if (
+                !(
+                  themes.filter(course => e.id === Number(course.id)).length > 0
+                )
+              ) {
+                return true;
+              }
+            })
+            .map(e => ({ value: e.id.toString(), label: e.subjectTitle }));
+          setMestringSubjectList(filteredList);
+        });
     })();
   }, []);
 
-  const addSubject = (subject, type): void => {
+  const addSubject = (subject, type: string): void => {
     const { value, label } = subject;
     if (type === 'fag') {
       const course = { subject: label, id: Number(value), isMestring: 0 };
@@ -83,12 +82,19 @@ const ProfileContainer = () => {
       if (!(themeList.filter(e => e.id === Number(value)).length > 0)) {
         setThemeList([...[theme], ...themeList]);
       }
-      const subjects = mestringSubjectList.filter(e => e.value !== subject.value);
+      const subjects = mestringSubjectList.filter(
+        e => e.value !== subject.value,
+      );
       setMestringSubjectList(subjects);
     }
   };
 
-  const removeSubject = (item: number, subject: string, type: string, e) => {
+  const removeSubject = (
+    item: number,
+    subject: string,
+    type: string,
+    e: MouseEvent,
+  ) => {
     if (type === 'fag') {
       const list = courseList.filter(({ id }) => id !== Number(item));
       setCourseList(list);
@@ -105,33 +111,50 @@ const ProfileContainer = () => {
 
   const onSave = (): void => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
-    saveSubjects(list);
+    saveSubjects(list)
+      .then(e => {
+        setModalText('Dine kunnskaper er oppdatert!');
+        setOnModal(true);
+      })
+      .catch(e => {
+        setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
+        setOnModal(true);
+      });
+  };
+
+  const onCloseModal = () => {
+    setOnModal(false);
   };
 
   return (
-    <div className="profile--container">
-      <Picker
-        title="Mine fag"
-        type="fag"
-        optionList={subjectList}
-        addSubject={addSubject}
-        selectedList={courseList}
-        removeSubject={removeSubject}
-      />
-      <Picker
-        title="Mestring og motivasjon"
-        type="mestring"
-        optionList={mestringSubjectList}
-        addSubject={addSubject}
-        selectedList={themeList}
-        removeSubject={removeSubject}
-      />
-      <div className="profile--footer">
-        <button className="leksehjelp--button-success" onClick={onSave}>
-          Lagre
-        </button>
+    <Fragment>
+      {onModal && <Modal content={modalText} handleClose={onCloseModal} />}
+      <div className="profile--container">
+        <Picker
+          title="Mine fag"
+          type="fag"
+          placeholder="Legg til fag"
+          optionList={subjectList}
+          addSubject={addSubject}
+          selectedList={courseList}
+          removeSubject={removeSubject}
+        />
+        <Picker
+          title="Mestring og motivasjon"
+          type="mestring"
+          placeholder="Legg til tema"
+          optionList={mestringSubjectList}
+          addSubject={addSubject}
+          selectedList={themeList}
+          removeSubject={removeSubject}
+        />
+        <div className="profile--footer">
+          <button className="leksehjelp--button-success" onClick={onSave}>
+            Lagre
+          </button>
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

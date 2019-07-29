@@ -1,30 +1,44 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import Dropdown from 'react-dropdown';
-import Cross from '../assets/Cross'
-import { IVolunteerSubject } from '../interfaces'
+import Cross from '../assets/Cross';
+import { IVolunteerSubject } from '../interfaces';
 
-interface IOptions {
+interface IOption {
   value: string;
   label: string;
 }
 
 interface IProps {
-  optionList: IOptions[];
+  optionList: IOption[];
   selectedList: IVolunteerSubject[];
-  addSubject(event, type: string): void;
-  removeSubject(id: number, subject: string, type: string, event): void;
+  addSubject(option, type: string): void;
+  removeSubject(
+    id: number,
+    subject: string,
+    type: string,
+    event: MouseEvent,
+  ): void;
   title: string;
-  type: string
+  type: string;
+  placeholder: string;
 }
 
-const PickerComponent = ({title, optionList, addSubject, selectedList, removeSubject, type }: IProps) => (
+const PickerComponent = ({
+  title,
+  optionList,
+  addSubject,
+  selectedList,
+  removeSubject,
+  type,
+  placeholder,
+}: IProps) => (
   <div className="profile--component">
     <h3>{title}</h3>
     <Dropdown
       className="subject--dropdown"
       options={optionList}
-      onChange={e => addSubject(e, type)}
-      placeholder="Legg til fag"
+      onChange={option => addSubject(option, type)}
+      placeholder={placeholder}
     />
     <div className="subject--list">
       {selectedList.map(({ subject, id }, index) => (
@@ -40,6 +54,6 @@ const PickerComponent = ({title, optionList, addSubject, selectedList, removeSub
       ))}
     </div>
   </div>
-)
+);
 
-export default PickerComponent
+export default PickerComponent;

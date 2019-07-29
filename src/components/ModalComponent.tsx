@@ -1,5 +1,6 @@
 import React, { MouseEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
+import Cross from '../assets/Cross';
 
 interface IProps {
   content: string;
@@ -25,8 +26,11 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
   return (
     <div className="modal">
       <p>{content}</p>
-      <button className="leksehjelp--button-close" onClick={handleClose}>
-        x
+      <button
+        className="modal--close leksehjelp--button-close"
+        onClick={handleClose}
+      >
+        <Cross color="black" />
       </button>
       {!hideButtons && (
         <div className="modal--button-container">

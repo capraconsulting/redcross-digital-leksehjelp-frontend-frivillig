@@ -14,7 +14,7 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
     return <p>Denne listen er tom for øyeblikket</p>;
   }
 
-  const { type } = props;
+  const { type, history } = props;
 
   return (
     <div className="question--list">
@@ -27,7 +27,7 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
             <div className="question--list-button-container">
               <button
                 className="leksehjelp--button-success"
-                onClick={() => props.history.push(`questions/${id}/${type}`)}
+                onClick={() => history.push(`questions/${id}/${type}`)}
               >
                 {' '}
                 Se spørsmål
