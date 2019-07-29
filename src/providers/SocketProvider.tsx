@@ -69,37 +69,45 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
-    if (msgType === TEXT) {
-      const action = addMessageAction(
-        {
-          message: payload['message'],
-          author: payload['author'],
-          roomID: payload['roomID'],
-          uniqueID: payload['uniqueID'],
-          datetime: payload['datetime'],
-        },
-        true,
-      );
-      dispatchChats(action);
-    } else if (msgType === DISTRIBUTE_ROOM) {
-      const action = addRoomIDAction(payload['roomID'], payload['studentID']);
-      dispatchChats(action);
-    } else if (msgType === CONNECTION) {
-      setUniqueID(payload['uniqueID']);
-    } else if (msgType === QUEUE_LIST) {
-      setQueue(payload['queueMembers']);
-    } else if (msgType === LEAVE_CHAT) {
-      let action;
-      if (payload['uniqueID'] === uniqueID) {
-        action = leaveChatAction(payload['roomID']);
-        toast.success('Du forlot rommet');
-      } else {
-        action = hasLeftChatAction(payload['roomID'], payload['name']);
-      }
-      setActiveChatIndex(0);
-      dispatchChats(action);
-    } else if (msgType === ERROR_LEAVING_CHAT) {
-      toast.error('Det skjedde en feil. Du forlot ikke rommet.');
+    let action;
+
+    switch (msgType) {
+      case TEXT:
+        action = addMessageAction(
+          {
+            message: payload['message'],
+            author: payload['author'],
+            roomID: payload['roomID'],
+            uniqueID: payload['uniqueID'],
+            datetime: payload['datetime'],
+          },
+          true,
+        );
+        dispatchChats(action);
+        break;
+      case DISTRIBUTE_ROOM:
+        action = addRoomIDAction(payload['roomID'], payload['studentID']);
+        dispatchChats(action);
+        break;
+      case CONNECTION:
+        setUniqueID(payload['uniqueID']);
+        break;
+      case QUEUE_LIST:
+        setQueue(payload['queueMembers']);
+        break;
+      case LEAVE_CHAT:
+        if (payload['uniqueID'] === uniqueID) {
+          action = leaveChatAction(payload['roomID']);
+          toast.success('Du forlot rommet');
+        } else {
+          action = hasLeftChatAction(payload['roomID'], payload['name']);
+        }
+        setActiveChatIndex(0);
+        dispatchChats(action);
+        break;
+      case ERROR_LEAVING_CHAT:
+        toast.error('Det skjedde en feil. Du forlot ikke rommet.');
+        break;
     }
   };
 
