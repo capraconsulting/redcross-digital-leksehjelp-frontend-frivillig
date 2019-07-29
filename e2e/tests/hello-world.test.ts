@@ -6,7 +6,7 @@ class LandingPage {
   public headline: Selector;
 
   public constructor() {
-    this.headline = Selector('h1');
+    this.headline = Selector('title');
   }
 
   public getHeadlineText = () => this.headline.textContent;
@@ -17,5 +17,5 @@ const landingPage = new LandingPage();
 test('Check welcome message', async t => {
   await t
     .expect(landingPage.getHeadlineText())
-    .match(new RegExp('Velkommen som frivillig'));
+    .eql('Frivillig|Digital Leksehjelp');
 });

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
+import Cross from '../assets/Cross';
 import { ModalContext } from '../providers/ModalProvider';
 
 interface IProps {
