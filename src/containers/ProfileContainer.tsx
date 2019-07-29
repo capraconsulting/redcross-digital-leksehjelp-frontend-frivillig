@@ -1,4 +1,10 @@
-import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
+import React, {
+  useState,
+  useEffect,
+  MouseEvent,
+  Fragment,
+  useContext,
+} from 'react';
 import {
   getVolunteerSubjectList,
   getSubjectList,
@@ -7,6 +13,7 @@ import {
 } from '../services';
 import { IVolunteerSubject, ISubject } from '../interfaces';
 import { Picker, Modal } from '../components';
+import { ModalContext } from '../providers';
 
 interface IOption {
   value: string;
@@ -18,7 +25,7 @@ const ProfileContainer = () => {
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
   const [subjectList, setSubjectList] = useState<IOption[]>([]);
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
-  const [onModal, setOnModal] = useState<boolean>(false);
+  const { isOpen, setIsOpen } = useContext(ModalContext);
   const [modalText, setModalText] = useState<string>('');
 
   useEffect(() => {
@@ -114,21 +121,17 @@ const ProfileContainer = () => {
     saveSubjects(list)
       .then(() => {
         setModalText('Dine kunnskaper er oppdatert!');
-        setOnModal(true);
+        setIsOpen(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
-        setOnModal(true);
+        setIsOpen(true);
       });
-  };
-
-  const onCloseModal = (): void => {
-    setOnModal(false);
   };
 
   return (
     <Fragment>
-      {onModal && <Modal content={modalText} handleClose={onCloseModal} />}
+      <Modal content={modalText} />
       <div className="profile--container">
         <Picker
           title="Mine fag"

@@ -62,9 +62,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
   if (!isOpen) {
     return null;
   } else {
-
-
-        return (
+    return (
       <div className="modal-container">
         <div className="backdrop" onClick={() => setIsOpen(false)} />
         <div className="modal">

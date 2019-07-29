@@ -18,9 +18,12 @@ export const addNewChatAction = createAction('ADD_NEW', callback => {
   return (student: IStudent) => callback({ student });
 });
 
-export const setChatFromLocalStorageAction = createAction('SET_ALL', callback => {
-  return (chats: IChat[]) => callback({ chats });
-});
+export const setChatFromLocalStorageAction = createAction(
+  'SET_ALL',
+  callback => {
+    return (chats: IChat[]) => callback({ chats });
+  },
+);
 
 export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
   return (roomID: string) => callback({ roomID });
