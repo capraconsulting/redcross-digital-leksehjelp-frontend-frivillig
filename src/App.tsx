@@ -3,7 +3,6 @@ import Routes from './router';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 import './styles/base';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { SocketProvider, ModalProvider } from './providers';
 
 const App = () => {
