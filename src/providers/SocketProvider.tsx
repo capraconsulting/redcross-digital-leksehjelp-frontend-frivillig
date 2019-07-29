@@ -65,6 +65,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     TEXT,
     LEAVE_CHAT,
     ERROR_LEAVING_CHAT,
+    RECONNECT,
   } = MESSAGE_TYPES;
 
   const socketHandler = (message): void => {
@@ -92,6 +93,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
+        reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
         setQueue(payload['queueMembers']);
@@ -109,6 +111,27 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       case ERROR_LEAVING_CHAT:
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
+      case RECONNECT:
+        reconnectSuccessHandler(payload['roomIDs']);
+        break;
+    }
+  };
+
+  const reconnectSuccessHandler = (roomIDs: string[]): void => {
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    if (chatsFromSessionStorage) {
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+
+      const successFullReconnectedChats = parsedChatsFromSessionStorage.filter(
+        chat => {
+          if (roomIDs.includes(chat.roomID)) {
+            return chat;
+          }
+        },
+      );
+      dispatchChats(reconnectChatAction(successFullReconnectedChats));
     }
   };
 
@@ -116,7 +139,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     return chats.map(chat => chat.roomID);
   };
 
-  const reconnectHandler = () => {
+  const reconnectHandler = (uniqueID: string): void => {
     const chatsFromSessionStorage = localStorage.getItem('chats');
     const oldUniqueID = sessionStorage.getItem('oldUniqueID');
 
@@ -128,7 +151,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
         chatsFromSessionStorage,
       );
-      dispatchChats(reconnectChatAction(parsedChatsFromSessionStorage));
       const msg = new ReconnectMessageBuilder(uniqueID)
         .withRoomIDs(getRoomNumbersFromChat(parsedChatsFromSessionStorage))
         .withOldUniqueID(oldUniqueID)
@@ -139,8 +161,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
 
   useEffect(() => {
     getSocket().onmessage = socketHandler;
-
-    reconnectHandler();
   }, []);
 
   useEffect(() => {
@@ -156,7 +176,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     }
   }, [uniqueID]);
 
-  const socketSend = (message: ISocketMessage | IGetMessage) => {
+  const socketSend = (message: ISocketMessage | IGetMessage): void => {
     getSocket().send(JSON.stringify(message));
   };
   return (
