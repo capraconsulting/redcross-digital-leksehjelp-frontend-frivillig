@@ -40,7 +40,7 @@ const ChatHeaderComponent = (props: IProps) => {
         </span>
       </div>
       <Modal
-        content="Er du sikker på at du vil forlate chaten?"
+        content="Er du sikker på at du vil forlate chatten?"
         warningButtonText="Forlat Chatten"
         warningCallback={leaveChat}
         successButtonText="Bli i Chatten"
