@@ -29,11 +29,11 @@ const ChatMessageComponent = (props: IProps) => {
         return (
           <div className={'chat-message'} key={index}>
             <div
-              className={`chat-message--${authorType} chat-message--download`}
+              className={`chat-message--download chat-message--${authorType} chat-message--${authorType}--file`}
             >
               <p className={`chat-message--message`}>
                 <span className="chat-message--file-name">
-                  {file.fileName} {' | '}
+                  {file.fileName}{' '}
                 </span>
                 <span className="chat-message--file-size">
                   {(1000000 / 1000000).toPrecision(3)} MB
@@ -56,7 +56,9 @@ const ChatMessageComponent = (props: IProps) => {
     return (
       message &&
       message.length > 0 && (
-        <p className={`chat-message--message chat-message--${authorType}`}>
+        <p
+          className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
+        >
           {message}
         </p>
       )

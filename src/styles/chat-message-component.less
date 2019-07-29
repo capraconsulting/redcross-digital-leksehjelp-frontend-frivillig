@@ -28,26 +28,42 @@
 
   &--message {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     padding: 0.3rem;
+    font-weight: 300;
     overflow-wrap: break-spaces;
+    border: solid 0px @select-color;
+    border-radius: 0.2rem;
   }
 
   &--self {
-    background-color: gray;
-    color: white;
-    margin-left: 10%;
+    &--message {
+      margin-left: 10%;
+      background-color: @self-chat-message-color;
+      color: @white;
+    }
+    &--file {
+      margin-left: 50%;
+      background-color: @white;
+    }
   }
   &--download {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: white;
+    background-color: @white;
     border: solid 1px @select-color;
+    border-radius: 0.2rem;
   }
   &--other {
-    background-color: @primary-color--light;
-    margin-right: 10%;
+    &--message {
+      margin-right: 10%;
+      background-color: @other-chat-message-color;
+    }
+    &--file {
+      margin-right: 50%;
+      background-color: @white;
+    }
   }
   &--author-self {
     text-align: right;

@@ -13,10 +13,6 @@ import {
 } from './containers';
 
 const Routes = () => {
-  const tf = (str: string) => {
-    console.log(str);
-  };
-
   return (
     <Router>
       <Header />

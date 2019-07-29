@@ -60,6 +60,11 @@ const ChatInputComponent = (props: IProps) => {
     });
   };
 
+  const openFileDialog = () => {
+    const ref = document.getElementById('file-dialog');
+    ref && ref.click();
+  };
+
   const DropzoneWithoutClick = () => {
     const onDrop = useCallback(
       acceptedFiles => {
@@ -67,7 +72,7 @@ const ChatInputComponent = (props: IProps) => {
       },
       [tempFiles],
     );
-    const { getRootProps, getInputProps, open } = useDropzone({
+    const { getRootProps, getInputProps } = useDropzone({
       noClick: true,
       noKeyboard: true,
       onDrop,
@@ -120,10 +125,30 @@ const ChatInputComponent = (props: IProps) => {
               type="file"
               name="attachment"
               id="msg-file-input"
-              accept="image/*|.pdf|.doc|.docx"
+              accept="image/*|.pdf|.doc|.docx|.csv"
               className="file"
             />
-            <button type="button" className="upload" onClick={open}>
+            <button
+              type="button"
+              className="upload"
+              onClick={() => openFileDialog()}
+            >
+              <input
+                type="file"
+                id="file-dialog"
+                className="input-file"
+                accept="image/*|.pdf|.doc|.docx|.csv"
+                onChange={event => {
+                  let { files } = event.target;
+                  let newFiles = [] as any;
+                  let steps = (files && files.length) || 0;
+                  for (var i = 0; i < steps; i++) {
+                    let item = (files && files.item(i)) || 'null';
+                    newFiles.push(item);
+                  }
+                  files && setTempFiles([...tempFiles, ...newFiles]);
+                }}
+              />
               <span className="plus">+</span>
               <div className="tooltip">
                 Hvis du sender et vedlegg, må du gjerne fjerne navnet ditt eller
