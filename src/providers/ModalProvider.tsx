@@ -2,7 +2,7 @@ import React, { createContext, useState, FunctionComponent } from 'react';
 import { SocketContext } from './SocketProvider';
 
 export const ModalContext = createContext({
-  isOpen: false as boolean,
+  isOpen: boolean,
   setIsOpen(bool: boolean): void {},
 });
 
