@@ -21,7 +21,6 @@ const ChatMessageComponent = (props: IProps) => {
 
   const RenderFiles = () => {
     return (
-      typeof message === 'string' &&
       files &&
       files.length > 0 &&
       files.map((file, index) => {

@@ -13,3 +13,4 @@ export * from './IAction';
 export * from './IFeedback';
 export * from './IVolunteerSubject';
 export * from './IFile';
+export * from './ITempFile';

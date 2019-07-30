@@ -128,6 +128,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
             datetime: payload['datetime'],
+            files: payload['files'],
           },
           true,
         );

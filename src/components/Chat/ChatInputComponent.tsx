@@ -4,7 +4,7 @@ import {
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
-import { IFile } from '../../interfaces';
+import { IFile, ITempFile } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 import { IconButton } from '../';
