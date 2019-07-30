@@ -54,6 +54,21 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     return data;
   };
 
+  const onDisapprove = () => {
+    const data = createBody();
+    saveAnswer(data).then(() => {
+      setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
+    }).catch(() => {
+      setModalText('Noe gikk galt.');
+    })
+    setHideModalButtons(true);
+    setIsOpen(true);
+    setTimeout(() => {
+      setIsOpen(false);
+      history.goBack()
+    }, 3000);
+  }
+
   const onSend = async () => {
     if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
@@ -75,11 +90,17 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
               setHideModalButtons(true);
-              setTimeout(() => history.goBack(), 2000);
+              setTimeout(() => {
+                setIsOpen(false);
+                history.goBack();
+              }, 2000);
             } else {
               setModalText('Svaret er sendt til godkjenning.');
               setHideModalButtons(true);
-              setTimeout(() => history.goBack(), 2000);
+              setTimeout(() => {
+                setIsOpen(false);
+                history.goBack()
+              }, 2000);
             }
             setIsOpen(true);
           })
@@ -136,7 +157,10 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setHideModalButtons(true);
         setModalText('Noe gikk galt.');
       });
-    setTimeout(() => history.goBack(), 3000);
+    setTimeout(() => {
+      setIsOpen(false);
+      history.goBack();
+    }, 3000);
     event.preventDefault();
   };
 
@@ -145,7 +169,10 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     setModalText(
       'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
     );
-    setTimeout(() => history.goBack(), 3000);
+    setTimeout(() => {
+      setIsOpen(false);
+      history.goBack();
+    }, 3000);
     event.preventDefault();
   };
 
@@ -202,6 +229,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             <div className="question-form--button-container">
               <button className="leksehjelp--button-success" onClick={onSend}>
                 Godkjenn
+              </button>
+              <button className="leksehjelp--button-warning" onClick={onDisapprove}>
+                Ikke godkjenn
               </button>
             </div>
           ) : (
