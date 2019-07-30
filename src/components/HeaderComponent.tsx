@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { StateContext } from '../StateProvider';
 
-const HeaderComponent = (props: RouteComponentProps) => {
+interface IProps {
+  onLogout(): void;
+}
+
+const HeaderComponent = (props: RouteComponentProps & IProps) => {
   const [path, setPath] = useState('' as string);
 
   const [subPath, setSubPath] = useState('' as string);
@@ -24,6 +28,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
 
   const onSlide = (): void => {
     setActiveState(!activeState);
+  };
+
+  const onLogout = (): void => {
+    props.onLogout();
   };
 
   useEffect(() => {
@@ -66,9 +74,12 @@ const HeaderComponent = (props: RouteComponentProps) => {
         <ul className="header--list">
           <li
             className={`header--list-item ${path === 'profile' && 'active'}`}
-            onClick={() => setPath('profile')}
+            onClick={() => {
+              setPath('profile');
+              setOnDropDown(false);
+            }}
           >
-            Min profil
+            <Link to="/profile">Min profil</Link>
           </li>
           <li
             className={`header--list-item ${path === 'admin' && 'active'}`}
@@ -77,7 +88,10 @@ const HeaderComponent = (props: RouteComponentProps) => {
           >
             Admin
           </li>
-          <li className={`header--list-item ${path === 'logout' && 'active'}`}>
+          <li
+            className={`header--list-item ${path === 'logout' && 'active'}`}
+            onClick={onLogout}
+          >
             Logg ut
           </li>
         </ul>

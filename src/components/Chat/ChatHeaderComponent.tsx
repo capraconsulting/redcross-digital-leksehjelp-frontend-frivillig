@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext } from 'react';
 import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
-import { ModalContext } from '../../providers/ModalProvider';
+import { ModalContext } from '../../providers';
 import { LeaveChatMessageBuilder } from '../../services';
 
 interface IProps {
@@ -40,7 +40,7 @@ const ChatHeaderComponent = (props: IProps) => {
         </span>
       </div>
       <Modal
-        content="Er du sikker på at du vil forlate chaten?"
+        content="Er du sikker på at du vil forlate chatten?"
         warningButtonText="Forlat Chatten"
         warningCallback={leaveChat}
         successButtonText="Bli i Chatten"

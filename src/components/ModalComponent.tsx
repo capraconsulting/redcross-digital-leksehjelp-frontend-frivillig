@@ -1,12 +1,10 @@
 import React, {
   MouseEvent,
-  KeyboardEvent,
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { ModalContext } from '../providers/ModalProvider';
+import Cross from '../assets/Cross';
+import { ModalContext } from '../providers';
 
 interface IProps {
   content: string;
@@ -18,7 +16,7 @@ interface IProps {
   inputFields?: {
     inputText: string;
     buttonText: string;
-    cb(): void;
+    callback(): void;
     isDisabled?: boolean;
   }[];
 }
@@ -47,7 +45,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
               disabled={inputField.isDisabled}
             />
             <button
-              onClick={() => inputField.cb()}
+              onClick={() => inputField.callback()}
               className="button leksehjelp--button-success"
             >
               {inputField.buttonText}
@@ -65,14 +63,12 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
       <div className="modal-container">
         <div className="backdrop" onClick={() => setIsOpen(false)} />
         <div className="modal">
-          <div className="x-container" onClick={() => setIsOpen(false)}>
-            <div className="x t medium">
-              <b></b>
-              <b></b>
-              <b></b>
-              <b></b>
-            </div>
-          </div>
+          <button
+            className="modal--close leksehjelp--button-close"
+            onClick={() => setIsOpen(false)}
+          >
+            <Cross color="black" />
+          </button>
           <p className="content-text">{content}</p>
           <div className="input-field-container">{createInputFields()}</div>
           <div className="button-container">

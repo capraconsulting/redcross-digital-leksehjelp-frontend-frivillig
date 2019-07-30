@@ -10,17 +10,23 @@ import {
   AnswerQuestionContainer,
   ChatContainer,
   AdminQuestionsContainer,
+  ProfileContainer,
 } from './containers';
 
-const Routes = () => {
+interface IProps {
+  onLogout(): void;
+}
+
+const Routes = ({ onLogout }: IProps) => {
   return (
     <Router>
-      <Header />
+      <Header onLogout={onLogout} />
       <Switch>
         <Route exact path="/" component={HomeComponent} />
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/messages" component={ChatContainer} />
         <Route exact path="/queue" component={ChatQueueComponent} />
+        <Route exaxt path="/profile" component={ProfileContainer} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (
