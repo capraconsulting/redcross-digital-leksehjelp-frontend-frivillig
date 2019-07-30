@@ -8,6 +8,7 @@ import {
   IChat,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
+import { IReconnectMessage } from '../interfaces/IReconnectMessage';
 import { IJoin } from '../interfaces/IJoin';
 
 const {
@@ -15,7 +16,7 @@ const {
   LEAVE_CHAT,
   GENERATE_ROOM,
   TEXT,
-  JOIN_CHAT,
+  RECONNECT,
 } = MESSAGE_TYPES;
 
 const createMessage = (
@@ -37,24 +38,63 @@ export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, QUEUE_LIST);
 };
 
-export const createPingMessage = (): ISocketMessage => {
-  return createMessage({}, MESSAGE_TYPES.PING);
-};
+class ReconnectMessage {
+  private readonly oldUniqueID: string;
+  private readonly uniqueID: string;
+  private readonly roomIDs: string[];
 
-export const createJoinChatMessage = (
-  studentInfo: IStudent,
-  uniqueID: string,
-  chatHistory: ITextMessage[],
-  roomID: string,
-) => {
-  const msg: IJoin = {
-    studentInfo,
-    uniqueID,
-    chatHistory,
-    roomID,
-  };
-  return createMessage(msg, JOIN_CHAT);
-};
+  public constructor(reconnectMessageBuilder: ReconnectMessageBuilder) {
+    this.oldUniqueID = reconnectMessageBuilder.oldUniqueID;
+    this.uniqueID = reconnectMessageBuilder.uniqueID;
+    this.roomIDs = reconnectMessageBuilder.roomIDs;
+  }
+
+  public get createMessage(): ISocketMessage {
+    const msg: IReconnectMessage = {
+      oldUniqueID: this.oldUniqueID,
+      uniqueID: this.uniqueID,
+      roomIDs: this.roomIDs,
+    };
+    return createMessage(msg, RECONNECT);
+  }
+}
+
+export class ReconnectMessageBuilder {
+  private readonly _uniqueID: string;
+  private _oldUniqueID: string;
+  private _roomIDs: string[];
+
+  public constructor(uniqueID: string) {
+    this._uniqueID = uniqueID;
+    return this;
+  }
+
+  public withOldUniqueID(value: string): ReconnectMessageBuilder {
+    this._oldUniqueID = value;
+    return this;
+  }
+
+  public withRoomIDs(value: string[]): ReconnectMessageBuilder {
+    this._roomIDs = value;
+    return this;
+  }
+
+  public build(): ReconnectMessage {
+    return new ReconnectMessage(this);
+  }
+
+  public get uniqueID(): string {
+    return this._uniqueID;
+  }
+
+  public get oldUniqueID(): string {
+    return this._oldUniqueID;
+  }
+
+  public get roomIDs(): string[] {
+    return this._roomIDs;
+  }
+}
 
 class LeaveChatMessage {
   private readonly roomID: string;

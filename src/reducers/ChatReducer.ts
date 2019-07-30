@@ -29,8 +29,12 @@ export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
   return (roomID: string) => callback({ roomID });
 });
 
-export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
-  return (roomID: string, name: string) => callback({ roomID, name });
+export const reconnectChatAction = createAction('RECONNECT', cb => {
+  return (chats: IChat[]) => cb({ chats });
+});
+
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
+  return (roomID: string, name: string) => cb({ roomID, name });
 });
 
 export const joinChatAction = createAction('JOIN_CHAT', cb => {
@@ -116,6 +120,10 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
   return [...state];
 };
 
+const handleReconnectChat = (state: IChat[], action: IAction) => {
+  return action.payload.chats;
+};
+
 export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addRoomIDAction, handleAddRoomID)
   .handleAction(addMessageAction, handleAddMessage)
@@ -123,5 +131,6 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addNewChatAction, handleAddNewChat)
   .handleAction(leaveChatAction, handleLeaveChat)
   .handleAction(hasLeftChatAction, handleHasLeftChat)
+  .handleAction(reconnectChatAction, handleReconnectChat);
   .handleAction(joinChatAction, joinChatHandler)
   .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage);

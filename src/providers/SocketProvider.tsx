@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useReducer, useState } from 'react';
+import React, {
+  createContext,
+  useEffect,
+  useReducer,
+  useState,
+  FunctionComponent,
+} from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
@@ -8,11 +14,13 @@ import {
   hasLeftChatAction,
   joinChatAction,
   leaveChatAction,
+  reconnectChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
 import { number } from 'prop-types';
+import { ReconnectMessageBuilder } from '../services';
 import { createPingMessage } from '../services';
 
 toast.configure({
@@ -51,7 +59,7 @@ const getSocket = (): WebSocket => {
   return socket;
 };
 
-export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
+export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [activeChatIndex, setActiveChatIndex] = useState<number>(0);
   const [uniqueID, setUniqueID] = useState<string>('');
@@ -65,68 +73,122 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     ERROR_LEAVING_CHAT,
     JOIN_CHAT,
     AVAILABLE_CHAT,
+    RECONNECT,
   } = MESSAGE_TYPES;
   const [name, setName] = useState<string>('');
   const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
 
-  const socketSend = (message: ISocketMessage | IGetMessage) => {
+  const socketSend = (message: ISocketMessage | IGetMessage): void => {
     getSocket().send(JSON.stringify(message));
   };
+
+  const reconnectSuccessHandler = (roomIDs: string[]): void => {
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    if (chatsFromSessionStorage) {
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+
+      const successFullReconnectedChats = parsedChatsFromSessionStorage.filter(
+        chat => {
+          if (roomIDs.includes(chat.roomID)) {
+            return chat;
+          }
+        },
+      );
+      dispatchChats(reconnectChatAction(successFullReconnectedChats));
+    }
+  };
+
+  const getRoomNumbersFromChat = (chats: IChat[]): string[] => {
+    return chats.map(chat => chat.roomID);
+  };
+
+  const reconnectHandler = (uniqueID: string): void => {
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    const oldUniqueID = sessionStorage.getItem('oldUniqueID');
+
+    if (chatsFromSessionStorage && oldUniqueID) {
+      /*
+       * If not both chatsFromSessionStorage and oldUniqueID is present
+       * then there is no point in reconnecting.
+       */
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+      const msg = new ReconnectMessageBuilder(uniqueID)
+        .withRoomIDs(getRoomNumbersFromChat(parsedChatsFromSessionStorage))
+        .withOldUniqueID(oldUniqueID)
+        .build();
+      socketSend(msg.createMessage);
+    }
+  };
+
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
-    if (msgType === TEXT) {
-      const action = addMessageAction(
-        {
-          message: payload['message'],
-          author: payload['author'],
-          roomID: payload['roomID'],
-          uniqueID: payload['uniqueID'],
-          datetime: payload['datetime'],
-        },
-        true,
-      );
-      console.log(action);
-      dispatchChats(action);
-      console.log(chats);
-    } else if (msgType === DISTRIBUTE_ROOM) {
-      const action = addRoomIDAction(payload['roomID'], payload['studentID']);
-      dispatchChats(action);
-    } else if (msgType === CONNECTION) {
-      setUniqueID(payload['uniqueID']);
-      setName(
-        Math.random()
-          .toString(36)
-          .substring(7),
-      );
-      setInterval(() => socketSend(createPingMessage()), 300000);
-    } else if (msgType === QUEUE_LIST) {
-      setQueue(payload['queueMembers']);
-    } else if (msgType === LEAVE_CHAT) {
-      let action;
-      if (payload['uniqueID'] === uniqueID) {
-        action = leaveChatAction(payload['roomID']);
-        toast.success('Du forlot rommet');
-      } else {
-        action = hasLeftChatAction(payload['roomID'], payload['name']);
-      }
-      setActiveChatIndex(0);
-      dispatchChats(action);
-    } else if (msgType === ERROR_LEAVING_CHAT) {
-      toast.error('Det skjedde en feil. Du forlot ikke rommet.');
-    } else if (msgType === JOIN_CHAT) {
-      const student: IStudent = payload['studentInfo'];
-      const messages: ITextMessage[] = payload['chatHistory'];
-      const action = joinChatAction(student, messages, payload['roomID']);
-      dispatchChats(action);
-    } else if (msgType === AVAILABLE_CHAT) {
-      setAvailableVolunteers(payload['queueMembers']);
+    let action;
+
+    switch (msgType) {
+      case TEXT:
+        action = addMessageAction(
+          {
+            message: payload['message'],
+            author: payload['author'],
+            roomID: payload['roomID'],
+            uniqueID: payload['uniqueID'],
+            datetime: payload['datetime'],
+          },
+          true,
+        );
+        dispatchChats(action);
+        break;
+      case DISTRIBUTE_ROOM:
+        action = addRoomIDAction(payload['roomID'], payload['studentID']);
+        dispatchChats(action);
+        break;
+      case CONNECTION:
+        setUniqueID(payload['uniqueID']);
+        reconnectHandler(payload['uniqueID']);
+        break;
+      case QUEUE_LIST:
+        setQueue(payload['queueMembers']);
+        break;
+      case LEAVE_CHAT:
+        if (payload['uniqueID'] === uniqueID) {
+          action = leaveChatAction(payload['roomID']);
+          toast.success('Du forlot rommet');
+        } else {
+          action = hasLeftChatAction(payload['roomID'], payload['name']);
+        }
+        setActiveChatIndex(0);
+        dispatchChats(action);
+        break;
+      case ERROR_LEAVING_CHAT:
+        toast.error('Det skjedde en feil. Du forlot ikke rommet.');
+        break;
+      case RECONNECT:
+        reconnectSuccessHandler(payload['roomIDs']);
+        break;
     }
   };
 
   useEffect(() => {
     getSocket().onmessage = socketHandler;
   }, []);
+
+  useEffect(() => {
+    if (chats.length > 0) {
+      // Don't set sessionStorage if chats are reset because of reload
+      sessionStorage.setItem('chats', JSON.stringify(chats));
+    }
+  }, [chats]);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('oldUniqueID')) {
+      sessionStorage.setItem('oldUniqueID', uniqueID);
+    }
+  }, [uniqueID]);
 
   return (
     <SocketContext.Provider
