@@ -54,10 +54,10 @@ const ChatContainer = () => {
     <div className="chat-container">
       <div />
       <div className="no-chat">Ingen chats</div>
-      <button
+      {/** <button
         onClick={() => handleDelete('chatfiles', 'gustav', 'config.jpg')}
       />
-      <button onClick={() => deleteBlobDirectory('chatfiles', 'gustav')} />
+      <button onClick={() => deleteBlobDirectory('chatfiles', 'gustav')} /> */}
     </div>
   );
 };
