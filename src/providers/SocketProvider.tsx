@@ -128,6 +128,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
             datetime: payload['datetime'],
+            files: payload['files'],
           },
           true,
         );
@@ -139,7 +140,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
-        reconnectHandler(payload['uniqueID']);
+        //reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
         setQueue(payload['queueMembers']);
@@ -158,7 +159,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
       case RECONNECT:
-        reconnectSuccessHandler(payload['roomIDs']);
+        //reconnectSuccessHandler(payload['roomIDs']);
         break;
     }
   };
