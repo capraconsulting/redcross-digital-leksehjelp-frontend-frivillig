@@ -31,7 +31,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
     false,
   );
-  const [isPublish, setIsPublish] = React.useState<boolean>(false);
   const [modalText, setModalText] = React.useState<string>('');
   const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
     [],
@@ -70,7 +69,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               setModalText(
                 'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
               );
-              setIsPublish(true);
             } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
               setTimeout(() => history.goBack(), 2000);

@@ -1,8 +1,6 @@
 import React, { MouseEvent, useContext } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { IChat, IStudent, ITextMessage } from '../interfaces';
-import { createJoinMessage } from '../services';
-import { SocketContext } from '../providers';
+import Cross from '../assets/Cross';
 
 interface IProps {
   content: string;
@@ -65,7 +63,12 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
   return (
     <div className="modal">
       <p>{content}</p>
-      {mapAvailable()}
+      <button
+        className="modal--close leksehjelp--button-close"
+        onClick={handleClose}
+      >
+        <Cross color="black" />
+      </button>
       {!hideButtons && (
         <div className="modal--button-container">
           {successButtonText && (

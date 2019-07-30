@@ -11,3 +11,4 @@ export { default as ChatQueue } from './Chat/ChatQueueComponent';
 export { default as ActiveChats } from './Chat/ActiveChatsComponent';
 export { default as ChatQueueHeader } from './Chat/ChatQueueHeaderComponent';
 export { default as Modal } from './ModalComponent';
+export { default as Picker } from './PickerComponent';

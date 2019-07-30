@@ -10,11 +10,12 @@
 @import 'chat-queue-component';
 @import 'active-chats-component';
 @import 'modal-component';
+@import 'profile-component';
 
 body {
   font-family: sans-serif;
   font-weight: lighter;
-  margin: 10px 0;
+  margin: 10px 20px;
 }
 
 p,
@@ -108,9 +109,6 @@ button {
     background-color: @danger-color;
   }
   &-close {
-    right: 0;
-    top: 0;
-    position: fixed;
     background: none;
     color: inherit;
     padding: 0.5rem;
@@ -118,6 +116,9 @@ button {
     outline: inherit;
     margin: 0;
     width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   &-abort {
     border: thin solid @danger-color;
@@ -213,4 +214,24 @@ input:checked + .slider:before {
   -webkit-transform: translateX(1rem);
   -ms-transform: translateX(15rem);
   transform: translateX(1rem);
+}
+
+.Dropdown {
+  &-placeholder {
+    padding: 0.5rem;
+    color: @dropdown-text-color;
+  }
+  &-control {
+    border: thin solid @dropdown-border-color;
+  }
+  &-menu {
+    border: thin solid @dropdown-border-color;
+  }
+  &-option {
+    padding: 0.5rem;
+    color: @dropdown-text-color;
+    &:hover {
+      color: @dropdown-caret-color;
+    }
+  }
 }
