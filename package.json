@@ -59,6 +59,7 @@
     "react-dom": "16.8.6",
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.0.1",
+    "react-toastify": "^5.3.2",
     "socket.io-client": "^2.2.0",
     "typesafe-actions": "^4.4.2"
   }

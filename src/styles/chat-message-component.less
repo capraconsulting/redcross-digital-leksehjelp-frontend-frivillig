@@ -2,12 +2,20 @@
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
+
+  &--notification {
+    border-bottom: @message-separator 1px solid;
+    border-top: @message-separator 1px solid;
+    padding: 0.5rem 1rem;
+    text-align: center;
+  }
+
   &--file-name {
     font-weight: bold;
     font-size: 1rem;
   }
   &--file-size {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
 
   &:hover {

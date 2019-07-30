@@ -3,7 +3,7 @@ import Routes from './router';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 import './styles/base';
-import { SocketProvider } from './providers';
+import { SocketProvider, ModalProvider } from './providers';
 
 const App = () => {
   const authenticatedFunction = logout => {

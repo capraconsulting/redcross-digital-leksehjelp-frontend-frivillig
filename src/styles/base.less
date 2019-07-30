@@ -11,6 +11,7 @@
 @import 'active-chats-component';
 @import 'modal-component';
 @import 'profile-component';
+@import '~react-toastify/dist/ReactToastify.min.css';
 
 body {
   font-family: sans-serif;
@@ -107,6 +108,9 @@ button {
 
   &-warning {
     background-color: @danger-color;
+    &:hover {
+      background-color: @danger-hover-color;
+    }
   }
   &-close {
     background: none;
@@ -126,7 +130,7 @@ button {
     padding: 0.5rem;
     margin: 0;
   }
- }
+}
 
 .leksehjelp--link {
   color: @link-color;

@@ -8,9 +8,13 @@ import { act } from 'react-dom/test-utils';
 
 // main component
 const ChatContainer = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { uniqueID, chats, dispatchChats, availableVolunteers } = useContext(SocketContext);
-  const [popup, setPopup] = useState<boolean>(false);
+  const {
+    uniqueID,
+    chats,
+    dispatchChats,
+    activeChatIndex,
+    setActiveChatIndex,
+  } = useContext(SocketContext);
 
 
   useEffect(() => {
@@ -22,9 +26,8 @@ const ChatContainer = () => {
   }, [chats]);
 
   const showMessages = (index: number) => {
-    console.log("Leser meldiger nå");
-    setActiveIndex(index);
-    dispatchChats(readMessagesAction(chats[activeIndex].roomID));
+    setActiveChatIndex(index);
+    dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
   };
 
   const func = () => {
@@ -68,14 +71,16 @@ const ChatContainer = () => {
           <ActiveChats showMessages={showMessages} availableChats={chats} />
         </div>
         <div className="chat">
-          {chats && <ChatHeader activeChat={chats[activeIndex]} />}
-          {chats && <ChatBody messages={chats[activeIndex].messages} />}
-          {chats && (
+          {chats && chats[activeChatIndex] && (
+            <ChatHeader activeChat={chats[activeChatIndex]} />
+          )}
+          {chats && chats[activeChatIndex] && (
+            <ChatBody messages={chats[activeChatIndex].messages} />
+          )}
+          {chats && chats[activeChatIndex] && (
             <ChatInput
               uniqueID={uniqueID}
-              roomID={chats[activeIndex].roomID}
-              student={chats[activeIndex].student}
-              popUp={func}
+              roomID={chats[activeChatIndex].roomID}
             />
           )}
         </div>

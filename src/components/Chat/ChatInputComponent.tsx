@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { createAvailableChatMessage, createJoinMessage, createTextMessage } from '../../services';
 import { ISocketFile, IStudent, ITextMessage } from '../../interfaces';
+import { createAvailableChatMessage, createJoinMessage, createTextMessage } from '../../services';
 import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
+import { TextMessageBuilder } from '../../services';
 
 interface IProps {
   uniqueID: string;
@@ -20,12 +21,11 @@ const ChatInputComponent = (props: IProps) => {
   const onSendTextMessage = event => {
     event.preventDefault();
     if (message.length > 0) {
-      const { textMessage, socketMessage } = createTextMessage(
-        message,
-        uniqueID,
-        roomID,
-        name,
-      );
+      const msg = new TextMessageBuilder(uniqueID)
+        .withMessage(message)
+        .toRoom(roomID)
+        .build();
+      const { textMessage, socketMessage } = msg.createMessage;
       setMessage('');
       socketSend(socketMessage);
       dispatchChats(addMessageAction(textMessage));
@@ -67,35 +67,11 @@ const ChatInputComponent = (props: IProps) => {
     }
   };
 
-  const onSendFileMessage = (file: File) => {
-    const fr = new FileReader();
-    fr.onload = () => {
-      const socketFile: ISocketFile = {
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        dataURL: String(fr.result),
-      };
-      const { textMessage, socketMessage } = createTextMessage(
-        socketFile,
-        uniqueID,
-        roomID,
-        name,
-      );
-      socketSend(socketMessage);
-      dispatchChats(addMessageAction(textMessage));
-    };
-    fr.readAsDataURL(file);
-  };
-
   return (
 
     <div className="message-form-container">
       <form className="message-form">
         <input
-          onChange={event =>
-            event.target.files && onSendFileMessage(event.target.files[0])
-          }
           type="file"
           name="attachment"
           id="msg-file-input"
