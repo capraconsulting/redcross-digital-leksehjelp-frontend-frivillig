@@ -8,9 +8,8 @@ import { IFile } from '../interfaces';
 import { AZURE_TOKENS } from '../config';
 
 //Creates Azure Blobservice with restricted access
-export const blobService = azure.createBlobService(
-  AZURE_TOKENS.CONNECTION_STRING,
-);
+export const blobService = azure.createBlobService(process.env
+  .CONNECTION_STRING as string);
 
 /**
  * Uploads file to azure blob storage.
@@ -60,5 +59,45 @@ export const uploadFileToAzureBlobStorage = async (
         });
       }
     };
+  });
+};
+
+export const deleteFileFromBlob = async (
+  share: string,
+  directory: string,
+  fileName: string,
+) => {
+  return new Promise<string>((resolve, reject) => {
+    blobService.deleteBlobIfExists(share, directory + '/' + fileName, function(
+      error,
+      result,
+      response,
+    ) {
+      if (!error) {
+        console.log(result);
+        console.log(response);
+        resolve('Deleted' + fileName);
+      } else {
+        reject();
+      }
+    });
+  });
+};
+
+export const deleteBlobDirectory = async (share: string, directory: string) => {
+  return new Promise<string>((resolve, reject) => {
+    blobService.deleteBlobIfExists(share, directory, function(
+      error,
+      result,
+      response,
+    ) {
+      if (!error) {
+        console.log(result);
+        console.log(response);
+        resolve('Deleted');
+      } else {
+        reject();
+      }
+    });
   });
 };
