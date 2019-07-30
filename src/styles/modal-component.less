@@ -1,23 +1,110 @@
+.backdrop {
+  min-height: 100%;
+  min-width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: @backdrop-color;
+}
+
 .modal {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   position: absolute;
-  top: 30%;
+  padding: 1rem;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  width: 30rem;
-  height: 15rem;
-  background-color: @disabled-color;
-  p {
+  background-color: @modal-color;
+  > .content-text {
     padding: 2rem;
     text-align: center;
+    font-weight: bold;
+  }
+  > .input-field-container {
+    width: 95%;
+    > .input-field {
+      display: flex;
+      flex-direction: row;
+      > .text {
+        resize: none;
+        width: 100%;
+        padding: 0.5rem;
+        box-sizing: border-box;
+        border: solid 1px @input-border-color;
+        border-radius: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        font-size: 1rem;
+        height: 3rem;
+        margin-bottom: .5rem;
+      }
+      > .button {
+        margin: 0 0 .5rem .5rem;
+      }
+    }
   }
   &--close {
     top: 0;
     right: 0;
     position: absolute;
   }
+}
+
+.x-container {
+  position: relative;
+  top: -15%;
+  left: 47%;
+}
+
+.x {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: @disabled-color;
+  border-radius: 2px;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.x.medium {
+  width: 20px;
+  height: 20px;
+}
+
+.x.t:hover {
+  background: @danger-color;
+}
+
+.x b {
+  display: block;
+  position: absolute;
+  height: 0;
+  width: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.x.medium b {
+  border: solid 10px rgba(255, 255, 255, 0);
+}
+
+.x b:nth-child(1) {
+  border-top-color: @modal-color;
+  top: -2px;
+}
+.x b:nth-child(2) {
+  border-left-color: @modal-color;
+  left: -2px;
+}
+.x b:nth-child(3) {
+  border-bottom-color: @modal-color;
+  bottom: -2px;
+}
+.x b:nth-child(4) {
+  border-right-color: @modal-color;
+  right: -2px;
 }
