@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { ISocketFile, IStudent, ITextMessage } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
 import { ModalContext, SocketContext } from '../../providers';
-import { TextMessageBuilder } from '../../services';
+import { createGetAvailableQueueMessage, TextMessageBuilder } from '../../services';
 
 interface IProps {
   uniqueID: string;
@@ -72,10 +72,14 @@ const ChatInputComponent = (props: IProps) => {
         </button>
         <button
           className="leksehjelp--button-success"
-          onClick={() => setIsOpen(true)}
+          onClick={(e) => {
+            e.preventDefault();
+            const msg = createGetAvailableQueueMessage();
+            socketSend(msg);
+            setIsOpen(true);
+          }}
         >
-          {' '}
-          Se alle tilgjengelige{' '}
+          Se alle tilgjengelige
         </button>
       </form>
     </div>

@@ -32,8 +32,6 @@ const ChatContainer = () => {
   
 
   if (chats.length >= 1) {
-    console.log("antall chats");
-    console.log(chats.length);
     return (
       <div className="chat-container">
         <div className="chat-list">

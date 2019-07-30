@@ -8,9 +8,11 @@ import { SocketProvider, ModalProvider } from './providers';
 const App = () => {
   const authenticatedFunction = logout => {
     return (
-      <SocketProvider>
-        <Routes onLogout={logout} />
-      </SocketProvider>
+      <ModalProvider>
+        <SocketProvider>
+          <Routes onLogout={logout} />
+        </SocketProvider>
+      </ModalProvider>
     );
   };
   const { origin } = window.location;

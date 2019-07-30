@@ -17,6 +17,10 @@ const {
   GENERATE_ROOM,
   TEXT,
   RECONNECT,
+  JOIN_CHAT,
+  PING,
+  AVAILABLE_CHAT
+
 } = MESSAGE_TYPES;
 
 const createMessage = (
@@ -36,6 +40,30 @@ const createMessage = (
 
 export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, QUEUE_LIST);
+};
+
+export const createPingMessage = (): ISocketMessage => {
+  return createMessage({}, PING);
+};
+
+export const createGetAvailableQueueMessage = (): ISocketMessage => {
+  return createMessage({}, AVAILABLE_CHAT)
+}
+
+
+export const createJoinChatMessage = (
+  studentInfo: IStudent,
+  uniqueID: string,
+  chatHistory: ITextMessage[],
+  roomID: string,
+) => {
+  const msg: IJoin = {
+    studentInfo,
+    uniqueID,
+    chatHistory,
+    roomID,
+  };
+  return createMessage(msg, JOIN_CHAT);
 };
 
 class ReconnectMessage {
@@ -95,6 +123,7 @@ export class ReconnectMessageBuilder {
     return this._roomIDs;
   }
 }
+
 
 class LeaveChatMessage {
   private readonly roomID: string;

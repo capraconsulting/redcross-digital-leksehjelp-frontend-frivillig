@@ -1,12 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
+import { Modal } from '../../components';
+import { SocketContext } from '../../providers';
+import { createJoinChatMessage } from '../../services';
 
 interface IProps {
   messages: ITextMessage[];
 }
 
 const ChatBodyComponent = (props: IProps) => {
+  const {
+    availableVolunteers,
+    socketSend,
+    activeChatIndex,
+    chats,
+    uniqueID,
+  } = useContext(SocketContext);
   const listMessages = () => {
     /*console.log("Kjører jeg?");
     console.log(props.messages);
@@ -19,8 +29,25 @@ const ChatBodyComponent = (props: IProps) => {
     ));
   };
 
+  const createFrivilligOptions = () => {
+    return availableVolunteers.map((vol: string) => {
+      return {
+        inputText: vol,
+        buttonText: 'Legg til',
+        callback: () => socketSend(createJoinChatMessage(
+          chats[activeChatIndex].student,
+          uniqueID,
+          chats[activeChatIndex].messages,
+          chats[activeChatIndex].roomID,
+        )),
+        isDisabled: true,
+      };
+    });
+  };
+
   return (
     <div className="chat-body-container">
+      <Modal content="Tilgjengelige frivillige" inputFields={createFrivilligOptions()} />
       <div className="display" id="message-display">
         <div className="welcome-container">
           <p className="welcome-header">Velkommen til chaten!</p>

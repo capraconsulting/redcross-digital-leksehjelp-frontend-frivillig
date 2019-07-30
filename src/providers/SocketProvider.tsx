@@ -19,7 +19,6 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { number } from 'prop-types';
 import { ReconnectMessageBuilder } from '../services';
 import { createPingMessage } from '../services';
 
@@ -107,7 +106,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const reconnectHandler = (uniqueID: string): void => {
     const chatsFromSessionStorage = localStorage.getItem('chats');
     const oldUniqueID = sessionStorage.getItem('oldUniqueID');
-
     if (chatsFromSessionStorage && oldUniqueID) {
       /*
        * If not both chatsFromSessionStorage and oldUniqueID is present
@@ -149,6 +147,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
+        setInterval(() => socketSend(createPingMessage()), 300000);
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
@@ -170,8 +169,71 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       case RECONNECT:
         reconnectSuccessHandler(payload['roomIDs']);
         break;
+      case JOIN_CHAT:
+        const student: IStudent = payload['studentInfo'];
+        const messages: ITextMessage[] = payload['chatHistory'];
+        action = joinChatAction(student, messages, payload['roomID']);
+        dispatchChats(action);
+        break;
+      case AVAILABLE_CHAT:
+        setAvailableVolunteers(payload['queueMembers']);
+        break;
     }
   };
+
+
+  /*
+  const socketSend = (message: ISocketMessage | IGetMessage): void => {
+    getSocket().send(JSON.stringify(message));
+  };
+  */
+  /*
+  const reconnectSuccessHandler = (roomIDs: string[]): void => {
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    if (chatsFromSessionStorage) {
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+
+      const successFullReconnectedChats = parsedChatsFromSessionStorage.filter(
+        chat => {
+          if (roomIDs.includes(chat.roomID)) {
+            return chat;
+          }
+        },
+      );
+      dispatchChats(reconnectChatAction(successFullReconnectedChats));
+    }
+  };
+  */
+  /*
+  const getRoomNumbersFromChat = (chats: IChat[]): string[] => {
+    return chats.map(chat => chat.roomID);
+  };
+  */
+  /*
+  const reconnectHandler = (uniqueID: string): void => {
+    const chatsFromSessionStorage = localStorage.getItem('chats');
+    const oldUniqueID = sessionStorage.getItem('oldUniqueID');
+
+    if (chatsFromSessionStorage && oldUniqueID) {
+      /*
+       * If not both chatsFromSessionStorage and oldUniqueID is present
+       * then there is no point in reconnecting.
+       */
+  /*
+      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
+        chatsFromSessionStorage,
+      );
+      
+      const msg = new ReconnectMessageBuilder(uniqueID)
+        .withRoomIDs(getRoomNumbersFromChat(parsedChatsFromSessionStorage))
+        .withOldUniqueID(oldUniqueID)
+        .build();
+      socketSend(msg.createMessage);
+    }
+  };
+  */
 
   useEffect(() => {
     getSocket().onmessage = socketHandler;
