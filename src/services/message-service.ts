@@ -8,7 +8,13 @@ import {
 import { MESSAGE_TYPES } from '../config';
 import { IReconnectMessage } from '../interfaces/IReconnectMessage';
 
-const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT, RECONNECT } = MESSAGE_TYPES;
+const {
+  QUEUE_LIST,
+  LEAVE_CHAT,
+  GENERATE_ROOM,
+  TEXT,
+  RECONNECT,
+} = MESSAGE_TYPES;
 
 const createMessage = (
   payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
@@ -39,7 +45,7 @@ class ReconnectMessage {
     const msg: IReconnectMessage = {
       oldUniqueID: this.oldUniqueID,
       uniqueID: this.uniqueID,
-      roomIDs: this.roomIDs
+      roomIDs: this.roomIDs,
     };
     return createMessage(msg, RECONNECT);
   }
@@ -55,7 +61,6 @@ export class ReconnectMessageBuilder {
     return this;
   }
 
-
   public withOldUniqueID(value: string): ReconnectMessageBuilder {
     this._oldUniqueID = value;
     return this;
@@ -69,7 +74,6 @@ export class ReconnectMessageBuilder {
   public build(): ReconnectMessage {
     return new ReconnectMessage(this);
   }
-
 
   public get uniqueID(): string {
     return this._uniqueID;
