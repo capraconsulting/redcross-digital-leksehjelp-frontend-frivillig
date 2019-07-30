@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
-import { createLeaveChatMessage } from '../../services';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
+import { ModalContext } from '../../providers';
+import { LeaveChatMessageBuilder } from '../../services';
 
 interface IProps {
   activeChat: IChat;
@@ -13,16 +14,13 @@ const ChatHeaderComponent = (props: IProps) => {
   const { roomID } = props.activeChat;
   const { nickname, course } = props.activeChat.student;
   const { socketSend, dispatchChats, uniqueID } = useContext(SocketContext);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { setIsOpen } = useContext(ModalContext);
 
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
-    socketSend(createLeaveChatMessage(roomID, uniqueID));
-    setIsModalOpen(false);
-  };
-
-  const handleCloseModal = (): void => {
-    setIsModalOpen(false);
+    const msg = new LeaveChatMessageBuilder(uniqueID).toRoom(roomID).build();
+    socketSend(msg.createMessage);
+    setIsOpen(false);
   };
 
   return (
@@ -34,22 +32,19 @@ const ChatHeaderComponent = (props: IProps) => {
         <span className="chat-header--text--right">
           <p>{course}</p>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsOpen(true)}
             className="leksehjelp--button-success"
           >
             Forlat Chatten
           </button>
         </span>
       </div>
-      {isModalOpen && (
-        <Modal
-          content="Er du sikker på at du vil forlate chaten?"
-          warningButtonText="Forlat Chatten"
-          warningCallback={leaveChat}
-          successButtonText="Bli i Chatten"
-          handleClose={handleCloseModal}
-        />
-      )}
+      <Modal
+        content="Er du sikker på at du vil forlate chatten?"
+        warningButtonText="Forlat Chatten"
+        warningCallback={leaveChat}
+        successButtonText="Bli i Chatten"
+      />
     </div>
   );
 };

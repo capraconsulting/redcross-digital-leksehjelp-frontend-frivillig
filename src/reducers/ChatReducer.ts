@@ -1,33 +1,36 @@
 import { createAction, createReducer } from 'typesafe-actions';
 import { IAction, IChat, IStudent, ITextMessage, IFile } from '../interfaces';
 
-export const addRoomIDAction = createAction('ADD_ROOM_ID', cb => {
-  return (roomID: string, studentID: string) => cb({ roomID, studentID });
+export const addRoomIDAction = createAction('ADD_ROOM_ID', callback => {
+  return (roomID: string, studentID: string) => callback({ roomID, studentID });
 });
 
-export const addMessageAction = createAction('ADD_MESSAGE', cb => {
+export const addMessageAction = createAction('ADD_MESSAGE', callback => {
   return (message: ITextMessage, unread: boolean = false) =>
-    cb({ message, unread });
+    callback({ message, unread });
 });
 
-export const readMessagesAction = createAction('READ_MESSAGES', cb => {
-  return (roomID: string) => cb({ roomID });
+export const readMessagesAction = createAction('READ_MESSAGES', callback => {
+  return (roomID: string) => callback({ roomID });
 });
 
-export const addNewChatAction = createAction('ADD_NEW', cb => {
-  return (student: IStudent) => cb({ student });
+export const addNewChatAction = createAction('ADD_NEW', callback => {
+  return (student: IStudent) => callback({ student });
 });
 
-export const setChatFromLocalStorageAction = createAction('SET_ALL', cb => {
-  return (chats: IChat[]) => cb({ chats });
+export const setChatFromLocalStorageAction = createAction(
+  'SET_ALL',
+  callback => {
+    return (chats: IChat[]) => callback({ chats });
+  },
+);
+
+export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
+  return (roomID: string) => callback({ roomID });
 });
 
-export const leaveChatAction = createAction('LEAVE_CHAT', cb => {
-  return (roomID: string) => cb({ roomID });
-});
-
-export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
-  return (roomID: string, name: string) => cb({ roomID, name });
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
+  return (roomID: string, name: string) => callback({ roomID, name });
 });
 
 const handleAddRoomID = (state: IChat[], action: IAction) => {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, ISubject, IFeedback } from '../interfaces';
+import { IQuestion, IAnswer, IFeedback } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -41,12 +41,19 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   }
   return await api
     .get(parameter !== undefined ? `questions${url}` : 'questions')
-    .then(res => res.data)
-    .catch(err => err);
+    .then(res => res.data);
 }
 
-export async function getSubjectList(): Promise<ISubject[]> {
+export async function getVolunteerSubjectList<T>(): Promise<T> {
+  return await api.get('volunteers/subjects').then(res => res.data);
+}
+
+export async function getSubjectList<T>(): Promise<T> {
   return await api.get('subjects').then(res => res.data);
+}
+
+export async function getMestringSubjectList<T>(): Promise<T> {
+  return await api.get('subjects?isMestring=1').then(res => res.data);
 }
 
 export async function postAnswer(
@@ -89,4 +96,10 @@ export async function publishQuestion(id: string): Promise<{}> {
 
 export async function deleteFeedback(id: string): Promise<{}> {
   return await api.post(`feedback/${id}/delete`).then(res => res.data);
+}
+
+export async function saveSubjects(list: number[]): Promise<{}> {
+  return await api
+    .post('volunteers/subjects', { subjects: list })
+    .then(res => res.data);
 }

@@ -1,8 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-
 import {
-  createTextMessage,
+  TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
 import { IFile } from '../../interfaces';
@@ -12,15 +11,14 @@ import { IconButton } from '../';
 import '../../styles/chat-input-component.less';
 
 interface IProps {
-  uniqueID: string;
   roomID: string;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
   const [tempFiles, setTempFiles] = useState([] as any[]);
-  const { dispatchChats, socketSend } = useContext(SocketContext);
-  const { uniqueID, roomID } = props;
+  const { dispatchChats, socketSend, uniqueID } = useContext(SocketContext);
+  const { roomID } = props;
 
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
@@ -32,14 +30,14 @@ const ChatInputComponent = (props: IProps) => {
   const sendTextMessage = (event, files) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
-      const { textMessage, socketMessage } = createTextMessage(
-        message,
-        uniqueID,
-        roomID,
-        files,
-      );
-      socketSend(socketMessage);
+      const msg = new TextMessageBuilder(uniqueID)
+        .withMessage(message)
+        .withFiles(files)
+        .toRoom(roomID)
+        .build();
+      const { textMessage, socketMessage } = msg.createMessage;
       dispatchChats(addMessageAction(textMessage));
+      socketSend(socketMessage);
       setMessage('');
       setTempFiles([] as any[]);
     }

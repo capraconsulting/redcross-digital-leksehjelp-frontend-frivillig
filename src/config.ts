@@ -1,8 +1,11 @@
 export const API_URL = 'http://localhost:8080/';
 export const CHAT_URL = 'ws://localhost:3002/events';
+
+const token = sessionStorage ? sessionStorage.getItem('msal.idtoken') : '';
 export const HEADERS = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
 };
 
 export const MESSAGE_TYPES = {

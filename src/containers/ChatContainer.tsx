@@ -6,7 +6,6 @@ import { SocketContext } from '../providers';
 // main component
 const ChatContainer = () => {
   const {
-    uniqueID,
     chats,
     dispatchChats,
     activeChatIndex,
@@ -40,10 +39,7 @@ const ChatContainer = () => {
             <ChatBody messages={chats[activeChatIndex].messages} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput
-              uniqueID={uniqueID}
-              roomID={chats[activeChatIndex].roomID}
-            />
+            <ChatInput roomID={chats[activeChatIndex].roomID} />
           )}
         </div>
       </div>

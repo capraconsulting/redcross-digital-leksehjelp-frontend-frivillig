@@ -2,6 +2,8 @@
   min-height: 100%;
   min-width: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
   background-color: @backdrop-color;
 }
 
@@ -12,7 +14,7 @@
   flex-direction: column;
   position: absolute;
   padding: 1rem;
-  top: 30%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
@@ -44,6 +46,11 @@
         margin: 0 0 .5rem .5rem;
       }
     }
+  }
+  &--close {
+    top: 0;
+    right: 0;
+    position: absolute;
   }
 }
 
