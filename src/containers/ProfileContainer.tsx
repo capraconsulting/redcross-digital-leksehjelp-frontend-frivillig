@@ -4,8 +4,9 @@ import {
   getSubjectList,
   saveSubjects,
   getMestringSubjectList,
+  getVolunteerProfile,
 } from '../services';
-import { IVolunteerSubject, ISubject } from '../interfaces';
+import { IVolunteerSubject, ISubject, IProfile } from '../interfaces';
 import { Picker, Modal } from '../components';
 
 interface IOption {
@@ -20,6 +21,12 @@ const ProfileContainer = () => {
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
   const [onModal, setOnModal] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
+  const [volunteerProfile, setVolunteerProfile] = useState<IProfile>({
+    email: '',
+    name: '',
+    id: '',
+    bioText: '',
+  });
 
   useEffect(() => {
     (async () => {
@@ -32,6 +39,7 @@ const ProfileContainer = () => {
         setThemeList(themes);
         return { courses, themes };
       });
+      getVolunteerProfile<IProfile>().then(setVolunteerProfile);
       volunteerSubjectList &&
         getSubjectList<ISubject[]>().then(list => {
           const filteredList = list
@@ -152,6 +160,9 @@ const ProfileContainer = () => {
           <button className="leksehjelp--button-success" onClick={onSave}>
             Lagre
           </button>
+        </div>
+        <div>
+          <p>{volunteerProfile.name}</p>
         </div>
       </div>
     </Fragment>
