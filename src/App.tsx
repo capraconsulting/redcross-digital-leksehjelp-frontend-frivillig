@@ -9,7 +9,7 @@ const App = () => {
   const authenticatedFunction = logout => {
     return (
       <SocketProvider>
-          <Routes onLogout={logout} />
+        <Routes onLogout={logout} />
       </SocketProvider>
     );
   };

@@ -131,7 +131,10 @@ const ProfileContainer = () => {
   return (
     <Fragment>
       {modalOpen && (
-        <Modal content={modalText} closingCallback={() => setModalOpen(false)} />
+        <Modal
+          content={modalText}
+          closingCallback={() => setModalOpen(false)}
+        />
       )}
       <div className="profile--container">
         <Picker
