@@ -7,7 +7,6 @@ interface IProps {
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  console.log(props.message);
   const { message, author, uniqueID, files } = props.message;
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead

@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 
 import {
   createTextMessage,
-  uploadFileToAzureFileStorage,
+  uploadFileToAzureBlobStorage,
 } from '../../services';
 import { ISocketFile, IFile } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
@@ -24,20 +24,13 @@ const ChatInputComponent = (props: IProps) => {
 
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
-      return uploadFileToAzureFileStorage(
-        'chatfiles',
-        uniqueID,
-        file,
-        uniqueID,
-      );
+      return uploadFileToAzureBlobStorage('chatfiles', roomID, file);
     });
   };
 
   const sendTextMessage = (event, results) => {
     event.preventDefault();
     if (message.length > 0 || results.length > 0) {
-      console.log(message);
-      console.log(results);
       let files = results;
       const { textMessage, socketMessage } = createTextMessage(
         message,
@@ -55,7 +48,6 @@ const ChatInputComponent = (props: IProps) => {
   const handleSubmit = event => {
     event.preventDefault();
     return Promise.all<IFile>(uploadPromises(tempFiles)).then(results => {
-      console.log(results);
       sendTextMessage(event, results);
     });
   };
