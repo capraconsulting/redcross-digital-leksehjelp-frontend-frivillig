@@ -1,3 +1,5 @@
+@import 'colors';
+
 .message-form-container {
   padding-top: 1rem;
   > .message-form {
@@ -9,8 +11,13 @@
       padding: 0;
       border: none;
       color: white;
+      background-color: @action-color;
       width: 37px;
       height: 37px;
+      border-radius: 0.6rem;
+      > .plus {
+        font-size: 32px;
+      }
       > .tooltip {
         background-color: #f2ecf8;
         display: none;
@@ -28,8 +35,8 @@
         display: block;
         transform: translate(0, -100%);
       }
-      &:hover > .add-file-icon {
-        filter: brightness(80%);
+      &:hover {
+        background-color: @link-hover-color;
       }
       &:focus {
         outline: none;
@@ -50,9 +57,7 @@
     > .send-message {
       background-color: rgba(0, 0, 0, 0);
       border: 0;
-      &:hover > .send-icon {
-        filter: brightness(80%);
-      }
+      cursor: pointer;
     }
   }
 }
@@ -65,5 +70,25 @@
 }
 
 .hidden {
+  display: none;
+}
+
+.dropzone {
+  height: 1rem;
+}
+
+.filelist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filelist-ankertag {
+  color: @hero-black;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.input-file {
   display: none;
 }

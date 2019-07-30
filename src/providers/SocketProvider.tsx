@@ -69,54 +69,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     RECONNECT,
   } = MESSAGE_TYPES;
 
-  const socketHandler = (message): void => {
-    const parsedMessage: ISocketMessage = JSON.parse(message.data);
-    const { payload, msgType } = parsedMessage;
-    let action;
-
-    switch (msgType) {
-      case TEXT:
-        action = addMessageAction(
-          {
-            message: payload['message'],
-            author: payload['author'],
-            roomID: payload['roomID'],
-            uniqueID: payload['uniqueID'],
-            datetime: payload['datetime'],
-          },
-          true,
-        );
-        dispatchChats(action);
-        break;
-      case DISTRIBUTE_ROOM:
-        action = addRoomIDAction(payload['roomID'], payload['studentID']);
-        dispatchChats(action);
-        setTalkyID(payload['talkyID']);
-        break;
-      case CONNECTION:
-        setUniqueID(payload['uniqueID']);
-        reconnectHandler(payload['uniqueID']);
-        break;
-      case QUEUE_LIST:
-        setQueue(payload['queueMembers']);
-        break;
-      case LEAVE_CHAT:
-        if (payload['uniqueID'] === uniqueID) {
-          action = leaveChatAction(payload['roomID']);
-          toast.success('Du forlot rommet');
-        } else {
-          action = hasLeftChatAction(payload['roomID'], payload['name']);
-        }
-        setActiveChatIndex(0);
-        dispatchChats(action);
-        break;
-      case ERROR_LEAVING_CHAT:
-        toast.error('Det skjedde en feil. Du forlot ikke rommet.');
-        break;
-      case RECONNECT:
-        reconnectSuccessHandler(payload['roomIDs']);
-        break;
-    }
+  const socketSend = (message: ISocketMessage | IGetMessage): void => {
+    getSocket().send(JSON.stringify(message));
   };
 
   const reconnectSuccessHandler = (roomIDs: string[]): void => {
@@ -161,6 +115,57 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     }
   };
 
+  const socketHandler = (message): void => {
+    const parsedMessage: ISocketMessage = JSON.parse(message.data);
+    const { payload, msgType } = parsedMessage;
+    let action;
+
+    switch (msgType) {
+      case TEXT:
+        action = addMessageAction(
+          {
+            message: payload['message'],
+            author: payload['author'],
+            roomID: payload['roomID'],
+            uniqueID: payload['uniqueID'],
+            datetime: payload['datetime'],
+            files: payload['files'],
+          },
+          true,
+        );
+        dispatchChats(action);
+        break;
+      case DISTRIBUTE_ROOM:
+        action = addRoomIDAction(payload['roomID'], payload['studentID']);
+        dispatchChats(action);
+        setTalkyID(payload['talkyID']);
+        break;
+      case CONNECTION:
+        setUniqueID(payload['uniqueID']);
+        //reconnectHandler(payload['uniqueID']);
+        break;
+      case QUEUE_LIST:
+        setQueue(payload['queueMembers']);
+        break;
+      case LEAVE_CHAT:
+        if (payload['uniqueID'] === uniqueID) {
+          action = leaveChatAction(payload['roomID']);
+          toast.success('Du forlot rommet');
+        } else {
+          action = hasLeftChatAction(payload['roomID'], payload['name']);
+        }
+        setActiveChatIndex(0);
+        dispatchChats(action);
+        break;
+      case ERROR_LEAVING_CHAT:
+        toast.error('Det skjedde en feil. Du forlot ikke rommet.');
+        break;
+      case RECONNECT:
+        //reconnectSuccessHandler(payload['roomIDs']);
+        break;
+    }
+  };
+
   useEffect(() => {
     getSocket().onmessage = socketHandler;
   }, []);
@@ -184,9 +189,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     }
   }, [uniqueID]);
 
-  const socketSend = (message: ISocketMessage | IGetMessage): void => {
-    getSocket().send(JSON.stringify(message));
-  };
   return (
     <SocketContext.Provider
       value={{
