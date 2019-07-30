@@ -28,10 +28,10 @@ const ChatInputComponent = (props: IProps) => {
     });
   };
 
-  const sendTextMessage = (event, results) => {
+  // Sends text message with message and succesfully uploaded files (IFiles)
+  const sendTextMessage = (event, files) => {
     event.preventDefault();
-    if (message.length > 0 || results.length > 0) {
-      let files = results;
+    if (message.length > 0 || files.length > 0) {
       const { textMessage, socketMessage } = createTextMessage(
         message,
         uniqueID,
@@ -45,6 +45,7 @@ const ChatInputComponent = (props: IProps) => {
     }
   };
 
+  //Returns promises that resolves upon successfull file upload. Then sends message with messagetext and files.
   const handleSubmit = event => {
     event.preventDefault();
     return Promise.all<IFile>(uploadPromises(tempFiles)).then(results => {
@@ -57,6 +58,7 @@ const ChatInputComponent = (props: IProps) => {
     ref && ref.click();
   };
 
+  //Callback handling file drop in DropZone.
   const onDrop = useCallback(
     acceptedFiles => {
       setTempFiles([...tempFiles, ...acceptedFiles]);
@@ -68,6 +70,8 @@ const ChatInputComponent = (props: IProps) => {
     noKeyboard: true,
     onDrop,
   });
+
+  //Renders temporary file attachments ready to send
   const FileList = () => {
     return (
       <ul className="filelist">
