@@ -1,18 +1,19 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
-import { IGetMessage, ISocketMessage } from '../interfaces';
+import { IGetMessage, ISocketMessage, ITextMessage } from '../interfaces';
 import {
   addMessageAction,
   addRoomIDAction,
   chatReducer,
   hasLeftChatAction,
+  joinChatAction,
   leaveChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
-import { createPingMessage } from '../services';
 
 import { toast } from 'react-toastify';
 import { number } from 'prop-types';
+import { createPingMessage } from '../services';
 
 toast.configure({
   autoClose: 5000,
@@ -62,10 +63,15 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     TEXT,
     LEAVE_CHAT,
     ERROR_LEAVING_CHAT,
+    JOIN_CHAT,
+    AVAILABLE_CHAT,
   } = MESSAGE_TYPES;
   const [name, setName] = useState<string>('');
   const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
 
+  const socketSend = (message: ISocketMessage | IGetMessage) => {
+    getSocket().send(JSON.stringify(message));
+  };
   const socketHandler = (message): void => {
     const parsedMessage: ISocketMessage = JSON.parse(message.data);
     const { payload, msgType } = parsedMessage;
@@ -88,8 +94,12 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       dispatchChats(action);
     } else if (msgType === CONNECTION) {
       setUniqueID(payload['uniqueID']);
-      setName(Math.random().toString(36).substring(7));
-      setInterval((() => socketSend(createPingMessage())), 300000);
+      setName(
+        Math.random()
+          .toString(36)
+          .substring(7),
+      );
+      setInterval(() => socketSend(createPingMessage()), 300000);
     } else if (msgType === QUEUE_LIST) {
       setQueue(payload['queueMembers']);
     } else if (msgType === LEAVE_CHAT) {
@@ -104,12 +114,12 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
       dispatchChats(action);
     } else if (msgType === ERROR_LEAVING_CHAT) {
       toast.error('Det skjedde en feil. Du forlot ikke rommet.');
-    } else if(msgType === JOIN_CHAT){
-      const student:IStudent = payload['studentInfo'];
-      const messages:ITextMessage[] = payload['chatHistory'];
+    } else if (msgType === JOIN_CHAT) {
+      const student: IStudent = payload['studentInfo'];
+      const messages: ITextMessage[] = payload['chatHistory'];
       const action = joinChatAction(student, messages, payload['roomID']);
       dispatchChats(action);
-    } else if(msgType === AVAILABLE_CHAT){
+    } else if (msgType === AVAILABLE_CHAT) {
       setAvailableVolunteers(payload['queueMembers']);
     }
   };
@@ -118,9 +128,6 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   }, []);
 
-  const socketSend = (message: ISocketMessage | IGetMessage) => {
-    getSocket().send(JSON.stringify(message));
-  };
   return (
     <SocketContext.Provider
       value={{
@@ -132,6 +139,8 @@ export const SocketProvider: React.FunctionComponent = ({ children }: any) => {
         socketSend,
         activeChatIndex,
         setActiveChatIndex,
+        name,
+        availableVolunteers,
       }}
     >
       {children}

@@ -13,7 +13,10 @@ const ChatMessageComponent = (props: IProps) => {
   // TODO: change when we have users, to use the username instead
   console.log(author);
   const authorType = author === name ? 'self' : 'other';
-  const time = useMemo(() => new Date().getHours() + ':' + new Date().getMinutes(), []);
+  const time = useMemo(
+    () => new Date().getHours() + ':' + new Date().getMinutes(),
+    [],
+  );
   const downloadFile = file => {
     const downloadLink = document.createElement('a');
     downloadLink.href = String(file.dataURL);
@@ -21,9 +24,8 @@ const ChatMessageComponent = (props: IProps) => {
     downloadLink.click();
   };
 
-
   const renderMessage = () => {
-    console.log("Skal renders");
+    console.log('Skal renders');
     if (typeof message === 'string') {
       return (
         <p className={`chat-message--message chat-message--${authorType}`}>

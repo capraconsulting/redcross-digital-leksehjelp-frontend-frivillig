@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
-import { ModalContext } from '../providers/ModalProvider';
+import { ModalContext, SocketContext } from '../providers';
 
 interface IProps {
   content: string;
@@ -25,8 +25,7 @@ interface IProps {
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
-
-  const {socketSend} = useContext(SocketContext);
+  const { socketSend } = useContext(SocketContext);
 
   const {
     content,

@@ -1,22 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { ISocketFile, IStudent, ITextMessage } from '../../interfaces';
-import { createAvailableChatMessage, createJoinMessage, createTextMessage } from '../../services';
 import { addMessageAction } from '../../reducers';
-import { SocketContext } from '../../providers';
+import { ModalContext, SocketContext } from '../../providers';
 import { TextMessageBuilder } from '../../services';
 
 interface IProps {
   uniqueID: string;
   roomID: string;
-  student: IStudent;
-  popUp(): any;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend, name} = useContext(SocketContext);
-  const { uniqueID, roomID, student} = props;
-
+  const { dispatchChats, socketSend, name } = useContext(SocketContext);
+  const { setIsOpen } = useContext(ModalContext);
+  const { uniqueID, roomID } = props;
 
   const onSendTextMessage = event => {
     event.preventDefault();
@@ -32,34 +29,6 @@ const ChatInputComponent = (props: IProps) => {
     }
   };
 
-  const onAddUser = event => {
-    event.preventDefault();
-    let temp:ITextMessage = {
-      author: '',
-      roomID: '',
-      uniqueID: '',
-      message: '',
-    };
-
-    let lol:ITextMessage[] = [temp];
-
-    const socketMessage = createJoinMessage(
-      message,
-      roomID,
-      student,
-      lol
-    );
-
-    socketSend(socketMessage);
-  }
-
-  const getAvailableChat = event => {
-    event.preventDefault();
-    const socketMessage = createAvailableChatMessage();
-    socketSend(socketMessage);
-    props.popUp();
-  }
-
   const onFileUploadClick = () => {
     const fileInput = document.getElementById('msg-file-input');
     if (fileInput) {
@@ -68,7 +37,6 @@ const ChatInputComponent = (props: IProps) => {
   };
 
   return (
-
     <div className="message-form-container">
       <form className="message-form">
         <input
@@ -102,8 +70,13 @@ const ChatInputComponent = (props: IProps) => {
             alt="Send"
           />
         </button>
-        <button className="leksehjelp--button-success" onClick={getAvailableChat}> Se alle tilgjengelige </button>
-        <button className="leksehjelp--button-success" onClick={onAddUser}> Legg til bruker </button>
+        <button
+          className="leksehjelp--button-success"
+          onClick={() => setIsOpen(true)}
+        >
+          {' '}
+          Se alle tilgjengelige{' '}
+        </button>
       </form>
     </div>
   );

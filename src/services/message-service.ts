@@ -3,15 +3,28 @@ import {
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
-  ISocketFile, IStudent,
+  ISocketFile,
+  IStudent,
+  IChat,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 import { IJoin } from '../interfaces/IJoin';
 
-const { QUEUE_LIST, LEAVE_CHAT, GENERATE_ROOM, TEXT } = MESSAGE_TYPES;
+const {
+  QUEUE_LIST,
+  LEAVE_CHAT,
+  GENERATE_ROOM,
+  TEXT,
+  JOIN_CHAT,
+} = MESSAGE_TYPES;
 
 const createMessage = (
-  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | IJoin | {},
+  payload:
+    | ITextMessage
+    | IEnterQueueMessage
+    | IGenerateRoomMessage
+    | IJoin
+    | {},
   type: string,
 ): ISocketMessage => {
   return {
@@ -22,6 +35,25 @@ const createMessage = (
 
 export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, QUEUE_LIST);
+};
+
+export const createPingMessage = (): ISocketMessage => {
+  return createMessage({}, MESSAGE_TYPES.PING);
+};
+
+export const createJoinChatMessage = (
+  studentInfo: IStudent,
+  uniqueID: string,
+  chatHistory: ITextMessage[],
+  roomID: string,
+) => {
+  const msg: IJoin = {
+    studentInfo,
+    uniqueID,
+    chatHistory,
+    roomID,
+  };
+  return createMessage(msg, JOIN_CHAT);
 };
 
 class LeaveChatMessage {

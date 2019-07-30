@@ -29,27 +29,13 @@ export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
   return (roomID: string) => callback({ roomID });
 });
 
-export const joinChatAction = createAction('JOIN_CHAT', cb => {
-  return (student: IStudent, messages:ITextMessage[], roomID: string) => cb({student, messages, roomID});
-});
-
-
-const joinChatHandler = (state: IChat[], action: IAction) => {
-
-  let chatHistory:ITextMessage[] = [];
-  action.payload.messages.forEach((message: ITextMessage) => {
-    chatHistory.push(message);
-    });
-
-  const newChat: IChat = {
-    student: action.payload.student,
-    messages: chatHistory,
-    roomID: action.payload.roomID,
-    unread: 0,
-  };
-  return [...state, newChat];
 export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
   return (roomID: string, name: string) => callback({ roomID, name });
+});
+
+export const joinChatAction = createAction('JOIN_CHAT', cb => {
+  return (student: IStudent, messages: ITextMessage[], roomID: string) =>
+    cb({ student, messages, roomID });
 });
 
 const handleAddRoomID = (state: IChat[], action: IAction) => {
@@ -70,7 +56,8 @@ const handleAddMessage = (state: IChat[], action: IAction) => {
     if (action.payload.unread) {
       room.unread += 1;
     }
-    room.messages.push(action.payload.message);
+    const message: ITextMessage = action.payload.message;
+    room.messages.push(message);
   }
   return [...state];
 };
@@ -97,6 +84,21 @@ const handleLeaveChat = (state: IChat[], action: IAction) => {
 
 const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
   return action.payload.chats;
+};
+
+const joinChatHandler = (state: IChat[], action: IAction) => {
+  let chatHistory: ITextMessage[] = [];
+  action.payload.messages.forEach((message: ITextMessage) => {
+    chatHistory.push(message);
+  });
+
+  const newChat: IChat = {
+    student: action.payload.student,
+    messages: chatHistory,
+    roomID: action.payload.roomID,
+    unread: 0,
+  };
+  return [...state, newChat];
 };
 
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
