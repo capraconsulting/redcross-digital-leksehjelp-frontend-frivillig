@@ -1,13 +1,10 @@
 import React, {
   MouseEvent,
-  KeyboardEvent,
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
-import { ModalContext } from '../providers/ModalProvider';
+import { ModalContext } from '../providers';
 
 interface IProps {
   content: string;
