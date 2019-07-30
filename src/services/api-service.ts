@@ -10,7 +10,7 @@ const api = axios.create({
 export function getQuestion(id: string): Promise<IQuestion> {
   return api
     .get(`questions/${id}`)
-    .then(res => res.data[0])
+    .then(res => res.data)
     .catch(err => err);
 }
 
