@@ -12,7 +12,7 @@ export const blobService = azure.createBlobService(process.env
   .CONNECTION_STRING as string);
 
 /**
- * Uploads file to azure blob storage.
+ * Uploads file to Azure Blob Storage.
  * Returns promise that returns the uploaded file's URL inside object of type IFile - See interfaces/IFile.
  * The blob storage works as a virtual file system.
  * */
@@ -62,6 +62,8 @@ export const uploadFileToAzureBlobStorage = async (
   });
 };
 
+/** Deletes single file from Blob (folder).
+ *  Folder gets deleted when empty (aka when last file gets deleted)*/
 export const deleteFileFromBlob = async (
   share: string,
   directory: string,
@@ -84,6 +86,8 @@ export const deleteFileFromBlob = async (
   });
 };
 
+/** Delete every file in blob folder -->
+ *  which then results in deleting the folder (virtual directory)*/
 export const deleteBlobDirectory = async (share: string, directory: string) => {
   return new Promise<string>((resolve, reject) => {
     blobService.deleteBlobIfExists(share, directory, function(
