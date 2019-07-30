@@ -29,39 +29,8 @@ const ChatContainer = () => {
     setActiveChatIndex(index);
     dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
   };
+  
 
-  const func = () => {
-    setPopup(true);
-  }
-
-  const close = () => {
-    setPopup(false);
-  }
-
-  if(popup){
-    console.log(availableVolunteers)
-    return(
-
-      <Modal
-        content={"Tilgjengelige frivillige"}
-        successButtonText={'Publiser svaret'}
-        warningButtonText={'Ikke publiser'}
-        successCallback={close}
-        warningCallback={close}
-        hideButtons={false}
-        handleClose={() => setPopup(false)}
-        volunteers={availableVolunteers}
-        roomID={chats[activeIndex].roomID}
-        student={chats[activeIndex].student}
-        messages={chats[activeIndex].messages}
-      />
-      /*
-      <AvailableVolunteersComponent
-        availableVolunteers={availableVolunteers}
-        closePopup={close}/>
-      */
-    )
-  }
   if (chats.length >= 1) {
     console.log("antall chats");
     console.log(chats.length);
