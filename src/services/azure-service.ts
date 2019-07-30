@@ -7,7 +7,7 @@ import { IFile } from '../interfaces';
 //Configuration
 import { AZURE_TOKENS } from '../config';
 
-//Creates Azure Blobservice with restricted access
+/** Creates Azure Blobservice with restricted access */
 export const blobService = azure.createBlobService(process.env
   .CONNECTION_STRING as string);
 
@@ -87,7 +87,8 @@ export const deleteFileFromBlob = async (
 };
 
 /** Delete every file in blob folder -->
- *  which then results in deleting the folder (virtual directory)*/
+ *  which then results in deleting the folder  itself
+ * (deleting the virtual directory inside blob container)*/
 export const deleteBlobDirectory = async (share: string, directory: string) => {
   return new Promise<string>((resolve, reject) => {
     blobService.deleteBlobIfExists(share, directory, function(
