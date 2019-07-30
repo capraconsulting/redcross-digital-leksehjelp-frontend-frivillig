@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   getQuestionList,
   getQuestion,
@@ -8,21 +8,15 @@ import { QuestionListComponent, FeedbackListComponent } from '../components';
 import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [inboxQuestions, setInboxQuestions] = React.useState(
-    [] as IQuestionMeta[],
+  const [inboxQuestions, setInboxQuestions] = useState<IQuestionMeta[]>([]);
+  const [startedQuestions, setStartedQuestions] = useState<IQuestionMeta[]>([]);
+  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestionMeta[]>(
+    [],
   );
-
-  const [startedQuestions, setStartedQuestions] = React.useState(
-    [] as IQuestionMeta[],
-  );
-
-  const [approvalQuestions, setAnsweredQuestions] = React.useState(
-    [] as IQuestionMeta[],
-  );
-
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState(
-    [] as IFeedbackQuestion[],
-  );
+  const [feedbackQuestions, setFeedbackQuestions] = useState<
+    IFeedbackQuestion[]
+  >([]);
+  const [apiFail, setApiFail] = useState<boolean>(false);
 
   const setFeedback = async () => {
     const feedbackList = await getFeedbackList().then(feedbackList =>
@@ -39,13 +33,21 @@ const QuestionContainer = () => {
           }),
       ),
     );
-    Promise.all(feedbackList).then(setFeedbackQuestions);
+    Promise.all(feedbackList)
+      .then(setFeedbackQuestions)
+      .catch(() => setApiFail(true));
   };
 
-  React.useEffect(() => {
-    getQuestionList<IQuestionMeta[]>('inbox').then(setInboxQuestions);
-    getQuestionList<IQuestionMeta[]>('started').then(setStartedQuestions);
-    getQuestionList<IQuestionMeta[]>('approval').then(setAnsweredQuestions);
+  useEffect(() => {
+    getQuestionList<IQuestionMeta[]>('inbox')
+      .then(setInboxQuestions)
+      .catch(() => setApiFail(true));
+    getQuestionList<IQuestionMeta[]>('started')
+      .then(setStartedQuestions)
+      .catch(() => setApiFail(true));
+    getQuestionList<IQuestionMeta[]>('approval')
+      .then(setAnsweredQuestions)
+      .catch(() => setApiFail(true));
     setFeedback();
   }, []);
 
@@ -54,30 +56,34 @@ const QuestionContainer = () => {
       <div className="container--header">
         <h3>Spørsmål</h3>
       </div>
-      <div className="question--container">
-        <div className="question--container-inbox">
-          <h5>Innboks</h5>
-          <QuestionListComponent questionList={inboxQuestions} type="inbox" />
+      {!apiFail ? (
+        <div className="question--container">
+          <div className="question--container-inbox">
+            <h5>Innboks</h5>
+            <QuestionListComponent questionList={inboxQuestions} type="inbox" />
+          </div>
+          <div className="question--container-started">
+            <h5>Påbegynt</h5>
+            <QuestionListComponent
+              questionList={startedQuestions}
+              type="started"
+            />
+          </div>
+          <div className="question--container-aproval">
+            <h5>Til godkjenning</h5>
+            <QuestionListComponent
+              questionList={approvalQuestions}
+              type="approval"
+            />
+          </div>
+          <div className="question--container-feedback">
+            <h5>Tilbakemeldinger</h5>
+            <FeedbackListComponent feedbackList={feedbackQuestions} />
+          </div>
         </div>
-        <div className="question--container-started">
-          <h5>Påbegynt</h5>
-          <QuestionListComponent
-            questionList={startedQuestions}
-            type="started"
-          />
-        </div>
-        <div className="question--container-aproval">
-          <h5>Til godkjenning</h5>
-          <QuestionListComponent
-            questionList={approvalQuestions}
-            type="approval"
-          />
-        </div>
-        <div className="question--container-feedback">
-          <h5>Tilbakemeldinger</h5>
-          <FeedbackListComponent feedbackList={feedbackQuestions} />
-        </div>
-      </div>
+      ) : (
+        <p>Noe gikk galt. Kontakt it-avdelingen.</p>
+      )}
     </div>
   );
 };
