@@ -57,6 +57,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onSend = async () => {
     if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
+      setHideModalButtons(true);
       setIsOpen(true);
     } else {
       const data = createBody();
@@ -70,17 +71,21 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               setModalText(
                 'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
               );
+              setHideModalButtons(false);
             } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
+              setHideModalButtons(true);
               setTimeout(() => history.goBack(), 2000);
             } else {
               setModalText('Svaret er sendt til godkjenning.');
+              setHideModalButtons(true);
               setTimeout(() => history.goBack(), 2000);
             }
             setIsOpen(true);
           })
           .catch(() => {
             setModalText('Noe gikk galt.');
+            setHideModalButtons(true);
             setIsOpen(true);
           });
     }
@@ -91,10 +96,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     saveAnswer(data)
       .then(() => {
         setModalText('Svaret er nå lagret.');
+        setHideModalButtons(true);
         setIsOpen(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Data ble ikke lagret.');
+        setHideModalButtons(true);
         setIsOpen(true);
       });
     event.preventDefault();
@@ -106,12 +113,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     deleteFeedback(id)
       .then(() => {
         setModalText('Feedback er nå slettet.');
+        setHideModalButtons(true);
         setIsOpen(true);
         const feedbackList = feedbackQuestions.filter(({ id }) => id !== value);
         setFeedbackQuestions(feedbackList);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Feedback ble ikke slettet.');
+        setHideModalButtons(true);
         setIsOpen(true);
       });
   };
