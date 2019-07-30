@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 
-fixture`Frivillig`.page('http://localhost:3000');
+fixture`Frivillig`.page('http://localhost:3001');
 
 class LandingPage {
   public headline: Selector;
