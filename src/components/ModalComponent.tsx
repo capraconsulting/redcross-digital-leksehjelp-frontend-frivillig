@@ -1,13 +1,6 @@
-import React, {
-  MouseEvent,
-  KeyboardEvent,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { MouseEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
-import { ModalContext } from '../providers/ModalProvider';
 
 interface IProps {
   content: string;
@@ -22,6 +15,7 @@ interface IProps {
     callback(): void;
     isDisabled?: boolean;
   }[];
+  closingCallback(): void;
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
@@ -33,8 +27,8 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     warningCallback,
     hideButtons,
     inputFields,
+    closingCallback,
   } = props;
-  const { isOpen, setIsOpen } = useContext(ModalContext);
 
   const createInputFields = () => {
     if (inputFields) {
@@ -59,47 +53,43 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
     }
   };
 
-  if (!isOpen) {
-    return null;
-  } else {
-    return (
-      <div className="modal-container">
-        <div className="backdrop" onClick={() => setIsOpen(false)} />
-        <div className="modal">
-          <button
-            className="modal--close leksehjelp--button-close"
-            onClick={() => setIsOpen(false)}
-          >
-            <Cross color="black" />
-          </button>
-          <p className="content-text">{content}</p>
-          <div className="input-field-container">{createInputFields()}</div>
-          <div className="button-container">
-            {!hideButtons && (
-              <div className="modal--button-container">
-                {successButtonText && (
-                  <button
-                    onClick={successCallback}
-                    className="leksehjelp--button-success"
-                  >
-                    {successButtonText}
-                  </button>
-                )}
-                {warningButtonText && (
-                  <button
-                    onClick={warningCallback}
-                    className="leksehjelp--button-warning"
-                  >
-                    {warningButtonText}
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+  return (
+    <div className="modal-container">
+      <div className="backdrop" onClick={closingCallback} />
+      <div className="modal">
+        <button
+          className="modal--close leksehjelp--button-close"
+          onClick={closingCallback}
+        >
+          <Cross color="black" />
+        </button>
+        <p className="content-text">{content}</p>
+        <div className="input-field-container">{createInputFields()}</div>
+        <div className="button-container">
+          {!hideButtons && (
+            <div className="modal--button-container">
+              {successButtonText && (
+                <button
+                  onClick={successCallback}
+                  className="leksehjelp--button-success"
+                >
+                  {successButtonText}
+                </button>
+              )}
+              {warningButtonText && (
+                <button
+                  onClick={warningCallback}
+                  className="leksehjelp--button-warning"
+                >
+                  {warningButtonText}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default withRouter(ModalComponent);

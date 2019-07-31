@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import {
   getQuestion,
   postAnswer,
@@ -11,7 +11,6 @@ import {
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Modal } from '../components';
-import { ModalContext } from '../providers/ModalProvider';
 
 interface IProps {
   id: string;
@@ -38,7 +37,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   );
   const { questionText, title, answerText, isPublic } = question;
   const { type, id, history } = props;
-  const { setIsOpen } = useContext(ModalContext);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   React.useEffect(() => {
     getQuestion(id).then(setQuestion);
@@ -76,7 +75,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
       setHideModalButtons(true);
-      setIsOpen(true);
+      setModalOpen(true);
     } else {
       const data = createBody();
       const isSaved = await saveAnswer(data)
@@ -105,12 +104,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
                 history.goBack();
               }, 2000);
             }
-            setIsOpen(true);
+            setModalOpen(true);
           })
           .catch(() => {
             setModalText('Noe gikk galt.');
             setHideModalButtons(true);
-            setIsOpen(true);
+            setModalOpen(true);
           });
     }
   };
@@ -121,12 +120,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       .then(() => {
         setModalText('Svaret er nå lagret.');
         setHideModalButtons(true);
-        setIsOpen(true);
+        setModalOpen(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Data ble ikke lagret.');
         setHideModalButtons(true);
-        setIsOpen(true);
+        setModalOpen(true);
       });
     event.preventDefault();
   };
@@ -138,14 +137,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       .then(() => {
         setModalText('Feedback er nå slettet.');
         setHideModalButtons(true);
-        setIsOpen(true);
+        setModalOpen(true);
         const feedbackList = feedbackQuestions.filter(({ id }) => id !== value);
         setFeedbackQuestions(feedbackList);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Feedback ble ikke slettet.');
         setHideModalButtons(true);
-        setIsOpen(true);
+        setModalOpen(true);
       });
   };
 
@@ -201,14 +200,17 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   return (
     <div>
-      <Modal
-        content={modalText}
-        successButtonText={'Publiser svaret'}
-        warningButtonText={'Ikke publiser'}
-        successCallback={onPublishQuestion}
-        warningCallback={onDontPublish}
-        hideButtons={hideModalButtons}
-      />
+      {modalOpen && (
+        <Modal
+          content={modalText}
+          successButtonText={'Publiser svaret'}
+          warningButtonText={'Ikke publiser'}
+          successCallback={onPublishQuestion}
+          warningCallback={onDontPublish}
+          hideButtons={hideModalButtons}
+          closingCallback={() => setModalOpen(false)}
+        />
+      )}
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
