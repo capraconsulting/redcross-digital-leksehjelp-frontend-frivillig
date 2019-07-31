@@ -25,7 +25,7 @@ const ProfileContainer = () => {
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
   const [subjectList, setSubjectList] = useState<IOption[]>([]);
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
-  const { isOpen, setIsOpen } = useContext(ModalContext);
+  const { setIsOpen } = useContext(ModalContext);
   const [modalText, setModalText] = useState<string>('');
 
   useEffect(() => {

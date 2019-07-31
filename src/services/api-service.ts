@@ -10,7 +10,7 @@ const api = axios.create({
 export function getQuestion(id: string): Promise<IQuestion> {
   return api
     .get(`questions/${id}`)
-    .then(res => res.data)
+    .then(res => res.data[0])
     .catch(err => err);
 }
 
@@ -34,6 +34,9 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
       break;
     case 'public':
       url = '/public';
+      break;
+    case 'unpublished':
+      url = '/unpublished';
       break;
     default:
       url = '';
@@ -92,6 +95,10 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
 
 export async function publishQuestion(id: string): Promise<{}> {
   return await api.post(`questions/${id}/publish`).then(res => res.data);
+}
+
+export async function approveQuestion(id: string): Promise<{}> {
+  return await api.post(`questions/${id}/approve`).then(res => res.data);
 }
 
 export async function deleteFeedback(id: string): Promise<{}> {

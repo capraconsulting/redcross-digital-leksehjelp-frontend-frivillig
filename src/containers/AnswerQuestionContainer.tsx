@@ -6,6 +6,7 @@ import {
   getFeedbackList,
   deleteFeedback,
   publishQuestion,
+  approveQuestion,
 } from '../services';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -56,18 +57,20 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onDisapprove = () => {
     const data = createBody();
-    saveAnswer(data).then(() => {
-      setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
-    }).catch(() => {
-      setModalText('Noe gikk galt.');
-    })
+    saveAnswer(data)
+      .then(() => {
+        setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
+      })
+      .catch(() => {
+        setModalText('Noe gikk galt.');
+      });
     setHideModalButtons(true);
     setIsOpen(true);
     setTimeout(() => {
       setIsOpen(false);
-      history.goBack()
+      history.goBack();
     }, 3000);
-  }
+  };
 
   const onSend = async () => {
     if (title === '') {
@@ -99,7 +102,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               setHideModalButtons(true);
               setTimeout(() => {
                 setIsOpen(false);
-                history.goBack()
+                history.goBack();
               }, 2000);
             }
             setIsOpen(true);
@@ -162,6 +165,26 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       history.goBack();
     }, 3000);
     event.preventDefault();
+  };
+
+  const onApprove = async () => {
+    const data = createBody();
+    const isApprove = await approveQuestion(data.questionId)
+      .then(() => true)
+      .catch(() => false);
+    isApprove &&
+      postAnswer(data, type).then(() => {
+        if (type === 'approval' && isPublic) {
+          setModalText(
+            'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
+          );
+          setHideModalButtons(false);
+        } else if (type === 'approval' && !isPublic) {
+          setModalText('Svaret er nå sendt til eleven.');
+          setHideModalButtons(true);
+        }
+        setIsOpen(true);
+      });
   };
 
   const onDontPublish = event => {
@@ -227,10 +250,16 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           </form>
           {type === 'approval' ? (
             <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>
+              <button
+                className="leksehjelp--button-success"
+                onClick={onApprove}
+              >
                 Godkjenn
               </button>
-              <button className="leksehjelp--button-warning" onClick={onDisapprove}>
+              <button
+                className="leksehjelp--button-warning"
+                onClick={onDisapprove}
+              >
                 Ikke godkjenn
               </button>
             </div>
