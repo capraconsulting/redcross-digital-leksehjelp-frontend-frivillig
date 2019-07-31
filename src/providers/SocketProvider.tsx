@@ -170,9 +170,12 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     getSocket().onmessage = socketHandler;
   }, []);
 
+
+
   useEffect(() => {
     if (talkyID) {
-      window.open(`https://talky.io/${talkyID}`, '_blank');
+      const windowObjectReference = window.open(`https://talky.io/${talkyID}`, "_blank");
+      windowObjectReference!.focus();
     }
   }, [talkyID]);
 
