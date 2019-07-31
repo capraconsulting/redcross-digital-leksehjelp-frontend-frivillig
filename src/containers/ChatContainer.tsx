@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ActiveChats, ChatInput, ChatBody, ChatHeader, Modal } from '../components';
+import React, { useContext, useEffect } from 'react';
+import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
-import AvailableVolunteersComponent from '../components/Chat/AvailableVolunteersComponent';
-import ModalComponent from '../components/ModalComponent';
-import { act } from 'react-dom/test-utils';
+import { deleteFileFromBlob, deleteBlobDirectory } from './../services';
 
 // main component
 const ChatContainer = () => {
   const {
-    uniqueID,
     chats,
     dispatchChats,
     activeChatIndex,
@@ -31,6 +28,10 @@ const ChatContainer = () => {
   };
   
 
+  const handleDelete = (share: string, directory: string, fileName: string) => {
+    return deleteFileFromBlob(share, directory, fileName);
+  };
+
   if (chats.length >= 1) {
     return (
       <div className="chat-container">
@@ -45,10 +46,7 @@ const ChatContainer = () => {
             <ChatBody messages={chats[activeChatIndex].messages} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput
-              uniqueID={uniqueID}
-              roomID={chats[activeChatIndex].roomID}
-            />
+            <ChatInput roomID={chats[activeChatIndex].roomID} />
           )}
         </div>
       </div>
@@ -58,6 +56,10 @@ const ChatContainer = () => {
     <div className="chat-container">
       <div />
       <div className="no-chat">Ingen chats</div>
+      {/** <button
+        onClick={() => handleDelete('chatfiles', 'gustav', 'config.jpg')}
+      />
+      <button onClick={() => deleteBlobDirectory('chatfiles', 'gustav')} /> */}
     </div>
   );
 };

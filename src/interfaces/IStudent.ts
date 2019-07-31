@@ -4,4 +4,5 @@ export interface IStudent {
   grade: string;
   uniqueID: string;
   introText: string;
+  chatType: string;
 }

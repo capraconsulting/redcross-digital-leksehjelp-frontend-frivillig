@@ -6,6 +6,7 @@ import {
   ISocketFile,
   IStudent,
   IChat,
+  IFile,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 import { IReconnectMessage } from '../interfaces/IReconnectMessage';
@@ -133,7 +134,6 @@ class LeaveChatMessage {
     this.roomID = leaveChatMessageBuilder.roomID;
     this.uniqueID = leaveChatMessageBuilder.uniqueID;
   }
-
   public get createMessage(): ISocketMessage {
     return createMessage(
       { roomID: this.roomID, uniqueID: this.uniqueID },
@@ -270,11 +270,13 @@ class TextMessage {
   private readonly roomID: string;
   private readonly uniqueID: string;
   private readonly message: string;
+  private readonly files: IFile[];
 
   public constructor(textMessageBuilder: TextMessageBuilder) {
     this.roomID = textMessageBuilder.roomID;
     this.message = textMessageBuilder.message;
     this.uniqueID = textMessageBuilder.uniqueID;
+    this.files = textMessageBuilder.files;
   }
 
   public get createMessage(): {
@@ -282,10 +284,11 @@ class TextMessage {
     socketMessage: ISocketMessage;
   } {
     const msg: ITextMessage = {
-      author: 'student',
+      author: 'frivillig',
       uniqueID: this.uniqueID,
       roomID: this.roomID,
       message: this.message,
+      files: this.files,
     };
     return {
       textMessage: msg,
@@ -298,6 +301,7 @@ export class TextMessageBuilder {
   private readonly _uniqueID: string;
   private _roomID: string;
   private _message: string;
+  private _files: IFile[];
 
   public constructor(uniqueID: string) {
     this._uniqueID = uniqueID;
@@ -311,6 +315,11 @@ export class TextMessageBuilder {
 
   public toRoom(roomID: string): TextMessageBuilder {
     this._roomID = roomID;
+    return this;
+  }
+
+  public withFiles(files: IFile[]): TextMessageBuilder {
+    this._files = files;
     return this;
   }
 
@@ -328,5 +337,9 @@ export class TextMessageBuilder {
 
   public get message(): string {
     return this._message;
+  }
+
+  public get files(): IFile[] {
+    return this._files;
   }
 }

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
-import { ModalContext } from '../../providers';
 import { LeaveChatMessageBuilder } from '../../services';
 
 interface IProps {
@@ -14,13 +13,13 @@ const ChatHeaderComponent = (props: IProps) => {
   const { roomID } = props.activeChat;
   const { nickname, course } = props.activeChat.student;
   const { socketSend, dispatchChats, uniqueID } = useContext(SocketContext);
-  const { setIsOpen } = useContext(ModalContext);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
     const msg = new LeaveChatMessageBuilder(uniqueID).toRoom(roomID).build();
     socketSend(msg.createMessage);
-    setIsOpen(false);
+    setModalOpen(false);
   };
 
   return (
@@ -32,21 +31,22 @@ const ChatHeaderComponent = (props: IProps) => {
         <span className="chat-header--text--right">
           <p>{course}</p>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setModalOpen(true)}
             className="leksehjelp--button-success"
           >
             Forlat Chatten
           </button>
         </span>
       </div>
-      {/*
-      <Modal
-        content="Er du sikker på at du vil forlate chatten?"
-        warningButtonText="Forlat Chatten"
-        warningCallback={leaveChat}
-        successButtonText="Bli i Chatten"
-      />
-      */}
+      {modalOpen && (
+        <Modal
+          content="Er du sikker på at du vil forlate chatten?"
+          warningButtonText="Forlat Chatten"
+          warningCallback={leaveChat}
+          successButtonText="Bli i Chatten"
+          closingCallback={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

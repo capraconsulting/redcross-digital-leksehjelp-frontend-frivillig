@@ -8,8 +8,13 @@ const AdminQuestionsContainer = () => {
     [] as IQuestion[],
   );
 
+  const [unpublicQuestionList, setUnpublicQuestionList] = useState(
+    [] as IQuestion[],
+  );
+
   useEffect(() => {
     getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
+    getQuestionList<IQuestion[]>('unpublished').then(setUnpublicQuestionList);
   }, []);
 
   return (
@@ -28,9 +33,11 @@ const AdminQuestionsContainer = () => {
         </div>
         <div className="admin-questions--item">
           <h5>Ikke Publisert</h5>
-          <div className="admin-questions--list">
+          {unpublicQuestionList.length > 0 ? (
+            <AdminQuestionList questionList={unpublicQuestionList} />
+          ) : (
             <p>Det er ingen spørsmål som kan redigeres</p>
-          </div>
+          )}
         </div>
       </div>
     </Fragment>

@@ -13,7 +13,6 @@ import {
 } from '../services';
 import { IVolunteerSubject, ISubject } from '../interfaces';
 import { Picker, Modal } from '../components';
-import { ModalContext } from '../providers';
 
 interface IOption {
   value: string;
@@ -25,7 +24,8 @@ const ProfileContainer = () => {
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
   const [subjectList, setSubjectList] = useState<IOption[]>([]);
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
-  const { isOpen, setIsOpen } = useContext(ModalContext);
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
 
   useEffect(() => {
@@ -121,17 +121,22 @@ const ProfileContainer = () => {
     saveSubjects(list)
       .then(() => {
         setModalText('Dine kunnskaper er oppdatert!');
-        setIsOpen(true);
+        setModalOpen(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
-        setIsOpen(true);
+        setModalOpen(true);
       });
   };
 
   return (
     <Fragment>
-      <Modal content={modalText} />
+      {modalOpen && (
+        <Modal
+          content={modalText}
+          closingCallback={() => setModalOpen(false)}
+        />
+      )}
       <div className="profile--container">
         <Picker
           title="Mine fag"

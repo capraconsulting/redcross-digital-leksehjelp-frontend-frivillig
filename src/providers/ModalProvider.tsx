@@ -11,11 +11,11 @@ export const ModalProvider: FunctionComponent = ({ children }: any) => {
   return (
     <ModalContext.Provider
       value={{
-        isOpen,
-        setIsOpen,
-      }}
-    >
-      {children}
-    </ModalContext.Provider>
-  );
+    isOpen,
+      setIsOpen,
+  }}
+>
+  {children}
+  </ModalContext.Provider>
+);
 };

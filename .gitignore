@@ -4,3 +4,8 @@ build/
 .env
 .DS_Store
 *.log
+WebRTCConfig.ts
+
+\.idea/
+
+package-lock\.json

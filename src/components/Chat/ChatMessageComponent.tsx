@@ -8,7 +8,7 @@ interface IProps {
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const { message, author, uniqueID } = props.message;
+  const { message, author, uniqueID, files } = props.message;
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
   console.log(author);
@@ -18,45 +18,55 @@ const ChatMessageComponent = (props: IProps) => {
     [],
   );
   const downloadFile = file => {
-    const downloadLink = document.createElement('a');
-    downloadLink.href = String(file.dataURL);
-    downloadLink['download'] = file.name;
-    downloadLink.click();
+    const a = document.createElement('a');
+    a.href = String(file.fileUrl);
+    a['download'] = file.fileName;
+    a.click();
+  };
+
+  const RenderFiles = () => {
+    return (
+      files &&
+      files.length > 0 &&
+      files.map((file, index) => {
+        return (
+          <div className={'chat-message'} key={index}>
+            <div
+              className={`chat-message--download chat-message--${authorType} chat-message--${authorType}--file`}
+            >
+              <p className={`chat-message--message`}>
+                <span className="chat-message--file-name">
+                  {file.fileName}{' '}
+                </span>
+                <span className="chat-message--file-size">
+                  {(1000000 / 1000000).toPrecision(3)} MB
+                </span>
+              </p>
+              <img
+                onClick={() => downloadFile(file)}
+                className="svg-download"
+                src={require('../../assets/images/download.svg')}
+                alt=""
+              />
+            </div>
+          </div>
+        );
+      })
+    );
   };
 
   const renderMessage = () => {
-    console.log('Skal renders');
-    if (typeof message === 'string') {
-      return (
-        <p className={`chat-message--message chat-message--${authorType}`}>
+    return (
+      message &&
+      message.length > 0 && (
+        <p
+          className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
+        >
           {message}
         </p>
-      );
-    } else {
-      return (
-        <div
-          className={`chat-message--${authorType} chat-message--download`}
-          onClick={() => downloadFile(message)}
-        >
-          <p className={`chat-message--message`}>
-            <span className="chat-message--file-name">
-              {message.name} {' | '}
-            </span>
-            <span className="chat-message--file-size">
-              {(message.size / 1000000).toPrecision(3)} MB {' - '}
-              {message.type}
-            </span>
-          </p>
-          <img
-            className="svg-download"
-            src={require('../../assets/images/download.svg')}
-            alt=""
-          />
-        </div>
-      );
-    }
+      )
+    );
   };
-
   if (uniqueID === 'NOTIFICATION') {
     return (
       <div className="chat-message">
@@ -67,16 +77,19 @@ const ChatMessageComponent = (props: IProps) => {
     );
   } else {
     return (
-      <div className="chat-message">
-        <p className={`chat-message--author-${authorType}`}>
-          <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>,
-          kl.{' '}
-          <span>
-            {props.message.datetime &&
-              timeStringFromDate(props.message.datetime)}
-          </span>
-        </p>
-        {renderMessage()}
+      <div>
+        <div className="chat-message">
+          <p className={`chat-message--author-${authorType}`}>
+            <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>,
+            kl.{' '}
+            <span>
+              {props.message.datetime &&
+                timeStringFromDate(props.message.datetime)}
+            </span>
+          </p>
+          {renderMessage()}
+        </div>
+        {RenderFiles()}
       </div>
     );
   }

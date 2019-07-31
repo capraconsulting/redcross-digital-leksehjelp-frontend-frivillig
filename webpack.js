@@ -103,6 +103,9 @@ module.exports = env => {
       outputConfig('config/qa.json', configQaJson),
       outputConfig('config/prod.json', configProdJson),
     ],
+    node: {
+      fs: 'empty',
+    },
   };
 
   if (isProd) {

@@ -47,7 +47,7 @@ const ChatBodyComponent = (props: IProps) => {
 
   return (
     <div className="chat-body-container">
-      <Modal content="Tilgjengelige frivillige" inputFields={createFrivilligOptions()} />
+
       <div className="display" id="message-display">
         <div className="welcome-container">
           <p className="welcome-header">Velkommen til chaten!</p>
