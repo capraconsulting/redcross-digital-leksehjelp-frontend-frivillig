@@ -1,4 +1,4 @@
-import React, { MouseEvent, useContext } from 'react';
+import React, { MouseEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
 

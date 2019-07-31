@@ -58,6 +58,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [activeChatIndex, setActiveChatIndex] = useState<number>(0);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
+  const [talkyID, setTalkyID] = useState<string>('');
   const {
     DISTRIBUTE_ROOM,
     CONNECTION,
@@ -137,6 +138,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       case DISTRIBUTE_ROOM:
         action = addRoomIDAction(payload['roomID'], payload['studentID']);
         dispatchChats(action);
+        setTalkyID(payload['talkyID']);
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
@@ -167,6 +169,18 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   useEffect(() => {
     getSocket().onmessage = socketHandler;
   }, []);
+
+  useEffect(() => {
+    if (talkyID) {
+      const windowObjectReference = window.open(
+        `https://talky.io/${talkyID}`,
+        '_blank',
+      );
+      if (windowObjectReference) {
+        windowObjectReference.focus();
+      }
+    }
+  }, [talkyID]);
 
   useEffect(() => {
     if (chats.length > 0) {
