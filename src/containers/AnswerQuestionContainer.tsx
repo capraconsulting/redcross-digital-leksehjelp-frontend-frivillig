@@ -7,9 +7,9 @@ import {
   deleteFeedback,
   publishQuestion,
 } from '../services';
-import { IQuestion, IFeedback } from '../interfaces';
+import { IQuestion, IFeedback, IFile } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { Modal } from '../components';
+import { Modal, IconButton } from '../components';
 import { ModalContext } from '../providers/ModalProvider';
 
 interface IProps {
@@ -27,6 +27,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
     isPublic: false,
+    files: [] as IFile[],
   });
   const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
     false,
@@ -43,6 +44,38 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     getQuestion(id).then(setQuestion);
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
+
+  const FileList = () => {
+    return (
+      <ul className="filelist">
+        {question.files.map((file, index) => {
+          const { fileName, fileUrl } = file;
+          return (
+            <li key={index}>
+              <span>
+                <a
+                  className="filelist-ankertag"
+                  href={fileUrl}
+                  title={fileName}
+                  download={fileName}
+                >
+                  {fileName}{' '}
+                </a>
+                <IconButton
+                  onClick={() => {
+                    setQuestion({
+                      ...question,
+                      files: question.files.filter((_, i) => i !== index),
+                    });
+                  }}
+                ></IconButton>{' '}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   const createBody = () => {
     const data = {
@@ -186,6 +219,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
                 }
               />
             </label>
+            <FileList />
             <label className="question-form--item">
               Svar
               <textarea
