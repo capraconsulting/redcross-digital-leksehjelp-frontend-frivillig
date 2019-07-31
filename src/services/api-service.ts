@@ -35,6 +35,9 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     case 'public':
       url = '/public';
       break;
+    case 'unpublished':
+      url = '/unpublished';
+      break;
     default:
       url = '';
       break;
@@ -91,6 +94,10 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
 }
 
 export async function publishQuestion(id: string): Promise<{}> {
+  return await api.post(`questions/${id}/publish`).then(res => res.data);
+}
+
+export async function approveQuestion(id: string): Promise<{}> {
   return await api.post(`questions/${id}/approve`).then(res => res.data);
 }
 
