@@ -1,4 +1,4 @@
-# Baseline for creating web apps
+# Frontend for frivillige på digitalleksehjelp.no
 
 [![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=redcross-digital-leksehjelp-frontend-frivillig/master)](https://jenkins.capra.tv/job/redcross-digital-leksehjelp-frontend-frivillig/job/master/)
 
