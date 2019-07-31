@@ -64,9 +64,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setModalText('Noe gikk galt.');
       });
     setHideModalButtons(true);
-    setIsOpen(true);
+    setModalOpen(true);
     setTimeout(() => {
-      setIsOpen(false);
+      setModalOpen(false);
       history.goBack();
     }, 3000);
   };
@@ -93,14 +93,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               setModalText('Svaret er nå sendt til eleven.');
               setHideModalButtons(true);
               setTimeout(() => {
-                setIsOpen(false);
+                setModalOpen(false);
                 history.goBack();
               }, 2000);
             } else {
               setModalText('Svaret er sendt til godkjenning.');
               setHideModalButtons(true);
               setTimeout(() => {
-                setIsOpen(false);
+                setModalOpen(false);
                 history.goBack();
               }, 2000);
             }
@@ -160,7 +160,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setModalText('Noe gikk galt.');
       });
     setTimeout(() => {
-      setIsOpen(false);
+      setModalOpen(false);
       history.goBack();
     }, 3000);
     event.preventDefault();
@@ -182,7 +182,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           setModalText('Svaret er nå sendt til eleven.');
           setHideModalButtons(true);
         }
-        setIsOpen(true);
+        setModalOpen(true);
       });
   };
 
@@ -192,7 +192,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
     );
     setTimeout(() => {
-      setIsOpen(false);
+      setModalOpen(false);
       history.goBack();
     }, 3000);
     event.preventDefault();
