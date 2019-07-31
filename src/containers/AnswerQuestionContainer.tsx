@@ -268,7 +268,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           ) : (
             <div className="question-form--button-container">
               <button className="leksehjelp--button-success" onClick={onSend}>
-                Godkjenning
+                Send til godkjenning
               </button>
               <button className="leksehjelp--button-success" onClick={onSave}>
                 Lagre
