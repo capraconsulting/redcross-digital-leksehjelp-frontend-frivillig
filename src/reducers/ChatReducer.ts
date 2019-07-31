@@ -1,29 +1,40 @@
 import { createAction, createReducer } from 'typesafe-actions';
-import { IAction, IChat, IStudent, ITextMessage } from '../interfaces';
+import { IAction, IChat, IStudent, ITextMessage, IFile } from '../interfaces';
 
-export const addRoomIDAction = createAction('ADD_ROOM_ID', cb => {
-  return (roomID: string, studentID: string) => cb({ roomID, studentID });
+export const addRoomIDAction = createAction('ADD_ROOM_ID', callback => {
+  return (roomID: string, studentID: string) => callback({ roomID, studentID });
 });
 
-export const addMessageAction = createAction('ADD_MESSAGE', cb => {
+export const addMessageAction = createAction('ADD_MESSAGE', callback => {
   return (message: ITextMessage, unread: boolean = false) =>
-    cb({ message, unread });
+    callback({ message, unread });
 });
 
-export const readMessagesAction = createAction('READ_MESSAGES', cb => {
-  return (roomID: string) => cb({ roomID });
+export const readMessagesAction = createAction('READ_MESSAGES', callback => {
+  return (roomID: string) => callback({ roomID });
 });
 
-export const addNewChatAction = createAction('ADD_NEW', cb => {
-  return (student: IStudent) => cb({ student });
+export const addNewChatAction = createAction('ADD_NEW', callback => {
+  return (student: IStudent) => callback({ student });
 });
 
-export const setChatFromLocalStorageAction = createAction('SET_ALL', cb => {
+export const setChatFromLocalStorageAction = createAction(
+  'SET_ALL',
+  callback => {
+    return (chats: IChat[]) => callback({ chats });
+  },
+);
+
+export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
+  return (roomID: string) => callback({ roomID });
+});
+
+export const reconnectChatAction = createAction('RECONNECT', cb => {
   return (chats: IChat[]) => cb({ chats });
 });
 
-export const leaveChatAction = createAction('LEAVE_CHAT', cb => {
-  return (roomID: string) => cb({ roomID });
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
+  return (roomID: string, name: string) => cb({ roomID, name });
 });
 
 const handleAddRoomID = (state: IChat[], action: IAction) => {
@@ -70,7 +81,23 @@ const handleLeaveChat = (state: IChat[], action: IAction) => {
   return state.filter(chat => chat.roomID !== action.payload.roomID);
 };
 
-const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
+const handleHasLeftChat = (state: IChat[], action: IAction) => {
+  const chatWhereAUserLeaves: IChat | undefined = state.find(
+    chat => chat.roomID === action.payload.roomID,
+  );
+  if (chatWhereAUserLeaves) {
+    chatWhereAUserLeaves.messages.push({
+      author: action.payload.name,
+      message: 'Har forlatt rommet',
+      roomID: action.payload.roomID,
+      uniqueID: 'NOTIFICATION',
+      files: [] as IFile[],
+    });
+  }
+  return [...state];
+};
+
+const handleReconnectChat = (state: IChat[], action: IAction) => {
   return action.payload.chats;
 };
 
@@ -80,4 +107,5 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(readMessagesAction, handleReadMessages)
   .handleAction(addNewChatAction, handleAddNewChat)
   .handleAction(leaveChatAction, handleLeaveChat)
-  .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage);
+  .handleAction(hasLeftChatAction, handleHasLeftChat)
+  .handleAction(reconnectChatAction, handleReconnectChat);

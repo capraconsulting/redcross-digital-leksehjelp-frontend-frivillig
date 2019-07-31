@@ -1,10 +1,11 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, createRef } from 'react';
 import { IStudent } from '../../interfaces';
 import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
+
 import {
-  createGenerateRoomMessage,
   createGetQueueMessage,
+  GenerateRoomMessageBuilder,
 } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
@@ -20,15 +21,14 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
       dispatchChats(addNewChatAction(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
 
-      const socketMessage = createGenerateRoomMessage(
-        uniqueID,
-        student.uniqueID,
-        student.nickname,
-        student.grade,
-        student.introText,
-        student.course,
-      );
-      socketSend(socketMessage);
+      const msg = new GenerateRoomMessageBuilder(uniqueID)
+        .withStudentID(student.uniqueID)
+        .withNickname(student.nickname)
+        .withGrade(student.grade)
+        .withCourse(student.course)
+        .withIntroText(student.introText)
+        .build();
+      socketSend(msg.createMessage);
     }
   };
 

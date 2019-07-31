@@ -1,4 +1,10 @@
-import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
+import React, {
+  useState,
+  useEffect,
+  MouseEvent,
+  Fragment,
+  useContext,
+} from 'react';
 import {
   getVolunteerSubjectList,
   getSubjectList,
@@ -19,7 +25,8 @@ const ProfileContainer = () => {
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
   const [subjectList, setSubjectList] = useState<IOption[]>([]);
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
-  const [onModal, setOnModal] = useState<boolean>(false);
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
   const [volunteerProfile, setVolunteerProfile] = useState<IProfile>({
     email: '',
@@ -122,21 +129,22 @@ const ProfileContainer = () => {
     saveSubjects(list)
       .then(() => {
         setModalText('Dine kunnskaper er oppdatert!');
-        setOnModal(true);
+        setModalOpen(true);
       })
       .catch(() => {
         setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
-        setOnModal(true);
+        setModalOpen(true);
       });
-  };
-
-  const onCloseModal = (): void => {
-    setOnModal(false);
   };
 
   return (
     <Fragment>
-      {onModal && <Modal content={modalText} handleClose={onCloseModal} />}
+      {modalOpen && (
+        <Modal
+          content={modalText}
+          closingCallback={() => setModalOpen(false)}
+        />
+      )}
       <div className="profile--container">
         <Picker
           title="Mine fag"
