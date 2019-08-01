@@ -22,10 +22,10 @@ const ProfileFormContainer = (props: IProps) => {
             value={profile.name}
             type="text"
             name="name"
-            onChange={(e) => {
-              isChanged(true)
-              setProfile({...profile, name: e.target.value})}
-            }
+            onChange={e => {
+              isChanged(true);
+              setProfile({ ...profile, name: e.target.value });
+            }}
           />
         </label>
         <label className="profile-form--item">
@@ -35,10 +35,10 @@ const ProfileFormContainer = (props: IProps) => {
             value={profile.email}
             type="email"
             name="email"
-            onChange={(e) => {
-              isChanged(true)
-              setProfile({...profile, email: e.target.value})}
-            }
+            onChange={e => {
+              isChanged(true);
+              setProfile({ ...profile, email: e.target.value });
+            }}
           />
         </label>
         <label className="profile-form--item">
@@ -47,15 +47,15 @@ const ProfileFormContainer = (props: IProps) => {
             className="profile-form--long-input"
             value={profile.bioText}
             name="bio"
-            onChange={(e) => {
-              isChanged(true)
-              setProfile({...profile, bioText: e.target.value})}
-            }
+            onChange={e => {
+              isChanged(true);
+              setProfile({ ...profile, bioText: e.target.value });
+            }}
           />
         </label>
       </form>
     </div>
-  )
-}
+  );
+};
 
 export default ProfileFormContainer;

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  MouseEvent,
-  Fragment,
-} from 'react';
+import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
 import {
   getVolunteerSubjectList,
   getSubjectList,
@@ -133,25 +128,31 @@ const ProfileContainer = () => {
     let isSubjectUpdateSuccess = false;
     let isProfileUpdateSuccess = false;
 
-
     if (isSubjectChanged) {
       isSubjectUpdateSuccess = await saveSubjects(list)
         .then(() => true)
-        .catch(() => false)
-    } if (isProfileChanged) {
+        .catch(() => false);
+    }
+    if (isProfileChanged) {
       isProfileUpdateSuccess = await updateProfile(volunteerProfile)
         .then(() => true)
-        .catch(() => false)
+        .catch(() => false);
     }
 
-    if ((isProfileChanged && isProfileUpdateSuccess) || (isSubjectChanged && isSubjectUpdateSuccess)) {
-      setModalText("Profilen din er oppdatert!")
+    if (
+      (isProfileChanged && isProfileUpdateSuccess) ||
+      (isSubjectChanged && isSubjectUpdateSuccess)
+    ) {
+      setModalText('Profilen din er oppdatert!');
       setModalOpen(true);
-    } else if ((isProfileChanged && !isProfileUpdateSuccess) || (isSubjectChanged && !isSubjectUpdateSuccess)) {
-      setModalText("Ops! Noe gikk galt.")
+    } else if (
+      (isProfileChanged && !isProfileUpdateSuccess) ||
+      (isSubjectChanged && !isSubjectUpdateSuccess)
+    ) {
+      setModalText('Ops! Noe gikk galt.');
       setModalOpen(true);
     } else {
-      setModalText("Ingenting å oppdatere...")
+      setModalText('Ingenting å oppdatere...');
       setModalOpen(true);
     }
     setIsSubjectChanged(false);

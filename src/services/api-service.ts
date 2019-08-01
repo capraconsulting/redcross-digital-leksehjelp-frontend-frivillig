@@ -116,7 +116,5 @@ export async function saveSubjects(list: number[]): Promise<{}> {
 }
 
 export async function updateProfile(profil: IProfile): Promise<{}> {
-  return await api
-    .post('volunteers', profil)
-    .then(res => res.data);
+  return await api.post('volunteers', profil).then(res => res.data);
 }
