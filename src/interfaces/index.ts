@@ -14,3 +14,4 @@ export * from './IFeedback';
 export * from './IVolunteerSubject';
 export * from './IFile';
 export * from './ITempFile';
+export * from './ITalky';
