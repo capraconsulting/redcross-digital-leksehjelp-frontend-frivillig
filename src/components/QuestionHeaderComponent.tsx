@@ -1,5 +1,5 @@
 import React from 'react';
-import { dateStringFormat, studentGradeFormat } from '../services'
+import { dateStringFormat, studentGradeFormat } from '../services';
 
 interface IProps {
   subject: string;
@@ -8,11 +8,14 @@ interface IProps {
   isPublic: boolean;
 }
 
-const QuestionHeaderComponent = ({ subject, questionDate, studentGrade, isPublic }: IProps) => (
+const QuestionHeaderComponent = ({
+  subject,
+  questionDate,
+  studentGrade,
+  isPublic,
+}: IProps) => (
   <div className="question-header--container">
-    <h3 className="question-header--title">
-      {subject}
-    </h3>
+    <h3 className="question-header--title">{subject}</h3>
     <div className="item-row">
       <p>Klasse:</p> {studentGradeFormat(studentGrade)}
     </div>
@@ -22,7 +25,7 @@ const QuestionHeaderComponent = ({ subject, questionDate, studentGrade, isPublic
     <div className="item-row">
       <p>Kan publiseres:</p> {isPublic ? 'Ja' : 'Nei'}
     </div>
-  </div >
-)
+  </div>
+);
 
 export default QuestionHeaderComponent;

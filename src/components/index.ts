@@ -16,3 +16,4 @@ export { default as IconButton } from './IconButton';
 export { default as Picker } from './PickerComponent';
 export { default as ProfileForm } from './ProfileFormComponent';
 export { default as QuestionHeader } from './QuestionHeaderComponent';
+export { default as QuestionForm } from './QuestionFormComponent';

@@ -13,7 +13,7 @@ interface IProps {
     type: string,
     event: MouseEvent,
   ): void;
-  title: string;
+  title?: string;
   type: string;
   placeholder: string;
 }
