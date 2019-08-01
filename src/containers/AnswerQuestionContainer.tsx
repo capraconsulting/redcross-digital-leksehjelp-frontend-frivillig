@@ -10,7 +10,7 @@ import {
 } from '../services';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { Modal } from '../components';
+import { Modal, QuestionHeader } from '../components';
 
 interface IProps {
   id: string;
@@ -35,7 +35,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
     [],
   );
-  const { questionText, title, answerText, isPublic } = question;
+  const { questionText, title, answerText, isPublic, subject, studentGrade, questionDate } = question;
   const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -199,7 +199,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   return (
-    <div>
+    <div className="answer-question--container">
       {modalOpen && (
         <Modal
           content={modalText}
@@ -211,6 +211,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           closingCallback={() => setModalOpen(false)}
         />
       )}
+      <QuestionHeader subject={subject} questionDate={questionDate} studentGrade={studentGrade} isPublic />
       <div className="question-answer">
         <div className="question-answer--container">
           <h3>Spørsmål og svar</h3>
@@ -266,15 +267,15 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               </button>
             </div>
           ) : (
-            <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>
-                Send til godkjenning
+              <div className="question-form--button-container">
+                <button className="leksehjelp--button-success" onClick={onSend}>
+                  Send til godkjenning
               </button>
-              <button className="leksehjelp--button-success" onClick={onSave}>
-                Lagre
+                <button className="leksehjelp--button-success" onClick={onSave}>
+                  Lagre
               </button>
-            </div>
-          )}
+              </div>
+            )}
         </div>
         {feedbackQuestions.length > 0 && (
           <div className="question-answer--container">
