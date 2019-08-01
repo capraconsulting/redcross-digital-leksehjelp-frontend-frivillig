@@ -3,7 +3,6 @@ import React, {
   useEffect,
   MouseEvent,
   Fragment,
-  useContext,
 } from 'react';
 import {
   getVolunteerSubjectList,
@@ -11,9 +10,10 @@ import {
   saveSubjects,
   getMestringSubjectList,
   getVolunteerProfile,
+  updateProfile,
 } from '../services';
 import { IVolunteerSubject, ISubject, IProfile } from '../interfaces';
-import { Picker, Modal } from '../components';
+import { Picker, Modal, ProfileForm } from '../components';
 
 interface IOption {
   value: string;
@@ -34,6 +34,8 @@ const ProfileContainer = () => {
     id: '',
     bioText: '',
   });
+  const [isSubjectChanged, setIsSubjectChanged] = useState<boolean>(false);
+  const [isProfileChanged, setIsProfileChanged] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -102,6 +104,7 @@ const ProfileContainer = () => {
       );
       setMestringSubjectList(subjects);
     }
+    setIsSubjectChanged(true);
   };
 
   const removeSubject = (
@@ -121,20 +124,38 @@ const ProfileContainer = () => {
       const subjectObj = { label: subject, value: item.toString() };
       setMestringSubjectList([...[subjectObj], ...subjectList]);
     }
+    setIsSubjectChanged(true);
     e.preventDefault();
   };
 
-  const onSave = (): void => {
+  const onSave = async () => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
-    saveSubjects(list)
-      .then(() => {
-        setModalText('Dine kunnskaper er oppdatert!');
-        setModalOpen(true);
-      })
-      .catch(() => {
-        setModalText('Noe gikk galt. Vi klarte ikke oppdatere dine kunnskaper');
-        setModalOpen(true);
-      });
+    let isSubjectUpdateSuccess = false;
+    let isProfileUpdateSuccess = false;
+
+
+    if (isSubjectChanged) {
+      isSubjectUpdateSuccess = await saveSubjects(list)
+        .then(() => true)
+        .catch(() => false)
+    } if (isProfileChanged) {
+      isProfileUpdateSuccess = await updateProfile(volunteerProfile)
+        .then(() => true)
+        .catch(() => false)
+    }
+
+    if ((isProfileChanged && isProfileUpdateSuccess) || (isSubjectChanged && isSubjectUpdateSuccess)) {
+      setModalText("Profilen din er oppdatert!")
+      setModalOpen(true);
+    } else if ((isProfileChanged && !isProfileUpdateSuccess) || (isSubjectChanged && !isSubjectUpdateSuccess)) {
+      setModalText("Ops! Noe gikk galt.")
+      setModalOpen(true);
+    } else {
+      setModalText("Ingenting å oppdatere...")
+      setModalOpen(true);
+    }
+    setIsSubjectChanged(false);
+    setIsProfileChanged(false);
   };
 
   return (
@@ -164,13 +185,16 @@ const ProfileContainer = () => {
           selectedList={themeList}
           removeSubject={removeSubject}
         />
+        <ProfileForm
+          profile={volunteerProfile}
+          setProfile={setVolunteerProfile}
+          isChanged={setIsProfileChanged}
+          title="Personlig info"
+        />
         <div className="profile--footer">
           <button className="leksehjelp--button-success" onClick={onSave}>
             Lagre
           </button>
-        </div>
-        <div>
-          <p>{volunteerProfile.name}</p>
         </div>
       </div>
     </Fragment>

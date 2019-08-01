@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, IFeedback } from '../interfaces';
+import { IQuestion, IAnswer, IFeedback, IProfile } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -112,5 +112,11 @@ export async function deleteFeedback(id: string): Promise<{}> {
 export async function saveSubjects(list: number[]): Promise<{}> {
   return await api
     .post('volunteers/subjects', { subjects: list })
+    .then(res => res.data);
+}
+
+export async function updateProfile(profil: IProfile): Promise<{}> {
+  return await api
+    .post('volunteers', profil)
     .then(res => res.data);
 }
