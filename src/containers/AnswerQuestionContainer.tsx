@@ -6,6 +6,7 @@ import {
   getFeedbackList,
   deleteFeedback,
   publishQuestion,
+  approveQuestion,
 } from '../services';
 import { IQuestion, IFeedback } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -53,6 +54,23 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     return data;
   };
 
+  const onDisapprove = () => {
+    const data = createBody();
+    saveAnswer(data)
+      .then(() => {
+        setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
+      })
+      .catch(() => {
+        setModalText('Noe gikk galt.');
+      });
+    setHideModalButtons(true);
+    setModalOpen(true);
+    setTimeout(() => {
+      setModalOpen(false);
+      history.goBack();
+    }, 3000);
+  };
+
   const onSend = async () => {
     if (title === '') {
       setModalText('Du må oppdatere tittel før du kan sende dette spørsmålet');
@@ -74,11 +92,17 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
             } else if (type === 'approval' && !isPublic) {
               setModalText('Svaret er nå sendt til eleven.');
               setHideModalButtons(true);
-              setTimeout(() => history.goBack(), 2000);
+              setTimeout(() => {
+                setModalOpen(false);
+                history.goBack();
+              }, 2000);
             } else {
               setModalText('Svaret er sendt til godkjenning.');
               setHideModalButtons(true);
-              setTimeout(() => history.goBack(), 2000);
+              setTimeout(() => {
+                setModalOpen(false);
+                history.goBack();
+              }, 2000);
             }
             setModalOpen(true);
           })
@@ -135,8 +159,31 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         setHideModalButtons(true);
         setModalText('Noe gikk galt.');
       });
-    setTimeout(() => history.goBack(), 3000);
+    setTimeout(() => {
+      setModalOpen(false);
+      history.goBack();
+    }, 3000);
     event.preventDefault();
+  };
+
+  const onApprove = async () => {
+    const data = createBody();
+    const isApprove = await approveQuestion(data.questionId)
+      .then(() => true)
+      .catch(() => false);
+    isApprove &&
+      postAnswer(data, type).then(() => {
+        if (type === 'approval' && isPublic) {
+          setModalText(
+            'Svaret er sendt til eleven. Ønsker du å publisere spørsmålet på nettsiden?',
+          );
+          setHideModalButtons(false);
+        } else if (type === 'approval' && !isPublic) {
+          setModalText('Svaret er nå sendt til eleven.');
+          setHideModalButtons(true);
+        }
+        setModalOpen(true);
+      });
   };
 
   const onDontPublish = event => {
@@ -144,7 +191,10 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     setModalText(
       'Svaret er sendt til eleven, men ble ikke publisert på Digitalleksehjelp.no',
     );
-    setTimeout(() => history.goBack(), 3000);
+    setTimeout(() => {
+      setModalOpen(false);
+      history.goBack();
+    }, 3000);
     event.preventDefault();
   };
 
@@ -202,14 +252,23 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           </form>
           {type === 'approval' ? (
             <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>
+              <button
+                className="leksehjelp--button-success"
+                onClick={onApprove}
+              >
                 Godkjenn
+              </button>
+              <button
+                className="leksehjelp--button-warning"
+                onClick={onDisapprove}
+              >
+                Ikke godkjenn
               </button>
             </div>
           ) : (
             <div className="question-form--button-container">
               <button className="leksehjelp--button-success" onClick={onSend}>
-                Godkjenning
+                Send til godkjenning
               </button>
               <button className="leksehjelp--button-success" onClick={onSave}>
                 Lagre
