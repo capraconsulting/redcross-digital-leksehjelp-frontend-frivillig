@@ -12,7 +12,7 @@ interface IProps {
   type: string;
 }
 
-const QuestionFromContainer = ({
+const QuestionFromComponent = ({
   question,
   setQuestion,
   onApprove,
@@ -47,6 +47,7 @@ const QuestionFromContainer = ({
             }
           />
         </label>
+
         <label className="question-form--item">
           Svar
           <textarea
@@ -82,4 +83,4 @@ const QuestionFromContainer = ({
   );
 };
 
-export default QuestionFromContainer;
+export default QuestionFromComponent;
