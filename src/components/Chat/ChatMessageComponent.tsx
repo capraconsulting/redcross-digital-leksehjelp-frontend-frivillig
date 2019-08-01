@@ -11,8 +11,7 @@ const ChatMessageComponent = (props: IProps) => {
   const { message, author, uniqueID, files } = props.message;
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
-  console.log(author);
-  const authorType = author === name ? 'self' : 'other';
+  const authorType = author === props.message.author ? 'self' : 'other';
   const time = useMemo(
     () => new Date().getHours() + ':' + new Date().getMinutes(),
     [],

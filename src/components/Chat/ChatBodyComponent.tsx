@@ -3,7 +3,8 @@ import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
 import { Modal } from '../../components';
 import { SocketContext } from '../../providers';
-import { createJoinChatMessage } from '../../services';
+import { createGetAvailableQueueMessage, createJoinChatMessage } from '../../services';
+import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
   messages: ITextMessage[];
@@ -17,6 +18,8 @@ const ChatBodyComponent = (props: IProps) => {
     chats,
     uniqueID,
   } = useContext(SocketContext);
+  const { isOpen, setIsOpen } = useContext(ModalContext);
+
   const listMessages = () => {
     /*console.log("Kjører jeg?");
     console.log(props.messages);
@@ -31,12 +34,13 @@ const ChatBodyComponent = (props: IProps) => {
 
   const createFrivilligOptions = () => {
     return availableVolunteers.map((vol: string) => {
+      console.log(chats[activeChatIndex].roomID);
       return {
         inputText: vol,
         buttonText: 'Legg til',
         callback: () => socketSend(createJoinChatMessage(
           chats[activeChatIndex].student,
-          uniqueID,
+          vol,
           chats[activeChatIndex].messages,
           chats[activeChatIndex].roomID,
         )),
@@ -47,7 +51,11 @@ const ChatBodyComponent = (props: IProps) => {
 
   return (
     <div className="chat-body-container">
-
+      {isOpen &&
+      <Modal content="Tilgjengelige frivillige"
+             inputFields={createFrivilligOptions()}
+             closingCallback={() => setIsOpen(false)}/>
+      }
       <div className="display" id="message-display">
         <div className="welcome-container">
           <p className="welcome-header">Velkommen til chaten!</p>

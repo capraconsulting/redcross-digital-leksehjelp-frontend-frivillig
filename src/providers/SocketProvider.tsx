@@ -19,7 +19,7 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { getVolunteer, ReconnectMessageBuilder } from '../services';
+import { createGetAvailableQueueMessage, getVolunteer, ReconnectMessageBuilder } from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
@@ -162,9 +162,9 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         break;
       case DISTRIBUTE_ROOM:
         setTalkyID(payload['talkyID']);
+        action = addRoomIDAction(payload['roomID'], payload['studentID']);
+        dispatchChats(action);
         getVolunteer().then( (data: IVolunteer) => {
-          action = addRoomIDAction(payload['roomID'], payload['studentID']);
-          dispatchChats(action);
           console.log(data);
           setVolunteerInfo(data);
           }
@@ -199,7 +199,13 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         const student: IStudent = payload['studentInfo'];
         const messages: ITextMessage[] = payload['chatHistory'];
         action = joinChatAction(student, messages, payload['roomID']);
+        console.log(action);
         dispatchChats(action);
+        getVolunteer().then( (data: IVolunteer) => {
+          console.log(data);
+          setVolunteerInfo(data);
+        });
+
         break;
       case AVAILABLE_CHAT:
         setAvailableVolunteers(payload['queueMembers']);

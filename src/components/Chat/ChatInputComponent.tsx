@@ -1,6 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
+  createGetAvailableQueueMessage,
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
@@ -76,6 +77,9 @@ const ChatInputComponent = (props: IProps) => {
 
   //Renders temporary file attachments ready to send
   const FileList = () => {
+    if (window.event) {
+      window.event.preventDefault();
+    }
     return (
       <ul className="filelist">
         {tempFiles.map((file, index) => {
@@ -170,6 +174,12 @@ const ChatInputComponent = (props: IProps) => {
                 points="30 15 0 30 5.5 15 0 0"
               ></polygon>
             </svg>
+          </button>
+          <button onClick={() => {
+            socketSend(createGetAvailableQueueMessage());
+            setIsOpen(true);
+          }} >
+            Se tilgjengelige
           </button>
         </form>
         <FileList />

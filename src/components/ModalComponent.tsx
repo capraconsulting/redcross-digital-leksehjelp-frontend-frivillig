@@ -45,7 +45,9 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
               disabled={inputField.isDisabled}
             />
             <button
-              onClick={() => inputField.callback()}
+              onClick={() => {
+                inputField.callback()
+              }}
               className="button leksehjelp--button-success"
             >
               {inputField.buttonText}
