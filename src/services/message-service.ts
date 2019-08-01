@@ -29,8 +29,9 @@ const createMessage = (
     | ITextMessage
     | IEnterQueueMessage
     | IGenerateRoomMessage
-    | IJoin
+    | IReconnectMessage
     | {},
+    | IJoin
   type: string,
 ): ISocketMessage => {
   return {
@@ -51,7 +52,6 @@ export const createGetAvailableQueueMessage = (): ISocketMessage => {
   return createMessage({}, AVAILABLE_CHAT)
 }
 
-
 export const createJoinChatMessage = (
   studentInfo: IStudent,
   uniqueID: string,
@@ -66,65 +66,10 @@ export const createJoinChatMessage = (
   };
   return createMessage(msg, JOIN_CHAT);
 };
-
-class ReconnectMessage {
-  private readonly oldUniqueID: string;
-  private readonly uniqueID: string;
-  private readonly roomIDs: string[];
-
-  public constructor(reconnectMessageBuilder: ReconnectMessageBuilder) {
-    this.oldUniqueID = reconnectMessageBuilder.oldUniqueID;
-    this.uniqueID = reconnectMessageBuilder.uniqueID;
-    this.roomIDs = reconnectMessageBuilder.roomIDs;
-  }
-
-  public get createMessage(): ISocketMessage {
-    const msg: IReconnectMessage = {
-      oldUniqueID: this.oldUniqueID,
-      uniqueID: this.uniqueID,
-      roomIDs: this.roomIDs,
-    };
-    return createMessage(msg, RECONNECT);
-  }
-}
-
-export class ReconnectMessageBuilder {
-  private readonly _uniqueID: string;
-  private _oldUniqueID: string;
-  private _roomIDs: string[];
-
-  public constructor(uniqueID: string) {
-    this._uniqueID = uniqueID;
-    return this;
-  }
-
-  public withOldUniqueID(value: string): ReconnectMessageBuilder {
-    this._oldUniqueID = value;
-    return this;
-  }
-
-  public withRoomIDs(value: string[]): ReconnectMessageBuilder {
-    this._roomIDs = value;
-    return this;
-  }
-
-  public build(): ReconnectMessage {
-    return new ReconnectMessage(this);
-  }
-
-  public get uniqueID(): string {
-    return this._uniqueID;
-  }
-
-  public get oldUniqueID(): string {
-    return this._oldUniqueID;
-  }
-
-  public get roomIDs(): string[] {
-    return this._roomIDs;
-  }
-}
-
+export const createReconnectMessage = (uniqueID: string): ISocketMessage => {
+  const msg: IReconnectMessage = { uniqueID };
+  return createMessage(msg, RECONNECT);
+};
 
 class LeaveChatMessage {
   private readonly roomID: string;

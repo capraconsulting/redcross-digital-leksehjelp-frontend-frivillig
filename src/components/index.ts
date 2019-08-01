@@ -13,3 +13,4 @@ export { default as ChatQueueHeader } from './Chat/ChatQueueHeaderComponent';
 export { default as Modal } from './ModalComponent';
 export { default as IconButton } from './IconButton';
 export { default as Picker } from './PickerComponent';
+export { default as ProfileForm } from './ProfileFormComponent';
