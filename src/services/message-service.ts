@@ -3,7 +3,6 @@ import {
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
-  ISocketFile,
   IFile,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';

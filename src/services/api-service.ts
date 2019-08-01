@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, IFeedback } from '../interfaces';
+import { IQuestion, IAnswer, IFeedback, IProfile } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -35,6 +35,9 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
     case 'public':
       url = '/public';
       break;
+    case 'unpublished':
+      url = '/unpublished';
+      break;
     default:
       url = '';
       break;
@@ -46,6 +49,10 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
 
 export async function getVolunteerSubjectList<T>(): Promise<T> {
   return await api.get('volunteers/subjects').then(res => res.data);
+}
+
+export async function getVolunteerProfile<T>(): Promise<T> {
+  return await api.get('volunteers/self').then(res => res.data);
 }
 
 export async function getSubjectList<T>(): Promise<T> {
@@ -91,6 +98,10 @@ export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
 }
 
 export async function publishQuestion(id: string): Promise<{}> {
+  return await api.post(`questions/${id}/publish`).then(res => res.data);
+}
+
+export async function approveQuestion(id: string): Promise<{}> {
   return await api.post(`questions/${id}/approve`).then(res => res.data);
 }
 
@@ -102,4 +113,8 @@ export async function saveSubjects(list: number[]): Promise<{}> {
   return await api
     .post('volunteers/subjects', { subjects: list })
     .then(res => res.data);
+}
+
+export async function updateProfile(profil: IProfile): Promise<{}> {
+  return await api.post('volunteers', profil).then(res => res.data);
 }
