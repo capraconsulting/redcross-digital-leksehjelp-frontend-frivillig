@@ -19,8 +19,9 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { ReconnectMessageBuilder } from '../services';
+import { getVolunteer, ReconnectMessageBuilder } from '../services';
 import { createPingMessage } from '../services';
+import { IVolunteer } from '../interfaces/IVolunteer';
 
 toast.configure({
   autoClose: 5000,
@@ -47,6 +48,14 @@ export const SocketContext = createContext({
   name: '' as string,
 
   availableVolunteers: [] as string[],
+
+  volunteerInfo: {
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+    } as IVolunteer
 });
 
 let socket;
@@ -64,6 +73,13 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talkyID, setTalkyID] = useState<string>('');
+  const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+  });
   const {
     DISTRIBUTE_ROOM,
     CONNECTION,
@@ -137,6 +153,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
             datetime: payload['datetime'],
+            imgUrl: payload['imgUrl'],
             files: payload['files'],
           },
           true,
@@ -144,9 +161,15 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         dispatchChats(action);
         break;
       case DISTRIBUTE_ROOM:
-        action = addRoomIDAction(payload['roomID'], payload['studentID']);
-        dispatchChats(action);
         setTalkyID(payload['talkyID']);
+        getVolunteer().then( (data: IVolunteer) => {
+          action = addRoomIDAction(payload['roomID'], payload['studentID']);
+          dispatchChats(action);
+          console.log(data);
+          setVolunteerInfo(data);
+          }
+        );
+
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
@@ -280,6 +303,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         setActiveChatIndex,
         name,
         availableVolunteers,
+        volunteerInfo,
       }}
     >
       {children}

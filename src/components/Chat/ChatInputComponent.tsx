@@ -16,9 +16,10 @@ interface IProps {
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
+  const { dispatchChats, socketSend, volunteerInfo } = useContext(SocketContext);
+  const { setIsOpen } = useContext(ModalContext);
+  const { uniqueID, roomID } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
-  const { dispatchChats, socketSend, uniqueID } = useContext(SocketContext);
-  const { roomID } = props;
 
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
@@ -31,6 +32,8 @@ const ChatInputComponent = (props: IProps) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
       const msg = new TextMessageBuilder(uniqueID)
+        .withName(volunteerInfo.name)
+        .withImg(volunteerInfo.imgUrl)
         .withMessage(message)
         .withFiles(files)
         .toRoom(roomID)

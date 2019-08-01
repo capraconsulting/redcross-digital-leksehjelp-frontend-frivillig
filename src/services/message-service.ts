@@ -270,6 +270,8 @@ class TextMessage {
   private readonly roomID: string;
   private readonly uniqueID: string;
   private readonly message: string;
+  private readonly name: string;
+  private readonly imgUrl: string;
   private readonly files: IFile[];
 
   public constructor(textMessageBuilder: TextMessageBuilder) {
@@ -277,6 +279,8 @@ class TextMessage {
     this.message = textMessageBuilder.message;
     this.uniqueID = textMessageBuilder.uniqueID;
     this.files = textMessageBuilder.files;
+    this.name = textMessageBuilder.name;
+    this.imgUrl = textMessageBuilder.imgUrl;
   }
 
   public get createMessage(): {
@@ -284,10 +288,11 @@ class TextMessage {
     socketMessage: ISocketMessage;
   } {
     const msg: ITextMessage = {
-      author: 'frivillig',
+      author: this.name,
       uniqueID: this.uniqueID,
       roomID: this.roomID,
       message: this.message,
+      imgUrl: this.imgUrl,
       files: this.files,
     };
     return {
@@ -301,6 +306,8 @@ export class TextMessageBuilder {
   private readonly _uniqueID: string;
   private _roomID: string;
   private _message: string;
+  private _name: string;
+  private _imgUrl: string;
   private _files: IFile[];
 
   public constructor(uniqueID: string) {
@@ -331,6 +338,9 @@ export class TextMessageBuilder {
     return this._roomID;
   }
 
+  public get imgUrl(): string {
+    return this._imgUrl;
+  }
   public get uniqueID(): string {
     return this._uniqueID;
   }
@@ -341,5 +351,18 @@ export class TextMessageBuilder {
 
   public get files(): IFile[] {
     return this._files;
+  }
+
+  public get name(): string {
+    return this._name;
+  }
+  public withName(name: string): TextMessageBuilder {
+    this._name = name;
+    return this;
+  }
+
+  public withImg(imgUrl: string): TextMessageBuilder {
+    this._imgUrl = imgUrl;
+    return this;
   }
 }

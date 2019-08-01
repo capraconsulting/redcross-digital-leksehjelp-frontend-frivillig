@@ -116,6 +116,7 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
       message: 'Har forlatt rommet',
       roomID: action.payload.roomID,
       uniqueID: 'NOTIFICATION',
+      imgUrl: action.payload.imgUrl,
       files: [] as IFile[],
     });
   }
