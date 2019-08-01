@@ -58,7 +58,7 @@ const ChatMessageComponent = (props: IProps) => {
   const renderMessage = () => {
     return (
       message &&
-      message.length > 0 && (
+      (typeof message === 'string' && message.length > 0) && (
         <p
           className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
         >

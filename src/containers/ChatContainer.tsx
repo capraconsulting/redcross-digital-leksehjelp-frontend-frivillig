@@ -46,7 +46,7 @@ const ChatContainer = () => {
             <ChatBody messages={chats[activeChatIndex].messages} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput roomID={chats[activeChatIndex].roomID} />
+            <ChatInput roomID={chats[activeChatIndex].roomID} uniqueID={chats[activeChatIndex].student.uniqueID} />
           )}
         </div>
       </div>

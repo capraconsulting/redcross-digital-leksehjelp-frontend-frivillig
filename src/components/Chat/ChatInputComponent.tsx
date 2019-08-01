@@ -9,9 +9,11 @@ import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 import { IconButton } from '../';
 import '../../styles/chat-input-component.less';
+import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
   roomID: string;
+  uniqueID: string,
 }
 
 const ChatInputComponent = (props: IProps) => {
