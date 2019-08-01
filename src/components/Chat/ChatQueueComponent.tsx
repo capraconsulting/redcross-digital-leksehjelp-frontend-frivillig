@@ -9,24 +9,45 @@ import {
 } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
+import { CHAT_TYPES } from '../../config';
+import { toast } from 'react-toastify';
+
+toast.configure({
+  autoClose: 8000,
+  draggable: false,
+  position: 'top-center',
+  closeButton: false,
+  closeOnClick: true,
+});
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const { queue, setQueue, uniqueID, dispatchChats, socketSend } = useContext(
+  const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
     SocketContext,
   );
+  const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
   const createNewChatRoom = (student: IStudent) => {
+    const { chatType, uniqueID, nickname, grade, introText, course } = student;
+    if (
+      talky &&
+      (chatType === LEKSEHJELP_VIDEO || chatType === MESTRING_VIDEO)
+    ) {
+      toast.error(
+        'Du er allerede i en videochat med en student.\nVennligst avslutt alle chatter med denne eleven først',
+      );
+      return;
+    }
+
     if (student) {
       dispatchChats(addNewChatAction(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
-
       const msg = new GenerateRoomMessageBuilder(uniqueID)
-        .withStudentID(student.uniqueID)
-        .withNickname(student.nickname)
-        .withGrade(student.grade)
-        .withCourse(student.course)
-        .withIntroText(student.introText)
+        .withStudentID(uniqueID)
+        .withNickname(nickname)
+        .withGrade(grade)
+        .withCourse(course)
+        .withIntroText(introText)
         .build();
       socketSend(msg.createMessage);
     }
@@ -61,7 +82,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
           </div>
         );
       }),
-    [queue],
+    [queue, talky],
   );
 
   return (
