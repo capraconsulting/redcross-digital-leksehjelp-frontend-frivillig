@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
 import { Modal } from '../../components';
 import { SocketContext } from '../../providers';
-import { createGetAvailableQueueMessage, createJoinChatMessage } from '../../services';
+import { createJoinChatMessage } from '../../services';
 import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
@@ -16,7 +16,6 @@ const ChatBodyComponent = (props: IProps) => {
     socketSend,
     activeChatIndex,
     chats,
-    uniqueID,
   } = useContext(SocketContext);
   const { isOpen, setIsOpen } = useContext(ModalContext);
 
@@ -38,12 +37,15 @@ const ChatBodyComponent = (props: IProps) => {
       return {
         inputText: vol,
         buttonText: 'Legg til',
-        callback: () => socketSend(createJoinChatMessage(
-          chats[activeChatIndex].student,
-          vol,
-          chats[activeChatIndex].messages,
-          chats[activeChatIndex].roomID,
-        )),
+        callback: () =>
+          socketSend(
+            createJoinChatMessage(
+              chats[activeChatIndex].student,
+              vol,
+              chats[activeChatIndex].messages,
+              chats[activeChatIndex].roomID,
+            ),
+          ),
         isDisabled: true,
       };
     });
@@ -51,11 +53,13 @@ const ChatBodyComponent = (props: IProps) => {
 
   return (
     <div className="chat-body-container">
-      {isOpen &&
-      <Modal content="Tilgjengelige frivillige"
-             inputFields={createFrivilligOptions()}
-             closingCallback={() => setIsOpen(false)}/>
-      }
+      {isOpen && (
+        <Modal
+          content="Tilgjengelige frivillige"
+          inputFields={createFrivilligOptions()}
+          closingCallback={() => setIsOpen(false)}
+        />
+      )}
       <div className="display" id="message-display">
         <div className="welcome-container">
           <p className="welcome-header">Velkommen til chaten!</p>

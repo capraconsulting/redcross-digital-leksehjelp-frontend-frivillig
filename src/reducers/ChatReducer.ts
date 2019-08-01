@@ -86,7 +86,6 @@ const handleLeaveChat = (state: IChat[], action: IAction) => {
   return state.filter(chat => chat.roomID !== action.payload.roomID);
 };
 
-
 const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
   return action.payload.chats;
 };
@@ -110,7 +109,6 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
     roomID: action.payload.roomID,
     unread: 0,
   };
-
 
   return [...state, newChat];
 };
@@ -147,4 +145,3 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(joinChatAction, joinChatHandler)
   .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage)
   .handleAction(reconnectChatAction, handleReconnectChat);
-

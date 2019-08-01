@@ -19,7 +19,11 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { createGetAvailableQueueMessage, getVolunteer, ReconnectMessageBuilder } from '../services';
+import {
+  createGetAvailableQueueMessage,
+  getVolunteer,
+  ReconnectMessageBuilder,
+} from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
@@ -55,7 +59,7 @@ export const SocketContext = createContext({
     email: '',
     name: '',
     imgUrl: '',
-    } as IVolunteer
+  } as IVolunteer,
 });
 
 let socket;
@@ -164,11 +168,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         setTalkyID(payload['talkyID']);
         action = addRoomIDAction(payload['roomID'], payload['studentID']);
         dispatchChats(action);
-        getVolunteer().then( (data: IVolunteer) => {
+        getVolunteer().then((data: IVolunteer) => {
           console.log(data);
           setVolunteerInfo(data);
-          }
-        );
+        });
 
         break;
       case CONNECTION:
@@ -201,7 +204,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         action = joinChatAction(student, messages, payload['roomID']);
         console.log(action);
         dispatchChats(action);
-        getVolunteer().then( (data: IVolunteer) => {
+        getVolunteer().then((data: IVolunteer) => {
           console.log(data);
           setVolunteerInfo(data);
         });
@@ -212,7 +215,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         break;
     }
   };
-
 
   /*
   const socketSend = (message: ISocketMessage | IGetMessage): void => {

@@ -14,12 +14,14 @@ import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
   roomID: string;
-  uniqueID: string,
+  uniqueID: string;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend, volunteerInfo } = useContext(SocketContext);
+  const { dispatchChats, socketSend, volunteerInfo } = useContext(
+    SocketContext,
+  );
   const { setIsOpen } = useContext(ModalContext);
   const { uniqueID, roomID } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
@@ -175,10 +177,12 @@ const ChatInputComponent = (props: IProps) => {
               ></polygon>
             </svg>
           </button>
-          <button onClick={() => {
-            socketSend(createGetAvailableQueueMessage());
-            setIsOpen(true);
-          }} >
+          <button
+            onClick={() => {
+              socketSend(createGetAvailableQueueMessage());
+              setIsOpen(true);
+            }}
+          >
             Se tilgjengelige
           </button>
         </form>

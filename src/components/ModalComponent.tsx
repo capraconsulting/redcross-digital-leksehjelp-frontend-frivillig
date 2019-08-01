@@ -46,7 +46,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
             />
             <button
               onClick={() => {
-                inputField.callback()
+                inputField.callback();
               }}
               className="button leksehjelp--button-success"
             >
