@@ -31,8 +31,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     const { chatType, uniqueID, nickname, grade, introText, course } = student;
     if (
       talky &&
-      (chatType === LEKSEHJELP_VIDEO ||
-        chatType === MESTRING_VIDEO)
+      (chatType === LEKSEHJELP_VIDEO || chatType === MESTRING_VIDEO)
     ) {
       toast.error(
         'Du er allerede i en videochat med en student.\nVennligst avslutt alle chatter med denne eleven først',

@@ -13,9 +13,11 @@ interface IProps {
 const ChatHeaderComponent = (props: IProps) => {
   const { roomID } = props.activeChat;
   const { nickname, course, chatType } = props.activeChat.student;
-  const { socketSend, dispatchChats, uniqueID, talky } = useContext(SocketContext);
+  const { socketSend, dispatchChats, uniqueID, talky } = useContext(
+    SocketContext,
+  );
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const {LEKSEHJELP_VIDEO, MESTRING_VIDEO} = CHAT_TYPES;
+  const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
   const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
@@ -38,16 +40,17 @@ const ChatHeaderComponent = (props: IProps) => {
 
   const renderChatType = () => {
     if (chatType === LEKSEHJELP_VIDEO || chatType === MESTRING_VIDEO) {
-      return <img
-        src={require('../../assets/images/video-icon.svg')}
-        onClick={openTalky}
-        alt="Video Chat"
-      />
+      return (
+        <img
+          src={require('../../assets/images/video-icon.svg')}
+          onClick={openTalky}
+          alt="Video Chat"
+        />
+      );
     }
-    return <img
-      src={require('../../assets/images/chat-icon.svg')}
-      alt="Text Chat"
-    />
+    return (
+      <img src={require('../../assets/images/chat-icon.svg')} alt="Text Chat" />
+    );
   };
 
   return (

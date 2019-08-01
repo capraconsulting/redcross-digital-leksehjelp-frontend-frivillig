@@ -90,7 +90,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       const successFullReconnectedChats = parsedChatsFromSessionStorage.filter(
         chat => {
           if (roomIDs.includes(chat.roomID)) {
-            if (parsedTalkyFromSessionStorage && roomIDs.includes(parsedTalkyFromSessionStorage.roomID)) {
+            if (
+              parsedTalkyFromSessionStorage &&
+              roomIDs.includes(parsedTalkyFromSessionStorage.roomID)
+            ) {
               setTalky(parsedTalkyFromSessionStorage);
               console.log(parsedTalkyFromSessionStorage);
             }
@@ -188,7 +191,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       const newTalky: ITalky = {
         talkyID: talky.talkyID,
         roomID: talky.roomID,
-        opened: true
+        opened: true,
       };
       setTalky(newTalky);
       sessionStorage.setItem('talky', JSON.stringify(newTalky));
@@ -226,7 +229,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         socketSend,
         activeChatIndex,
         setActiveChatIndex,
-        talky
+        talky,
       }}
     >
       {children}
