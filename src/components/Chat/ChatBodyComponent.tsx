@@ -3,7 +3,7 @@ import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
 import { Modal } from '../../components';
 import { SocketContext } from '../../providers';
-import { createJoinChatMessage } from '../../services';
+import { createJoinChatMessage, JoinChatMessageBuilder } from '../../services';
 import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
@@ -20,12 +20,6 @@ const ChatBodyComponent = (props: IProps) => {
   const { isOpen, setIsOpen } = useContext(ModalContext);
 
   const listMessages = () => {
-    /*console.log("Kjører jeg?");
-    console.log(props.messages);
-    console.log(props.messages.map((message, index) => (
-      <ChatMessageComponent key={index} message={message} />
-    )));
-    */
     return props.messages.map((message, index) => (
       <ChatMessageComponent key={index} message={message} />
     ));
@@ -39,12 +33,14 @@ const ChatBodyComponent = (props: IProps) => {
         buttonText: 'Legg til',
         callback: () =>
           socketSend(
-            createJoinChatMessage(
-              chats[activeChatIndex].student,
-              vol,
-              chats[activeChatIndex].messages,
-              chats[activeChatIndex].roomID,
-            ),
+            new JoinChatMessageBuilder()
+              .withRoomID(chats[activeChatIndex].roomID)
+              .withChatHistory(chats[activeChatIndex].messages)
+              .withStudentInfo(chats[activeChatIndex].student)
+              .withUniqueID(vol)
+              .build()
+              .createMessage()
+            ,
           ),
         isDisabled: true,
       };

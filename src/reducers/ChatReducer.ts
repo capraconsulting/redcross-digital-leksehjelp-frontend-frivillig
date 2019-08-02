@@ -29,17 +29,17 @@ export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
   return (roomID: string) => callback({ roomID });
 });
 
-export const reconnectChatAction = createAction('RECONNECT', cb => {
-  return (chats: IChat[]) => cb({ chats });
+export const reconnectChatAction = createAction('RECONNECT', callback => {
+  return (chats: IChat[]) => callback({ chats });
 });
 
-export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
-  return (roomID: string, name: string) => cb({ roomID, name });
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
+  return (roomID: string, name: string) => callback({ roomID, name });
 });
 
-export const joinChatAction = createAction('JOIN_CHAT', cb => {
+export const joinChatAction = createAction('JOIN_CHAT', callback => {
   return (student: IStudent, messages: ITextMessage[], roomID: string) =>
-    cb({ student, messages, roomID });
+    callback({ student, messages, roomID });
 });
 
 const handleAddRoomID = (state: IChat[], action: IAction) => {
