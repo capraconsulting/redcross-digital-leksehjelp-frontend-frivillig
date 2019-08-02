@@ -20,6 +20,14 @@ export async function getFeedbackList(id?: string): Promise<IFeedback[]> {
     .then(res => res.data);
 }
 
+export async function getIsLeksehjelpOpen<T>(): Promise<boolean> {
+  return api.get('isopen').then(res => res.data);
+}
+
+export async function toggleIsLeksehjelpOpen<T>(): Promise<boolean> {
+  return api.post('isopen').then(res => res.data);
+}
+
 export async function getQuestionList<T>(parameter?: string): Promise<T> {
   let url = '';
   switch (parameter) {

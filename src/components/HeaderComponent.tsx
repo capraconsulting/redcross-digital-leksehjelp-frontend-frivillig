@@ -1,7 +1,9 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { StateContext } from '../StateProvider';
+import { StateContext } from '../providers/';
+import { Modal } from './';
+import { toggleIsLeksehjelpOpen } from '../services';
 
 interface IProps {
   onLogout(): void;
@@ -14,7 +16,14 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
-  const { activeState, setActiveState } = useContext(StateContext);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const {
+    activeState,
+    setActiveState,
+    isLeksehjelpOpen,
+    setIsLeksehjelpOpen,
+  } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -37,6 +46,12 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
   useEffect(() => {
     setLocationPath();
   }, []);
+
+  const handleToggleLeksehjelp = () => {
+    toggleIsLeksehjelpOpen()
+      .then(data => setIsLeksehjelpOpen(data['isopen']))
+      .then(() => setModalOpen(false));
+  };
 
   return (
     <Fragment>
@@ -105,9 +120,32 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             </label>
           </div>
           <li className="header--list-item">
-            <button className="leksehjelp--button-abort">
-              Steng Leksehjelpen
+            <button
+              onClick={() => setModalOpen(true)}
+              className={
+                isLeksehjelpOpen
+                  ? 'leksehjelp--button-abort'
+                  : 'leksehjelp--button-success'
+              }
+            >
+              {isLeksehjelpOpen ? 'Steng Leksehjelpen' : 'Åpne Leksehjelpen'}
             </button>
+            {modalOpen && (
+              <Modal
+                content={
+                  isLeksehjelpOpen
+                    ? 'Er du sikker på at du vil stenge leksehjelpen?'
+                    : 'Er du sikker på at du vil åpne leksehjelpen?'
+                }
+                successButtonText={
+                  isLeksehjelpOpen ? 'Steng leksehjelp' : 'Åpne leksehjelp'
+                }
+                warningButtonText="Avbryt"
+                successCallback={() => handleToggleLeksehjelp()}
+                warningCallback={() => setModalOpen(false)}
+                closingCallback={() => setModalOpen(false)}
+              />
+            )}
           </li>
         </ul>
       </div>
