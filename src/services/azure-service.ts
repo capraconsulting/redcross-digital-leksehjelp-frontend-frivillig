@@ -1,10 +1,9 @@
-import azure from 'azure-storage';
-import stream from 'stream';
+import azure from 'azure-storage/browser/azure-storage.blob.export';
 
-//Interfaces
+/** Interfaces */
 import { IFile } from '../interfaces';
 
-//Configuration
+/** Configuration */
 import { AZURE_TOKENS } from '../config';
 
 /** Creates Azure Blobservice with restricted access */
@@ -21,49 +20,40 @@ export const uploadFileToAzureBlobStorage = async (
   directory: string,
   file,
 ) => {
-  const fileReader = new FileReader();
-  fileReader.readAsArrayBuffer(file);
-  const fileStream = new stream.Readable();
   return new Promise<IFile>((resolve, reject) => {
-    fileReader.onload = () => {
-      let myFileBuffer: ArrayBuffer = fileReader.result as ArrayBuffer;
-      if (myFileBuffer) {
-        fileStream.push(myFileBuffer[0]);
-        fileStream.push(null);
-        blobService.createContainerIfNotExists(share, function() {
-          blobService.createBlockBlobFromStream(
-            share,
-            directory + '/' + file.name,
-            fileStream,
-            myFileBuffer.byteLength,
-            function(error, result) {
-              if (!error) {
-                const { container, name } = result;
-                const fileLink = blobService.getUrl(
-                  container,
-                  name,
-                  AZURE_TOKENS.PUBLIC_SAS_TOKEN,
-                );
-                let promisedFile: IFile = {
-                  share,
-                  directory,
-                  fileName: file.name,
-                  fileUrl: fileLink + '&sr=b&sv=2018-03-28',
-                };
-                resolve(promisedFile);
-              } else {
-                reject();
-              }
-            },
-          );
-        });
-      }
-    };
+    blobService.createContainerIfNotExists(share, function() {
+      blobService.createBlockBlobFromBrowserFile(
+        share,
+        directory + '/' + file.name,
+        file,
+        function(error, result) {
+          if (!error) {
+            const { container, name } = result;
+            const fileLink = blobService.getUrl(
+              container,
+              name,
+              AZURE_TOKENS.PUBLIC_SAS_TOKEN,
+            );
+            let promisedFile: IFile = {
+              share,
+              directory,
+              fileName: file.name,
+              fileUrl: fileLink + '&sr=b&sv=2018-03-28',
+            };
+            resolve(promisedFile);
+          } else {
+            reject();
+          }
+        },
+      );
+    });
   });
 };
 
-/** Deletes single file from Blob (folder).
- *  Folder gets deleted when empty (aka when last file gets deleted)*/
+/**
+ * Deletes single file from Blob (folder).
+ * Folder gets deleted when empty (aka when last file gets deleted)
+ * */
 export const deleteFileFromBlob = async (
   share: string,
   directory: string,
@@ -72,34 +62,9 @@ export const deleteFileFromBlob = async (
   return new Promise<string>((resolve, reject) => {
     blobService.deleteBlobIfExists(share, directory + '/' + fileName, function(
       error,
-      result,
-      response,
     ) {
       if (!error) {
-        console.log(result);
-        console.log(response);
         resolve('Deleted' + fileName);
-      } else {
-        reject();
-      }
-    });
-  });
-};
-
-/** Delete every file in blob folder -->
- *  which then results in deleting the folder  itself
- * (deleting the virtual directory inside blob container)*/
-export const deleteBlobDirectory = async (share: string, directory: string) => {
-  return new Promise<string>((resolve, reject) => {
-    blobService.deleteBlobIfExists(share, directory, function(
-      error,
-      result,
-      response,
-    ) {
-      if (!error) {
-        console.log(result);
-        console.log(response);
-        resolve('Deleted');
       } else {
         reject();
       }
