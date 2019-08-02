@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { StateContext } from '../providers/';
 import { Modal } from './';
-import { toggleIsLeksehjelpOpen } from '../services';
+import { getIsLeksehjelpOpen, toggleIsLeksehjelpOpen } from '../services';
+import { toast } from 'react-toastify';
 
 interface IProps {
   onLogout(): void;
@@ -41,6 +42,21 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const onLogout = (): void => {
     props.onLogout();
+  };
+
+  const handleOpenModal = () => {
+    getIsLeksehjelpOpen().then(data => {
+      if (data.isopen === isLeksehjelpOpen) {
+        setModalOpen(true);
+      } else {
+        toast.info(
+          `En annen har allerede ${
+            data.isopen ? 'åpnet' : 'lukket'
+          } leksehjelpen.`,
+        );
+        setIsLeksehjelpOpen(data.isopen);
+      }
+    });
   };
 
   useEffect(() => {
@@ -121,7 +137,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           </div>
           <li className="header--list-item">
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={handleOpenModal}
               className={
                 isLeksehjelpOpen
                   ? 'leksehjelp--button-abort'
