@@ -1,6 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
+  createGetAvailableQueueMessage,
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
@@ -12,14 +13,18 @@ import '../../styles/chat-input-component.less';
 
 interface IProps {
   roomID: string;
+  uniqueID: string;
+  setModal(openModalFlag: boolean): void;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
+  const { dispatchChats, socketSend, volunteerInfo } = useContext(
+    SocketContext,
+  );
+  const { uniqueID, roomID, setModal } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
-  const { dispatchChats, socketSend, uniqueID } = useContext(SocketContext);
-  const { roomID } = props;
-
+  const { name, imgUrl } = volunteerInfo;
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
       return uploadFileToAzureBlobStorage('chatfiles', roomID, file);
@@ -31,6 +36,8 @@ const ChatInputComponent = (props: IProps) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
       const msg = new TextMessageBuilder(uniqueID)
+        .withAuthor(name)
+        .withImg(imgUrl)
         .withMessage(message)
         .withFiles(files)
         .toRoom(roomID)
@@ -71,6 +78,9 @@ const ChatInputComponent = (props: IProps) => {
 
   //Renders temporary file attachments ready to send
   const FileList = () => {
+    if (window.event) {
+      window.event.preventDefault();
+    }
     return (
       <ul className="filelist">
         {tempFiles.map((file, index) => {
@@ -165,6 +175,14 @@ const ChatInputComponent = (props: IProps) => {
                 points="30 15 0 30 5.5 15 0 0"
               ></polygon>
             </svg>
+          </button>
+          <button
+            onClick={() => {
+              socketSend(createGetAvailableQueueMessage());
+              setModal(true);
+            }}
+          >
+            Se tilgjengelige
           </button>
         </form>
         <FileList />

@@ -16,3 +16,5 @@ export * from './IProfile';
 export * from './IFile';
 export * from './ITempFile';
 export * from './ITalky';
+export * from './IJoin';
+export * from './IReconnectMessage';

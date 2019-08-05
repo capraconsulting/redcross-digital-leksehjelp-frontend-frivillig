@@ -7,3 +7,7 @@ build/
 WebRTCConfig.ts
 .idea/
 .vscode/
+
+\.idea/
+
+package-lock\.json
