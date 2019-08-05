@@ -24,7 +24,11 @@ const ChatBodyComponent = (props: IProps) => {
 
   const listMessages = () => {
     return props.messages.map((message, index) => (
-      <ChatMessageComponent key={index} message={message} volunteerInfo={volunteerInfo} />
+      <ChatMessageComponent
+        key={index}
+        message={message}
+        volunteerInfo={volunteerInfo}
+      />
     ));
   };
 

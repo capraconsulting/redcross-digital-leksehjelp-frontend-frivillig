@@ -66,7 +66,7 @@ export const SocketContext = createContext({
     email: '',
     name: '',
     imgUrl: '',
-  } as IVolunteer,
+  },
 });
 
 let socket;
