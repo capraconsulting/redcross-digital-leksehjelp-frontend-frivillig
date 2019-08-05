@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react';
 import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
-import { deleteFileFromBlob, deleteBlobDirectory } from './../services';
 
 // main component
 const ChatContainer = () => {
@@ -28,10 +27,6 @@ const ChatContainer = () => {
   };
   
 
-  const handleDelete = (share: string, directory: string, fileName: string) => {
-    return deleteFileFromBlob(share, directory, fileName);
-  };
-
   if (chats.length >= 1) {
     return (
       <div className="chat-container">
@@ -56,10 +51,6 @@ const ChatContainer = () => {
     <div className="chat-container">
       <div />
       <div className="no-chat">Ingen chats</div>
-      {/** <button
-        onClick={() => handleDelete('chatfiles', 'gustav', 'config.jpg')}
-      />
-      <button onClick={() => deleteBlobDirectory('chatfiles', 'gustav')} /> */}
     </div>
   );
 };
