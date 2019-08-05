@@ -262,109 +262,39 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
         studentGrade={studentGrade}
         isPublic
       />
-      <div className="question-answer">
-<<<<<<< HEAD
-        <QuestionForm
-          question={question}
-          setQuestion={setQuestion}
-          onApprove={onApprove}
-          onDisapprove={onDisapprove}
-          onSave={onSave}
-          onSend={onSend}
-          type={type}
-          themeList={themeList}
-        />
-=======
+      <QuestionForm
+        question={question}
+        setQuestion={setQuestion}
+        onApprove={onApprove}
+        onDisapprove={onDisapprove}
+        onSave={onSave}
+        onSend={onSend}
+        type={type}
+        themeList={themeList}
+      />
+      {feedbackQuestions.length > 0 && (
         <div className="question-answer--container">
-          <h3>Spørsmål og svar</h3>
-          <form className="question-form">
-            <label className="question-form--item">
-              Tittel
-              <input
-                className="question-form--input"
-                value={title}
-                type="text"
-                name="title"
-                onChange={e =>
-                  setQuestion({ ...question, title: e.target.value })
-                }
-              />
-            </label>
-            <label className="question-form--item">
-              Spørsmål
-              <textarea
-                className="question-form--question"
-                value={questionText}
-                name="question"
-                onChange={e =>
-                  setQuestion({ ...question, questionText: e.target.value })
-                }
-              />
-            </label>
-            <FileList />
-            <label className="question-form--item">
-              Svar
-              <textarea
-                className="question-form--answer"
-                value={answerText}
-                name="answer"
-                onChange={e =>
-                  setQuestion({ ...question, answerText: e.target.value })
-                }
-              />
-            </label>
-          </form>
-          {type === 'approval' ? (
-            <div className="question-form--button-container">
-              <button
-                className="leksehjelp--button-success"
-                onClick={onApprove}
-              >
-                Godkjenn
-              </button>
-              <button
-                className="leksehjelp--button-warning"
-                onClick={onDisapprove}
-              >
-                Ikke godkjenn
-              </button>
-            </div>
-          ) : (
-            <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>
-                Send til godkjenning
-              </button>
-              <button className="leksehjelp--button-success" onClick={onSave}>
-                Lagre
-              </button>
-            </div>
-          )}
-        </div>
->>>>>>> master
-        {feedbackQuestions.length > 0 && (
-          <div className="question-answer--container">
-            <h3>Tilbakemeldinger</h3>
-            <div className="feedback--list">
-              {feedbackQuestions.map(({ feedbackText, id }, index) => (
-                <div className="feedback--list-row" key={index}>
-                  <div className="feedback--list-element">
-                    <p>{feedbackText}</p>
-                  </div>
-                  <div className="feedback--list-footer">
-                    <button
-                      className="leksehjelp--link-warning"
-                      onClick={e => onDeleteFeedback(e, id)}
-                    >
-                      Slett
-                    </button>
-                    <a className="leksehjelp--link">Resolve</a>
-                  </div>
+          <h3>Tilbakemeldinger</h3>
+          <div className="feedback--list">
+            {feedbackQuestions.map(({ feedbackText, id }, index) => (
+              <div className="feedback--list-row" key={index}>
+                <div className="feedback--list-element">
+                  <p>{feedbackText}</p>
                 </div>
-              ))}
-            </div>
+                <div className="feedback--list-footer">
+                  <button
+                    className="leksehjelp--link-warning"
+                    onClick={e => onDeleteFeedback(e, id)}
+                  >
+                    Slett
+                  </button>
+                  <a className="leksehjelp--link">Resolve</a>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

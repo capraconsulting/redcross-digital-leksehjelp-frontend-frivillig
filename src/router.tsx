@@ -5,10 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import {
-  HeaderComponent as Header,
-  ChatQueue,
-} from './components';
+import { HeaderComponent as Header, ChatQueue } from './components';
 import {
   QuestionContainer,
   AnswerQuestionContainer,
