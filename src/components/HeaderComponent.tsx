@@ -1,7 +1,10 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { StateContext } from '../StateProvider';
+import { StateContext } from '../providers/';
+import { Modal } from './';
+import { getIsLeksehjelpOpen, toggleIsLeksehjelpOpen } from '../services';
+import { toast } from 'react-toastify';
 
 interface IProps {
   onLogout(): void;
@@ -14,7 +17,14 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
-  const { activeState, setActiveState } = useContext(StateContext);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const {
+    activeState,
+    setActiveState,
+    isLeksehjelpOpen,
+    setIsLeksehjelpOpen,
+  } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -34,9 +44,36 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
     props.onLogout();
   };
 
+  const handleOpenModal = () => {
+    getIsLeksehjelpOpen().then(data => {
+      if (data.isopen === isLeksehjelpOpen) {
+        setModalOpen(true);
+      } else {
+        toast.info(
+          `En annen har allerede ${
+            data.isopen ? 'åpnet' : 'lukket'
+          } leksehjelpen.`,
+        );
+        setIsLeksehjelpOpen(data.isopen);
+      }
+    });
+  };
+
   useEffect(() => {
     setLocationPath();
   }, []);
+
+  const handleToggleLeksehjelp = () => {
+    toggleIsLeksehjelpOpen().then(data => {
+      if (data.isopen) {
+        toast.success('Leksehjelpen er nå åpnet');
+      } else {
+        toast.success('Leksehjelpen er nå stengt');
+      }
+      setModalOpen(false);
+      setIsLeksehjelpOpen(data.isopen);
+    });
+  };
 
   return (
     <Fragment>
@@ -105,9 +142,32 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             </label>
           </div>
           <li className="header--list-item">
-            <button className="leksehjelp--button-abort">
-              Steng Leksehjelpen
+            <button
+              onClick={handleOpenModal}
+              className={
+                isLeksehjelpOpen
+                  ? 'leksehjelp--button--outline-warning'
+                  : 'leksehjelp--button--outline-success'
+              }
+            >
+              {isLeksehjelpOpen ? 'Steng Leksehjelpen' : 'Åpne Leksehjelpen'}
             </button>
+            {modalOpen && (
+              <Modal
+                content={
+                  isLeksehjelpOpen
+                    ? 'Er du sikker på at du vil stenge leksehjelpen?'
+                    : 'Er du sikker på at du vil åpne leksehjelpen?'
+                }
+                successButtonText={
+                  isLeksehjelpOpen ? 'Steng leksehjelp' : 'Åpne leksehjelp'
+                }
+                warningButtonText="Avbryt"
+                successCallback={() => handleToggleLeksehjelp()}
+                warningCallback={() => setModalOpen(false)}
+                closingCallback={() => setModalOpen(false)}
+              />
+            )}
           </li>
         </ul>
       </div>

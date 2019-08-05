@@ -3,13 +3,15 @@ import Routes from './router';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 import './styles/base';
-import { SocketProvider } from './providers';
+import { SocketProvider, StateProvider } from './providers';
 
 const App = () => {
   const authenticatedFunction = logout => {
     return (
       <SocketProvider>
-        <Routes onLogout={logout} />
+        <StateProvider>
+          <Routes onLogout={logout} />
+        </StateProvider>
       </SocketProvider>
     );
   };
