@@ -7,8 +7,9 @@ import {
   deleteFeedback,
   publishQuestion,
   approveQuestion,
+  getSubjectList,
 } from '../services';
-import { IQuestion, IFeedback } from '../interfaces';
+import { IQuestion, IFeedback, ITheme, ISubject } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Modal, QuestionHeader, QuestionForm } from '../components';
 
@@ -35,6 +36,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
     [],
   );
+  const [themes, setThemes] = React.useState<ITheme[]>([]);
+
   const {
     questionText,
     title,
@@ -50,6 +53,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   React.useEffect(() => {
     getQuestion(id).then(setQuestion);
     getFeedbackList(id).then(setFeedbackQuestions);
+    getSubjectList<ISubject[]>().then(data => {
+      const list = data
+        .filter(e => e.id.toString() === id)
+        .flatMap(e => e.themes);
+      setThemes(list);
+    });
   }, []);
 
   const createBody = () => {
@@ -234,6 +243,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           onSave={onSave}
           onSend={onSend}
           type={type}
+          themes={themes}
         />
         {feedbackQuestions.length > 0 && (
           <div className="question-answer--container">

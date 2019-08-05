@@ -1,6 +1,7 @@
-import React from 'react';
-import { IQuestion } from '../interfaces';
-import PickerComponent from './PickerComponent';
+import React, { useState, MouseEvent } from 'react';
+import Dropdown, { Option } from 'react-dropdown';
+import { IQuestion, ITheme } from '../interfaces';
+import Cross from '../assets/Cross';
 
 interface IProps {
   question: IQuestion;
@@ -10,9 +11,10 @@ interface IProps {
   onSend(event): void;
   onSave(event): void;
   type: string;
+  themes: ITheme[];
 }
 
-const QuestionFromComponent = ({
+const QuestionFormComponent = ({
   question,
   setQuestion,
   onApprove,
@@ -20,8 +22,32 @@ const QuestionFromComponent = ({
   onSave,
   onSend,
   type,
+  themes,
 }: IProps) => {
   const { title, questionText, answerText } = question;
+  const options = themes.map(e => ({ value: e.id, label: e.theme }))
+  const [chosenThemes, setChosenThemes] = useState<Option[]>(() => {
+    /*
+    TODO: handle themes from question object
+    return question.themes.map(({ id, theme }) => ({ value: id, label: theme })) 
+    */
+    return ([])
+  });
+
+  const onAdd = (option: Option) => {
+    if (!(chosenThemes.filter(e => e.value === option.value).length > 0)) {
+      setChosenThemes([...[option], ...chosenThemes]);
+    };
+  }
+
+  const onRemove = (
+    item: string,
+    e: MouseEvent,
+  ): void => {
+    setChosenThemes(chosenThemes.filter(e => e.value !== item))
+    e.preventDefault();
+  };
+
   return (
     <div className="question-answer--container">
       <h3>Spørsmål og svar</h3>
@@ -47,7 +73,28 @@ const QuestionFromComponent = ({
             }
           />
         </label>
-
+        <label className="question-form--item">
+          <Dropdown
+            className="leksehjelp--dropdown"
+            options={options}
+            onChange={option => onAdd(option)}
+            placeholder={'Velg tema'}
+          />
+        </label>
+        <label className="question-form--item question-form--tagg">
+          {chosenThemes.map(({ value, label }) => (
+            <div key={value} className="subject--list-element" >
+              <p>{label}</p>
+              <button
+                className="leksehjelp--button-close"
+                onClick={(e) => onRemove(value, e)}
+              >
+                <Cross color="#8b51c6" />
+              </button>
+            </div >
+          )
+          )}
+        </label>
         <label className="question-form--item">
           Svar
           <textarea
@@ -70,17 +117,17 @@ const QuestionFromComponent = ({
           </button>
         </div>
       ) : (
-        <div className="question-form--button-container">
-          <button className="leksehjelp--button-success" onClick={onSend}>
-            Send til godkjenning
+          <div className="question-form--button-container">
+            <button className="leksehjelp--button-success" onClick={onSend}>
+              Send til godkjenning
           </button>
-          <button className="leksehjelp--button-success" onClick={onSave}>
-            Lagre
+            <button className="leksehjelp--button-success" onClick={onSave}>
+              Lagre
           </button>
-        </div>
-      )}
+          </div>
+        )}
     </div>
   );
 };
 
-export default QuestionFromComponent;
+export default QuestionFormComponent;
