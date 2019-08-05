@@ -2,16 +2,19 @@ import React, { useContext, useMemo, useState } from 'react';
 import { ITextMessage } from '../../interfaces';
 import { timeStringFromDate } from '../../services';
 import { SocketContext } from '../../providers';
+import { IVolunteer } from '../../interfaces/IVolunteer';
 
 interface IProps {
   message: ITextMessage;
+  volunteerInfo: IVolunteer;
 }
 
 const ChatMessageComponent = (props: IProps) => {
   const { message, author, uniqueID, files } = props.message;
+
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
-  const authorType = author === props.message.author ? 'self' : 'other';
+  const authorType = author === props.volunteerInfo.name ? 'self' : 'other';
   const time = useMemo(
     () => new Date().getHours() + ':' + new Date().getMinutes(),
     [],

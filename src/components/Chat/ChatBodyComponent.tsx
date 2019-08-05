@@ -1,13 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
 import { Modal } from '../../components';
 import { SocketContext } from '../../providers';
 import { createJoinChatMessage, JoinChatMessageBuilder } from '../../services';
-import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
   messages: ITextMessage[];
+  openModal: boolean;
+  setModal(flag: boolean): void;
 }
 
 const ChatBodyComponent = (props: IProps) => {
@@ -16,20 +17,22 @@ const ChatBodyComponent = (props: IProps) => {
     socketSend,
     activeChatIndex,
     chats,
+    volunteerInfo,
   } = useContext(SocketContext);
-  const { isOpen, setIsOpen } = useContext(ModalContext);
+
+  //const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const listMessages = () => {
     return props.messages.map((message, index) => (
-      <ChatMessageComponent key={index} message={message} />
+      <ChatMessageComponent key={index} message={message} volunteerInfo={volunteerInfo} />
     ));
   };
 
   const createFrivilligOptions = () => {
-    return availableVolunteers.map((vol: string) => {
+    return availableVolunteers.map((volunteerID: string) => {
       console.log(chats[activeChatIndex].roomID);
       return {
-        inputText: vol,
+        inputText: volunteerID,
         buttonText: 'Legg til',
         callback: () =>
           socketSend(
@@ -37,10 +40,9 @@ const ChatBodyComponent = (props: IProps) => {
               .withRoomID(chats[activeChatIndex].roomID)
               .withChatHistory(chats[activeChatIndex].messages)
               .withStudentInfo(chats[activeChatIndex].student)
-              .withUniqueID(vol)
+              .withUniqueID(volunteerID)
               .build()
-              .createMessage()
-            ,
+              .createMessage(),
           ),
         isDisabled: true,
       };
@@ -49,11 +51,11 @@ const ChatBodyComponent = (props: IProps) => {
 
   return (
     <div className="chat-body-container">
-      {isOpen && (
+      {props.openModal && (
         <Modal
           content="Tilgjengelige frivillige"
           inputFields={createFrivilligOptions()}
-          closingCallback={() => setIsOpen(false)}
+          closingCallback={() => props.setModal(false)}
         />
       )}
       <div className="display" id="message-display">

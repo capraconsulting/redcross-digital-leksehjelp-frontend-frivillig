@@ -10,11 +10,11 @@ import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 import { IconButton } from '../';
 import '../../styles/chat-input-component.less';
-import { ModalContext } from '../../providers/ModalProvider';
 
 interface IProps {
   roomID: string;
   uniqueID: string;
+  setModal(flag: boolean): void;
 }
 
 const ChatInputComponent = (props: IProps) => {
@@ -22,8 +22,8 @@ const ChatInputComponent = (props: IProps) => {
   const { dispatchChats, socketSend, volunteerInfo } = useContext(
     SocketContext,
   );
-  const { setIsOpen } = useContext(ModalContext);
   const { uniqueID, roomID } = props;
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [tempFiles, setTempFiles] = useState([] as any[]);
 
   const uploadPromises = tempFiles => {
@@ -36,8 +36,10 @@ const ChatInputComponent = (props: IProps) => {
   const sendTextMessage = (event, files) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
+      console.log(volunteerInfo.name);
+      console.log(volunteerInfo);
       const msg = new TextMessageBuilder(uniqueID)
-        .withName(volunteerInfo.name)
+        .withAuthor(volunteerInfo.name)
         .withImg(volunteerInfo.imgUrl)
         .withMessage(message)
         .withFiles(files)
@@ -180,7 +182,7 @@ const ChatInputComponent = (props: IProps) => {
           <button
             onClick={() => {
               socketSend(createGetAvailableQueueMessage());
-              setIsOpen(true);
+              props.setModal(true);
             }}
           >
             Se tilgjengelige

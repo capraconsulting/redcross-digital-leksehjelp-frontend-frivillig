@@ -4,16 +4,13 @@ import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 import './styles/base';
 import { SocketProvider } from './providers';
-import { ModalProvider } from './providers/ModalProvider';
 
 const App = () => {
   const authenticatedFunction = logout => {
     return (
-      <ModalProvider>
         <SocketProvider>
           <Routes onLogout={logout} />
         </SocketProvider>
-      </ModalProvider>
     );
   };
   const { origin } = window.location;

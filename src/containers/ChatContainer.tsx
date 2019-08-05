@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
@@ -12,6 +12,7 @@ const ChatContainer = () => {
     setActiveChatIndex,
   } = useContext(SocketContext);
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // Auto scroll down in chat
@@ -26,6 +27,9 @@ const ChatContainer = () => {
     dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
   };
   
+  const modalFlag = (flag: boolean) => {
+    setModalOpen(flag);
+  }
 
   if (chats.length >= 1) {
     return (
@@ -38,10 +42,12 @@ const ChatContainer = () => {
             <ChatHeader activeChat={chats[activeChatIndex]} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatBody messages={chats[activeChatIndex].messages} />
+            <ChatBody messages={chats[activeChatIndex].messages} openModal={modalOpen}
+            setModal={modalFlag}/>
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput roomID={chats[activeChatIndex].roomID} uniqueID={chats[activeChatIndex].student.uniqueID} />
+            <ChatInput roomID={chats[activeChatIndex].roomID} uniqueID={chats[activeChatIndex].student.uniqueID}
+            setModal={modalFlag}/>
           )}
         </div>
       </div>
