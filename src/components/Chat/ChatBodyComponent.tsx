@@ -8,7 +8,7 @@ import { createJoinChatMessage, JoinChatMessageBuilder } from '../../services';
 interface IProps {
   messages: ITextMessage[];
   openModal: boolean;
-  setModal(flag: boolean): void;
+  setModal(openModalFlag: boolean): void;
 }
 
 const ChatBodyComponent = (props: IProps) => {

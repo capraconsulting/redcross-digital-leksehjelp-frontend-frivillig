@@ -1,7 +1,6 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { ITextMessage } from '../../interfaces';
 import { timeStringFromDate } from '../../services';
-import { SocketContext } from '../../providers';
 import { IVolunteer } from '../../interfaces/IVolunteer';
 
 interface IProps {
@@ -10,7 +9,7 @@ interface IProps {
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const { message, author, uniqueID, files } = props.message;
+  const { message, author, uniqueID, files, datetime, imgUrl } = props.message;
 
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
@@ -80,14 +79,10 @@ const ChatMessageComponent = (props: IProps) => {
   } else {
     return (
       <div className="chat-message">
-        <img height={10} width={10} src={props.message.imgUrl} />
+        <img height={10} width={10} src={imgUrl} />
         <p className={`chat-message--author-${authorType}`}>
-          <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>,
-          kl.{' '}
-          <span>
-            {props.message.datetime &&
-              timeStringFromDate(props.message.datetime)}
-          </span>
+          <span>{authorType === 'self' ? 'Deg' : author}</span>, kl.{' '}
+          <span>{datetime && timeStringFromDate(datetime)}</span>
         </p>
         {renderMessage()}
       </div>

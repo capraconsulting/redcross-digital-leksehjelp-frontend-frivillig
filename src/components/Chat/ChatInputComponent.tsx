@@ -14,7 +14,7 @@ import '../../styles/chat-input-component.less';
 interface IProps {
   roomID: string;
   uniqueID: string;
-  setModal(flag: boolean): void;
+  setModal(openModalFlag: boolean): void;
 }
 
 const ChatInputComponent = (props: IProps) => {
@@ -22,8 +22,7 @@ const ChatInputComponent = (props: IProps) => {
   const { dispatchChats, socketSend, volunteerInfo } = useContext(
     SocketContext,
   );
-  const { uniqueID, roomID } = props;
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { uniqueID, roomID, setModal } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
 
   const uploadPromises = tempFiles => {
@@ -180,7 +179,7 @@ const ChatInputComponent = (props: IProps) => {
           <button
             onClick={() => {
               socketSend(createGetAvailableQueueMessage());
-              props.setModal(true);
+              setModal(true);
             }}
           >
             Se tilgjengelige

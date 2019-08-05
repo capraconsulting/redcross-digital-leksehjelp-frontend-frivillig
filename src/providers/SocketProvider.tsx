@@ -24,11 +24,7 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import {
-  createGetAvailableQueueMessage,
-  getVolunteer,
-  createReconnectMessage,
-} from '../services';
+import { getVolunteer, createReconnectMessage } from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
