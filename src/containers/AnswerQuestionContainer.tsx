@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {
   getQuestion,
   postAnswer,
@@ -272,17 +274,19 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               />
             </label>
             <FileList />
-            <label className="question-form--item">
-              Svar
-              <textarea
-                className="question-form--answer"
-                value={answerText}
-                name="answer"
-                onChange={e =>
-                  setQuestion({ ...question, answerText: e.target.value })
-                }
-              />
-            </label>
+            <label className="question-form--item">Svar</label>
+            <CKEditor
+              disabled={type === 'approval'}
+              editor={ClassicEditor}
+              data={answerText || '<p></p>'}
+              onInit={editor => {}}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setQuestion({ ...question, answerText: data });
+              }}
+              onBlur={editor => {}}
+              onFocus={editor => {}}
+            />
           </form>
           {type === 'approval' ? (
             <div className="question-form--button-container">
@@ -337,5 +341,40 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     </div>
   );
 };
+
+class MyUploadAdapter {
+  loader: any;
+  xhr: any;
+  constructor(loader) {
+    // The file loader instance to use during the upload.
+    this.loader = loader;
+  }
+
+  // Starts the upload process.
+  upload() {
+    return this.loader.file.then(
+      file =>
+        new Promise((resolve, reject) => {
+          console.log(file);
+        }),
+    );
+  }
+
+  // Aborts the upload process.
+  abort() {
+    return;
+  }
+}
+
+// ...
+
+function MyCustomUploadAdapterPlugin(editor) {
+  editor.plugins.get('FileRepository').createUploadAdapter = loader => {
+    // Configure the URL to the upload script in your back-end here!
+    return new MyUploadAdapter(loader);
+  };
+}
+
+// ...
 
 export default withRouter(AnswerQuestionContainer);
