@@ -22,8 +22,9 @@ const QuestionContainer = () => {
     const feedbackList = await getFeedbackList().then(feedbackList =>
       feedbackList.map(
         async feedback =>
-          await getQuestion(feedback.questionID.toString()).then(question => {
+          await getQuestion(feedback.id.toString()).then(question => {
             const { studentGrade, subject, questionDate } = question;
+
             return {
               ...feedback,
               studentGrade,
@@ -33,6 +34,7 @@ const QuestionContainer = () => {
           }),
       ),
     );
+
     Promise.all(feedbackList)
       .then(setFeedbackQuestions)
       .catch(() => setApiFail(true));
@@ -82,8 +84,8 @@ const QuestionContainer = () => {
           </div>
         </div>
       ) : (
-        <p>Noe gikk galt. Kontakt it-avdelingen.</p>
-      )}
+          <p>Noe gikk galt. Kontakt it-avdelingen.</p>
+        )}
     </div>
   );
 };
