@@ -25,37 +25,33 @@ const QuestionFormComponent = ({
   themeList,
 }: IProps) => {
   const { title, questionText, answerText, themes } = question;
-  const options = themeList.map(e => ({ value: e.id, label: e.theme }))
+  const options = themeList.map(e => ({ value: e.id, label: e.theme }));
   const [chosenThemes, setChosenThemes] = useState<Option[]>([]);
 
   useEffect(() => {
-    setChosenThemes(themes.map(({ id, theme }) => ({ value: id, label: theme })))
+    setChosenThemes(
+      themes.map(({ id, theme }) => ({ value: id, label: theme })),
+    );
   }, [question.themes]);
 
   const onAdd = ({ value, label }: Option) => {
     if (!(chosenThemes.filter(e => e.value === value).length > 0)) {
       setChosenThemes([...[{ value, label }], ...chosenThemes]);
 
-      const theme = { theme: label as string, id: value.toString() }
+      const theme = { theme: label as string, id: value.toString() };
       setQuestion({
-        ...question
-        , themes: [
-          ...themes.filter(e => e.id !== value.toString()),
-          theme,
-        ]
-      })
-    };
-  }
+        ...question,
+        themes: [...themes.filter(e => e.id !== value.toString()), theme],
+      });
+    }
+  };
 
-  const onRemove = (
-    item: string,
-    e: MouseEvent,
-  ): void => {
-    setChosenThemes(chosenThemes.filter(e => e.value !== item))
+  const onRemove = (item: string, e: MouseEvent): void => {
+    setChosenThemes(chosenThemes.filter(e => e.value !== item));
     setQuestion({
-      ...question
-      , themes: themes.filter(e => e.id.toString() !== item.toString())
-    })
+      ...question,
+      themes: themes.filter(e => e.id.toString() !== item.toString()),
+    });
     e.preventDefault();
   };
 
@@ -94,17 +90,16 @@ const QuestionFormComponent = ({
         </label>
         <label className="question-form--item question-form--tagg">
           {chosenThemes.map(({ value, label }, index) => (
-            <div key={index} className="subject--list-element" >
+            <div key={index} className="subject--list-element">
               <p>{label}</p>
               <button
                 className="leksehjelp--button-close"
-                onClick={(e) => onRemove(value, e)}
+                onClick={e => onRemove(value, e)}
               >
                 <Cross color="#8b51c6" />
               </button>
-            </div >
-          )
-          )}
+            </div>
+          ))}
         </label>
         <label className="question-form--item">
           Svar
@@ -128,15 +123,15 @@ const QuestionFormComponent = ({
           </button>
         </div>
       ) : (
-          <div className="question-form--button-container">
-            <button className="leksehjelp--button-success" onClick={onSend}>
-              Send til godkjenning
+        <div className="question-form--button-container">
+          <button className="leksehjelp--button-success" onClick={onSend}>
+            Send til godkjenning
           </button>
-            <button className="leksehjelp--button-success" onClick={onSave}>
-              Lagre
+          <button className="leksehjelp--button-success" onClick={onSave}>
+            Lagre
           </button>
-          </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

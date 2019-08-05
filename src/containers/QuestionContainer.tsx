@@ -84,8 +84,8 @@ const QuestionContainer = () => {
           </div>
         </div>
       ) : (
-          <p>Noe gikk galt. Kontakt it-avdelingen.</p>
-        )}
+        <p>Noe gikk galt. Kontakt it-avdelingen.</p>
+      )}
     </div>
   );
 };

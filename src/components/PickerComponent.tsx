@@ -27,28 +27,28 @@ const PickerComponent = ({
   type,
   placeholder,
 }: IProps) => (
-    <div className="profile--component">
-      <h3>{title}</h3>
-      <Dropdown
-        className="leksehjelp--dropdown"
-        options={optionList}
-        onChange={option => addSubject(option, type)}
-        placeholder={placeholder}
-      />
-      <div className="subject--list">
-        {selectedList.map(({ subject, id }, index) => (
-          <div key={index} className="subject--list-element">
-            <p>{subject}</p>
-            <button
-              className="leksehjelp--button-close"
-              onClick={e => removeSubject(id, subject, type, e)}
-            >
-              <Cross color="#8b51c6" />
-            </button>
-          </div>
-        ))}
-      </div>
+  <div className="profile--component">
+    <h3>{title}</h3>
+    <Dropdown
+      className="leksehjelp--dropdown"
+      options={optionList}
+      onChange={option => addSubject(option, type)}
+      placeholder={placeholder}
+    />
+    <div className="subject--list">
+      {selectedList.map(({ subject, id }, index) => (
+        <div key={index} className="subject--list-element">
+          <p>{subject}</p>
+          <button
+            className="leksehjelp--button-close"
+            onClick={e => removeSubject(id, subject, type, e)}
+          >
+            <Cross color="#8b51c6" />
+          </button>
+        </div>
+      ))}
     </div>
-  );
+  </div>
+);
 
 export default PickerComponent;

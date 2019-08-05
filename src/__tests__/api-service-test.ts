@@ -40,12 +40,15 @@ describe('api-service', () => {
 
   it('TEST: saveAnswer \n Should work', async () => {
     mocked(mock.post).mockResolvedValue({});
-    await postAnswer({
-      questionId: ':id',
-      answerText: 'answer',
-      title: 'title',
-      questionText: 'question',
-    }, 'save');
+    await postAnswer(
+      {
+        questionId: ':id',
+        answerText: 'answer',
+        title: 'title',
+        questionText: 'question',
+      },
+      'save',
+    );
 
     const call = mocked(mock.post).mock.calls[0];
 

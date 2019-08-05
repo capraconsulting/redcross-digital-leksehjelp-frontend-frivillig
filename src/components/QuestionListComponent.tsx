@@ -28,10 +28,10 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
         return 'Se svar';
         break;
       default:
-        return 'Se spørsmål'
+        return 'Se spørsmål';
         break;
     }
-  }
+  };
 
   return (
     <div className="question--list">
@@ -49,12 +49,15 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
             </div>
             <div className="question--list-themes">
               {themes.map(({ theme }, i) => (
-                <div key={i} className="leksehjelp--tag question--list-themes-element">
+                <div
+                  key={i}
+                  className="leksehjelp--tag question--list-themes-element"
+                >
                   <p>{theme}</p>
-                </div >
+                </div>
               ))}
             </div>
-            < div className="question--list-button-container">
+            <div className="question--list-button-container">
               <button
                 className="leksehjelp--button-success"
                 onClick={() => history.push(`questions/${id}/${type}`)}

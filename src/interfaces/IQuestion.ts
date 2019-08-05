@@ -1,4 +1,4 @@
-import { ITheme } from '.'
+import { ITheme } from '.';
 export interface IQuestion extends IQuestionMeta {
   title: string;
   questionText: string;

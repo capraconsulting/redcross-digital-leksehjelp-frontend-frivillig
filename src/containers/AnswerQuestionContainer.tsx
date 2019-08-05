@@ -27,13 +27,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     isPublic: false,
     themes: [],
   });
-  const [hideModalButtons, setHideModalButtons] = useState<boolean>(
-    false,
-  );
+  const [hideModalButtons, setHideModalButtons] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
-  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>(
-    [],
-  );
+  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>([]);
   const [themeList, setThemeList] = useState<ITheme[]>([]);
 
   const {
@@ -48,8 +44,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    getQuestion(id).then((question) => {
-      setQuestion(question)
+    getQuestion(id).then(question => {
+      setQuestion(question);
       getSubjectList<ISubject[]>().then(data => {
         const list = data
           .filter(e => e.subjectTitle === question.subject)

@@ -68,7 +68,7 @@ export async function postAnswer(
   type?: string,
 ): Promise<IQuestion> {
   const { questionId } = data;
-  let body = {}
+  let body = {};
   switch (type) {
     case 'inbox':
       body = { ...data, state: 3 };
@@ -92,9 +92,7 @@ export async function postAnswer(
       body = { ...data, state: 2 };
       break;
   }
-  return await api
-    .post(`questions/${questionId}`, body)
-    .then(res => res.data);
+  return await api.post(`questions/${questionId}`, body).then(res => res.data);
 }
 
 export async function deleteFeedback(id: string): Promise<{}> {
