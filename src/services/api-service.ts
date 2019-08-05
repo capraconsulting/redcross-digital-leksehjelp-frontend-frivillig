@@ -77,6 +77,9 @@ export async function getMestringSubjectList<T>(): Promise<T> {
   return await api.get('subjects?isMestring=1').then(res => res.data);
 }
 
+export async function getVolunteer<T>(): Promise<T> {
+  return await api.get('volunteers/self').then(res => res.data);
+}
 export async function postAnswer(
   data: IAnswer,
   type?: string,

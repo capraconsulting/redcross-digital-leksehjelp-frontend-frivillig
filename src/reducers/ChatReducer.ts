@@ -29,12 +29,17 @@ export const leaveChatAction = createAction('LEAVE_CHAT', callback => {
   return (roomID: string) => callback({ roomID });
 });
 
-export const reconnectChatAction = createAction('RECONNECT', cb => {
-  return (chats: IChat[]) => cb({ chats });
+export const reconnectChatAction = createAction('RECONNECT', callback => {
+  return (chats: IChat[]) => callback({ chats });
 });
 
-export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', cb => {
-  return (roomID: string, name: string) => cb({ roomID, name });
+export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
+  return (roomID: string, name: string) => callback({ roomID, name });
+});
+
+export const joinChatAction = createAction('JOIN_CHAT', callback => {
+  return (student: IStudent, messages: ITextMessage[], roomID: string) =>
+    callback({ student, messages, roomID });
 });
 
 const handleAddRoomID = (state: IChat[], action: IAction) => {
@@ -81,16 +86,47 @@ const handleLeaveChat = (state: IChat[], action: IAction) => {
   return state.filter(chat => chat.roomID !== action.payload.roomID);
 };
 
+const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
+  return action.payload.chats;
+};
+
+const joinChatHandler = (state: IChat[], action: IAction) => {
+  let chatHistory: ITextMessage[] = [];
+  const { name, roomID, imgUrl, student, messages } = action.payload;
+  messages.forEach((message: ITextMessage) => {
+    chatHistory.push(message);
+  });
+  chatHistory.push({
+    author: name,
+    message: 'Har blitt med i rommet',
+    roomID: roomID,
+    uniqueID: 'NOTIFICATION',
+    imgUrl: imgUrl,
+    files: [] as IFile[],
+  });
+  const newChat: IChat = {
+    student: student,
+    messages: chatHistory,
+    roomID: roomID,
+    unread: 0,
+  };
+
+  return [...state, newChat];
+};
+
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
+  const { name, roomID, imgUrl } = action.payload;
+
   const chatWhereAUserLeaves: IChat | undefined = state.find(
-    chat => chat.roomID === action.payload.roomID,
+    chat => chat.roomID === roomID,
   );
   if (chatWhereAUserLeaves) {
     chatWhereAUserLeaves.messages.push({
-      author: action.payload.name,
+      author: name,
       message: 'Har forlatt rommet',
-      roomID: action.payload.roomID,
+      roomID: roomID,
       uniqueID: 'NOTIFICATION',
+      imgUrl: imgUrl,
       files: [] as IFile[],
     });
   }
@@ -108,4 +144,7 @@ export const chatReducer = createReducer<IChat[], IAction>([])
   .handleAction(addNewChatAction, handleAddNewChat)
   .handleAction(leaveChatAction, handleLeaveChat)
   .handleAction(hasLeftChatAction, handleHasLeftChat)
+  .handleAction(reconnectChatAction, handleReconnectChat)
+  .handleAction(joinChatAction, joinChatHandler)
+  .handleAction(setChatFromLocalStorageAction, handleSetChatFromLocalStorage)
   .handleAction(reconnectChatAction, handleReconnectChat);
