@@ -84,6 +84,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talky, setTalky] = useState<ITalky | null>(null);
+  const [name, setName] = useState<string>('');
+  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
   const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
     id: '',
     bioText: '',
@@ -102,8 +104,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     AVAILABLE_CHAT,
     RECONNECT,
   } = MESSAGE_TYPES;
-  const [name, setName] = useState<string>('');
-  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
 
   const socketSend = (message: ISocketMessage | IGetMessage): void => {
     getSocket().send(JSON.stringify(message));

@@ -92,21 +92,22 @@ const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
 
 const joinChatHandler = (state: IChat[], action: IAction) => {
   let chatHistory: ITextMessage[] = [];
-  action.payload.messages.forEach((message: ITextMessage) => {
+  const { name, roomID, imgUrl, student, messages } = action.payload;
+  messages.forEach((message: ITextMessage) => {
     chatHistory.push(message);
   });
   chatHistory.push({
-    author: action.payload.name,
+    author: name,
     message: 'Har blitt med i rommet',
-    roomID: action.payload.roomID,
+    roomID: roomID,
     uniqueID: 'NOTIFICATION',
-    imgUrl: action.payload.imgUrl,
+    imgUrl: imgUrl,
     files: [] as IFile[],
   });
   const newChat: IChat = {
-    student: action.payload.student,
+    student: student,
     messages: chatHistory,
-    roomID: action.payload.roomID,
+    roomID: roomID,
     unread: 0,
   };
 
@@ -114,16 +115,18 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
 };
 
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
+  const { name, roomID, imgUrl } = action.payload;
+
   const chatWhereAUserLeaves: IChat | undefined = state.find(
-    chat => chat.roomID === action.payload.roomID,
+    chat => chat.roomID === roomID,
   );
   if (chatWhereAUserLeaves) {
     chatWhereAUserLeaves.messages.push({
-      author: action.payload.name,
+      author: name,
       message: 'Har forlatt rommet',
-      roomID: action.payload.roomID,
+      roomID: roomID,
       uniqueID: 'NOTIFICATION',
-      imgUrl: action.payload.imgUrl,
+      imgUrl: imgUrl,
       files: [] as IFile[],
     });
   }
