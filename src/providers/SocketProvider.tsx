@@ -126,7 +126,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
               roomIDs.includes(parsedTalkyFromSessionStorage.roomID)
             ) {
               setTalky(parsedTalkyFromSessionStorage);
-              console.log(parsedTalkyFromSessionStorage);
             }
             return chat;
           }
@@ -184,7 +183,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
           });
         }
         getVolunteer().then((data: IVolunteer) => {
-          console.log(data);
           setVolunteerInfo(data);
         });
 
@@ -220,10 +218,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         const student: IStudent = payload['studentInfo'];
         const messages: ITextMessage[] = payload['chatHistory'];
         action = joinChatAction(student, messages, payload['roomID']);
-        console.log(action);
         dispatchChats(action);
         getVolunteer().then((data: IVolunteer) => {
-          console.log(data);
           setVolunteerInfo(data);
         });
 
@@ -240,7 +236,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
 
   useEffect(() => {
     if (talky && !talky.opened) {
-      console.log(talky);
       const newTalky: ITalky = {
         talkyID: talky.talkyID,
         roomID: talky.roomID,
