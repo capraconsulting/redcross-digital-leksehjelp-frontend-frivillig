@@ -1,3 +1,4 @@
+import { ITheme } from '.'
 export interface IQuestion extends IQuestionMeta {
   title: string;
   questionText: string;
@@ -10,4 +11,5 @@ export interface IQuestionMeta {
   subject: string;
   questionDate: string;
   studentGrade: string;
+  themes: ITheme[];
 }

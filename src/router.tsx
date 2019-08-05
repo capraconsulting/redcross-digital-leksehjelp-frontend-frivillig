@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import {
-  HomeComponent,
   HeaderComponent as Header,
   ChatQueueComponent,
 } from './components';
@@ -22,11 +21,10 @@ const Routes = ({ onLogout }: IProps) => {
     <Router>
       <Header onLogout={onLogout} />
       <Switch>
-        <Route exact path="/" component={HomeComponent} />
+        <Route exaxt path="/profile" component={ProfileContainer} />
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/messages" component={ChatContainer} />
         <Route exact path="/queue" component={ChatQueueComponent} />
-        <Route exaxt path="/profile" component={ProfileContainer} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (
@@ -41,6 +39,7 @@ const Routes = ({ onLogout }: IProps) => {
           path="/admin/questions"
           component={AdminQuestionsContainer}
         />
+        <Redirect from="/*" to="/profile" />
       </Switch>
     </Router>
   );

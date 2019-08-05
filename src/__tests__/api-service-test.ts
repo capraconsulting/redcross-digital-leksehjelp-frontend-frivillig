@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   getQuestion,
   getQuestionList,
-  saveAnswer,
+  postAnswer,
 } from '../services/api-service';
 
 beforeAll(() => {
@@ -15,17 +15,17 @@ describe('api-service', () => {
     const question = await getQuestion('1');
     expect(question.id).toEqual(1);
   });
-  it('TEST: getQuestionList \n Should create request on the form: "questions/unanswered", input: inbox', async () => {
+  it('TEST: getQuestionList \n Should create request on the form: "questions?state=2", input: inbox', async () => {
     const url = await getQuestionList('inbox');
-    expect(url).toEqual('questions/unanswered');
+    expect(url).toEqual('questions?state=1');
   });
-  it('TEST: getQuestionList \n Should create request on the form: "questions/inprogress", input: started', async () => {
+  it('TEST: getQuestionList \n Should create request on the form: "questions?state=2", input: started', async () => {
     const url = await getQuestionList('started');
-    expect(url).toEqual('questions/inprogress');
+    expect(url).toEqual('questions?state=2');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions/approve", input: approval', async () => {
     const url = await getQuestionList('approval');
-    expect(url).toEqual('questions/unapproved');
+    expect(url).toEqual('questions?state=3');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions", input: test', async () => {
     const url = await getQuestionList('test');
@@ -40,21 +40,22 @@ describe('api-service', () => {
 
   it('TEST: saveAnswer \n Should work', async () => {
     mocked(mock.post).mockResolvedValue({});
-    await saveAnswer({
+    await postAnswer({
       questionId: ':id',
       answerText: 'answer',
       title: 'title',
       questionText: 'question',
-    });
+    }, 'save');
 
     const call = mocked(mock.post).mock.calls[0];
 
-    expect(call[0]).toEqual('questions/:id/edit');
+    expect(call[0]).toEqual('questions/:id');
     expect(call[1]).toEqual({
       questionId: ':id',
       answerText: 'answer',
       title: 'title',
       questionText: 'question',
+      state: 2,
     });
   });
 });

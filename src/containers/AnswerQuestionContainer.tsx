@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import {
   getQuestion,
   postAnswer,
-  saveAnswer,
   getFeedbackList,
   deleteFeedback,
-  publishQuestion,
-  approveQuestion,
   getSubjectList,
 } from '../services';
 import { IQuestion, IFeedback, ITheme, ISubject } from '../interfaces';
@@ -28,6 +25,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
     isPublic: false,
+    themes: [],
   });
   const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
     false,
@@ -73,7 +71,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onDisapprove = () => {
     const data = createBody();
-    saveAnswer(data)
+    postAnswer(data, 'save')
       .then(() => {
         setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
       })
@@ -95,7 +93,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       setModalOpen(true);
     } else {
       const data = createBody();
-      const isSaved = await saveAnswer(data)
+      const isSaved = await postAnswer(data, 'save')
         .then(() => true)
         .catch(() => false);
       isSaved &&
@@ -133,7 +131,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onSave = event => {
     const data = createBody();
-    saveAnswer(data)
+    postAnswer(data, 'save')
       .then(() => {
         setModalText('Svaret er nå lagret.');
         setHideModalButtons(true);
@@ -167,7 +165,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onPublishQuestion = event => {
     if (!id) return;
-    publishQuestion(id)
+    const data = createBody();
+    postAnswer(data, 'publish')
       .then(() => {
         setModalText('Svaret er nå publisert!');
         setHideModalButtons(true);
@@ -185,7 +184,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onApprove = async () => {
     const data = createBody();
-    const isApprove = await approveQuestion(data.questionId)
+    const isApprove = await postAnswer(data, 'approve')
       .then(() => true)
       .catch(() => false);
     isApprove &&
