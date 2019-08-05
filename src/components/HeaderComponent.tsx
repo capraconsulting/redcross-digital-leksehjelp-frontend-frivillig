@@ -66,7 +66,14 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
   const handleToggleLeksehjelp = () => {
     toggleIsLeksehjelpOpen()
       .then(data => setIsLeksehjelpOpen(data.isopen))
-      .then(() => setModalOpen(false));
+      .then(() => {
+        if (isLeksehjelpOpen) {
+          toast.success("Leksehjelpen er nå åpnet");
+        } else {
+          toast.success("Leksehjelpen er nå stengt");
+        }
+        setModalOpen(false);
+      });
   };
 
   return (
