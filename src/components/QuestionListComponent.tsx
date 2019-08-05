@@ -39,8 +39,14 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
         ({ id, subject, questionDate, studentGrade, themes }, index) => (
           <div key={index} className="question--list-item">
             <h4>{subject}</h4>
-            <p>Klasse: {studentGradeFormat(studentGrade)}</p>
-            <p>Sendt inn: {dateStringFormat(questionDate)}</p>
+            <div className="question--list-item-info">
+              <div className="item-row">
+                <p>Klasse:</p> {studentGradeFormat(studentGrade)}
+              </div>
+              <div className="item-row">
+                <p>Sendt inn:</p> {dateStringFormat(questionDate)}
+              </div>
+            </div>
             <div className="question--list-themes">
               {themes.map(({ theme }, i) => (
                 <div key={i} className="leksehjelp--tag question--list-themes-element">
