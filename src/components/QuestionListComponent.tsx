@@ -42,8 +42,8 @@ const QuestionListComponent = (props: IProps & RouteComponentProps) => {
             <p>Klasse: {studentGradeFormat(studentGrade)}</p>
             <p>Sendt inn: {dateStringFormat(questionDate)}</p>
             <div className="question--list-themes">
-              {themes.map(({ theme }) => (
-                <div className="leksehjelp--tag question--list-themes-element">
+              {themes.map(({ theme }, i) => (
+                <div key={i} className="leksehjelp--tag question--list-themes-element">
                   <p>{theme}</p>
                 </div >
               ))}

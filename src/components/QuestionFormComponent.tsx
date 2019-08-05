@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useEffect } from 'react';
 import Dropdown, { Option } from 'react-dropdown';
 import { IQuestion, ITheme } from '../interfaces';
 import Cross from '../assets/Cross';
@@ -11,7 +11,7 @@ interface IProps {
   onSend(event): void;
   onSave(event): void;
   type: string;
-  themes: ITheme[];
+  themeList: ITheme[];
 }
 
 const QuestionFormComponent = ({
@@ -22,21 +22,28 @@ const QuestionFormComponent = ({
   onSave,
   onSend,
   type,
-  themes,
+  themeList,
 }: IProps) => {
-  const { title, questionText, answerText } = question;
-  const options = themes.map(e => ({ value: e.id, label: e.theme }))
-  const [chosenThemes, setChosenThemes] = useState<Option[]>(() => {
-    /*
-    TODO: handle themes from question object
-    return question.themes.map(({ id, theme }) => ({ value: id, label: theme })) 
-    */
-    return ([])
-  });
+  const { title, questionText, answerText, themes } = question;
+  const options = themeList.map(e => ({ value: e.id, label: e.theme }))
+  const [chosenThemes, setChosenThemes] = useState<Option[]>([]);
 
-  const onAdd = (option: Option) => {
-    if (!(chosenThemes.filter(e => e.value === option.value).length > 0)) {
-      setChosenThemes([...[option], ...chosenThemes]);
+  useEffect(() => {
+    setChosenThemes(themes.map(({ id, theme }) => ({ value: id, label: theme })))
+  }, [question.themes]);
+
+  const onAdd = ({ value, label }: Option) => {
+    if (!(chosenThemes.filter(e => e.value === value).length > 0)) {
+      setChosenThemes([...[{ value, label }], ...chosenThemes]);
+
+      const theme = { theme: label as string, id: value.toString() }
+      setQuestion({
+        ...question
+        , themes: [
+          ...themes.filter(e => e.id !== value.toString()),
+          theme,
+        ]
+      })
     };
   }
 
@@ -45,6 +52,10 @@ const QuestionFormComponent = ({
     e: MouseEvent,
   ): void => {
     setChosenThemes(chosenThemes.filter(e => e.value !== item))
+    setQuestion({
+      ...question
+      , themes: themes.filter(e => e.id.toString() !== item.toString())
+    })
     e.preventDefault();
   };
 
@@ -82,8 +93,8 @@ const QuestionFormComponent = ({
           />
         </label>
         <label className="question-form--item question-form--tagg">
-          {chosenThemes.map(({ value, label }) => (
-            <div key={value} className="subject--list-element" >
+          {chosenThemes.map(({ value, label }, index) => (
+            <div key={index} className="subject--list-element" >
               <p>{label}</p>
               <button
                 className="leksehjelp--button-close"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   getQuestion,
   postAnswer,
@@ -16,7 +16,7 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
-  const [question, setQuestion] = React.useState<IQuestion>({
+  const [question, setQuestion] = useState<IQuestion>({
     id: '',
     title: '',
     questionText: '',
@@ -27,44 +27,44 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     isPublic: false,
     themes: [],
   });
-  const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
+  const [hideModalButtons, setHideModalButtons] = useState<boolean>(
     false,
   );
-  const [modalText, setModalText] = React.useState<string>('');
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
+  const [modalText, setModalText] = useState<string>('');
+  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>(
     [],
   );
-  const [themes, setThemes] = React.useState<ITheme[]>([]);
+  const [themeList, setThemeList] = useState<ITheme[]>([]);
 
   const {
-    questionText,
     title,
-    answerText,
     isPublic,
     subject,
     studentGrade,
     questionDate,
+    themes,
   } = question;
   const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    getQuestion(id).then(setQuestion);
-    getFeedbackList(id).then(setFeedbackQuestions);
-    getSubjectList<ISubject[]>().then(data => {
-      const list = data
-        .filter(e => e.id.toString() === id)
-        .flatMap(e => e.themes);
-      setThemes(list);
+  useEffect(() => {
+    getQuestion(id).then((question) => {
+      setQuestion(question)
+      getSubjectList<ISubject[]>().then(data => {
+        const list = data
+          .filter(e => e.subjectTitle === question.subject)
+          .flatMap(e => e.themes);
+        setThemeList(list);
+      });
     });
+    getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
   const createBody = () => {
     const data = {
+      ...question,
       questionId: id,
-      answerText,
-      title,
-      questionText,
+      themes: themes.map(e => e.id),
     };
     return data;
   };
@@ -242,7 +242,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           onSave={onSave}
           onSend={onSend}
           type={type}
-          themes={themes}
+          themeList={themeList}
         />
         {feedbackQuestions.length > 0 && (
           <div className="question-answer--container">

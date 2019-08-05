@@ -71,13 +71,13 @@ export async function postAnswer(
   let body = {}
   switch (type) {
     case 'inbox':
-      body = { ...data, state: 2 };
+      body = { ...data, state: 3 };
       break;
     case 'started':
-      body = { ...data, state: 2 };
+      body = { ...data, state: 3 };
       break;
     case 'approval':
-      body = { ...data, state: 3 };
+      body = { ...data, state: 4 };
       break;
     case 'save':
       body = { ...data, state: 2 };
