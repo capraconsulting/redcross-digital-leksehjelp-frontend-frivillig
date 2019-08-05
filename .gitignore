@@ -11,3 +11,5 @@ WebRTCConfig.ts
 \.idea/
 
 package-lock\.json
+
+tags
