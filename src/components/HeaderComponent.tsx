@@ -140,8 +140,8 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
               onClick={handleOpenModal}
               className={
                 isLeksehjelpOpen
-                  ? 'leksehjelp--button-abort'
-                  : 'leksehjelp--button-success'
+                  ? 'leksehjelp--button--outline-warning'
+                  : 'leksehjelp--button--outline-success'
               }
             >
               {isLeksehjelpOpen ? 'Steng Leksehjelpen' : 'Åpne Leksehjelpen'}

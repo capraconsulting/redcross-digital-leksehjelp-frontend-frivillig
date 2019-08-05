@@ -133,12 +133,31 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    &:hover {
+      filter: brightness(80%);
+    }
   }
-  &-abort {
-    border: thin solid @danger-color;
-    color: @danger-color;
-    padding: 0.5rem;
-    margin: 0;
+  &--outline {
+    &-warning {
+      border: thin solid @danger-color;
+      color: @danger-color;
+      padding: 0.5rem;
+      margin: 0;
+      &:hover {
+        border-color: @danger-hover-color;
+        color: @danger-hover-color;
+      }
+    }
+    &-success {
+      border: thin solid @secondary-color;
+      color: @secondary-color;
+      padding: 0.5rem;
+      margin: 0;
+      &:hover {
+        border-color: @link-hover-color;
+        color: @link-hover-color;
+      }
+    }
   }
 }
 
