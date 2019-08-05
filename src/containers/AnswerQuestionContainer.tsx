@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   getQuestion,
   postAnswer,
-  saveAnswer,
   getFeedbackList,
   deleteFeedback,
-  publishQuestion,
-  approveQuestion,
+  getSubjectList,
 } from '../services';
-import { IQuestion, IFeedback, IFile } from '../interfaces';
+import { IQuestion, IFeedback, ITheme, ISubject, IFile } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { Modal, IconButton } from '../components';
+import { Modal, QuestionHeader, QuestionForm, IconButton } from '../components';
 
 interface IProps {
   id: string;
@@ -18,7 +16,7 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
-  const [question, setQuestion] = React.useState<IQuestion>({
+  const [question, setQuestion] = useState<IQuestion>({
     id: '',
     title: '',
     questionText: '',
@@ -27,21 +25,35 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     questionDate: '',
     subject: '',
     isPublic: false,
+    themes: [],
     files: [] as IFile[],
   });
-  const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
-    false,
-  );
-  const [modalText, setModalText] = React.useState<string>('');
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
-    [],
-  );
-  const { questionText, title, answerText, isPublic } = question;
+  const [hideModalButtons, setHideModalButtons] = useState<boolean>(false);
+  const [modalText, setModalText] = useState<string>('');
+  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>([]);
+  const [themeList, setThemeList] = useState<ITheme[]>([]);
+
+  const {
+    title,
+    isPublic,
+    subject,
+    studentGrade,
+    questionDate,
+    themes,
+  } = question;
   const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    getQuestion(id).then(setQuestion);
+  useEffect(() => {
+    getQuestion(id).then(question => {
+      setQuestion(question);
+      getSubjectList<ISubject[]>().then(data => {
+        const list = data
+          .filter(e => e.subjectTitle === question.subject)
+          .flatMap(e => e.themes);
+        setThemeList(list);
+      });
+    });
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
@@ -79,17 +91,16 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const createBody = () => {
     const data = {
+      ...question,
       questionId: id,
-      answerText,
-      title,
-      questionText,
+      themes: themes.map(e => e.id),
     };
     return data;
   };
 
   const onDisapprove = () => {
     const data = createBody();
-    saveAnswer(data)
+    postAnswer(data, 'save')
       .then(() => {
         setModalText('Du har underkjent svaret og er nå sendt til "Påbegynt"');
       })
@@ -111,7 +122,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       setModalOpen(true);
     } else {
       const data = createBody();
-      const isSaved = await saveAnswer(data)
+      const isSaved = await postAnswer(data, 'save')
         .then(() => true)
         .catch(() => false);
       isSaved &&
@@ -149,7 +160,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onSave = event => {
     const data = createBody();
-    saveAnswer(data)
+    postAnswer(data, 'save')
       .then(() => {
         setModalText('Svaret er nå lagret.');
         setHideModalButtons(true);
@@ -183,7 +194,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onPublishQuestion = event => {
     if (!id) return;
-    publishQuestion(id)
+    const data = createBody();
+    postAnswer(data, 'publish')
       .then(() => {
         setModalText('Svaret er nå publisert!');
         setHideModalButtons(true);
@@ -201,7 +213,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   const onApprove = async () => {
     const data = createBody();
-    const isApprove = await approveQuestion(data.questionId)
+    const isApprove = await postAnswer(data, 'approve')
       .then(() => true)
       .catch(() => false);
     isApprove &&
@@ -232,7 +244,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   return (
-    <div>
+    <div className="answer-question--container">
       {modalOpen && (
         <Modal
           content={modalText}
@@ -244,96 +256,45 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           closingCallback={() => setModalOpen(false)}
         />
       )}
-      <div className="question-answer">
+      <QuestionHeader
+        subject={subject}
+        questionDate={questionDate}
+        studentGrade={studentGrade}
+        isPublic
+      />
+      <QuestionForm
+        question={question}
+        setQuestion={setQuestion}
+        onApprove={onApprove}
+        onDisapprove={onDisapprove}
+        onSave={onSave}
+        onSend={onSend}
+        type={type}
+        themeList={themeList}
+      />
+      {feedbackQuestions.length > 0 && (
         <div className="question-answer--container">
-          <h3>Spørsmål og svar</h3>
-          <form className="question-form">
-            <label className="question-form--item">
-              Tittel
-              <input
-                className="question-form--input"
-                value={title}
-                type="text"
-                name="title"
-                onChange={e =>
-                  setQuestion({ ...question, title: e.target.value })
-                }
-              />
-            </label>
-            <label className="question-form--item">
-              Spørsmål
-              <textarea
-                className="question-form--question"
-                value={questionText}
-                name="question"
-                onChange={e =>
-                  setQuestion({ ...question, questionText: e.target.value })
-                }
-              />
-            </label>
-            <FileList />
-            <label className="question-form--item">
-              Svar
-              <textarea
-                className="question-form--answer"
-                value={answerText}
-                name="answer"
-                onChange={e =>
-                  setQuestion({ ...question, answerText: e.target.value })
-                }
-              />
-            </label>
-          </form>
-          {type === 'approval' ? (
-            <div className="question-form--button-container">
-              <button
-                className="leksehjelp--button-success"
-                onClick={onApprove}
-              >
-                Godkjenn
-              </button>
-              <button
-                className="leksehjelp--button-warning"
-                onClick={onDisapprove}
-              >
-                Ikke godkjenn
-              </button>
-            </div>
-          ) : (
-            <div className="question-form--button-container">
-              <button className="leksehjelp--button-success" onClick={onSend}>
-                Send til godkjenning
-              </button>
-              <button className="leksehjelp--button-success" onClick={onSave}>
-                Lagre
-              </button>
-            </div>
-          )}
-        </div>
-        {feedbackQuestions.length > 0 && (
-          <div className="question-answer--container">
-            <h3>Tilbakemeldinger</h3>
-            <div className="feedback--list">
-              {feedbackQuestions.map(({ feedbackText, id }, index) => (
-                <div className="feedback--list-row" key={index}>
-                  <div className="feedback--list-element">
-                    <p>{feedbackText}</p>
-                  </div>
-                  <div className="feedback--list-footer">
-                    <button
-                      className="leksehjelp--link-warning"
-                      onClick={e => onDeleteFeedback(e, id)}
-                    >
-                      Slett
-                    </button>
-                    <a className="leksehjelp--link">Resolve</a>
-                  </div>
+          <h3>Tilbakemeldinger</h3>
+          <div className="feedback--list">
+            {feedbackQuestions.map(({ feedbackText, id }, index) => (
+              <div className="feedback--list-row" key={index}>
+                <div className="feedback--list-element">
+                  <p>{feedbackText}</p>
                 </div>
-              ))}
-            </div>
+                <div className="feedback--list-footer">
+                  <button
+                    className="leksehjelp--link-warning"
+                    onClick={e => onDeleteFeedback(e, id)}
+                  >
+                    Slett
+                  </button>
+                  <a className="leksehjelp--link">Resolve</a>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
