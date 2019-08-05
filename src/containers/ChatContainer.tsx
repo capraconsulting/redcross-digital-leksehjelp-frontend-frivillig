@@ -26,10 +26,10 @@ const ChatContainer = () => {
     setActiveChatIndex(index);
     dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
   };
-  
+
   const modalFlag = (flag: boolean) => {
     setModalOpen(flag);
-  }
+  };
 
   if (chats.length >= 1) {
     return (
@@ -42,12 +42,18 @@ const ChatContainer = () => {
             <ChatHeader activeChat={chats[activeChatIndex]} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatBody messages={chats[activeChatIndex].messages} openModal={modalOpen}
-            setModal={modalFlag}/>
+            <ChatBody
+              messages={chats[activeChatIndex].messages}
+              openModal={modalOpen}
+              setModal={modalFlag}
+            />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput roomID={chats[activeChatIndex].roomID} uniqueID={chats[activeChatIndex].student.uniqueID}
-            setModal={modalFlag}/>
+            <ChatInput
+              roomID={chats[activeChatIndex].roomID}
+              uniqueID={chats[activeChatIndex].student.uniqueID}
+              setModal={modalFlag}
+            />
           )}
         </div>
       </div>
