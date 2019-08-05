@@ -20,10 +20,10 @@ const ChatBodyComponent = (props: IProps) => {
     volunteerInfo,
   } = useContext(SocketContext);
 
-  //const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { openModal, messages, setModal } = props;
 
   const listMessages = () => {
-    return props.messages.map((message, index) => (
+    return messages.map((message, index) => (
       <ChatMessageComponent
         key={index}
         message={message}
@@ -34,7 +34,6 @@ const ChatBodyComponent = (props: IProps) => {
 
   const createFrivilligOptions = () => {
     return availableVolunteers.map((volunteerID: string) => {
-      console.log(chats[activeChatIndex].roomID);
       return {
         inputText: volunteerID,
         buttonText: 'Legg til',
@@ -55,11 +54,11 @@ const ChatBodyComponent = (props: IProps) => {
 
   return (
     <div className="chat-body-container">
-      {props.openModal && (
+      {openModal && (
         <Modal
           content="Tilgjengelige frivillige"
           inputFields={createFrivilligOptions()}
-          closingCallback={() => props.setModal(false)}
+          closingCallback={() => setModal(false)}
         />
       )}
       <div className="display" id="message-display">

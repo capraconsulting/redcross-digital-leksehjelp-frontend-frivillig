@@ -36,8 +36,6 @@ const ChatInputComponent = (props: IProps) => {
   const sendTextMessage = (event, files) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
-      console.log(volunteerInfo.name);
-      console.log(volunteerInfo);
       const msg = new TextMessageBuilder(uniqueID)
         .withAuthor(volunteerInfo.name)
         .withImg(volunteerInfo.imgUrl)
