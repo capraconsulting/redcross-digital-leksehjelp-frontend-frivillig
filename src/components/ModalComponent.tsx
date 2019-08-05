@@ -1,6 +1,7 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useContext } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
+import { SocketContext } from '../providers';
 
 interface IProps {
   content: string;
@@ -19,6 +20,8 @@ interface IProps {
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
+  const { socketSend } = useContext(SocketContext);
+
   const {
     content,
     successButtonText,
@@ -42,7 +45,9 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
               disabled={inputField.isDisabled}
             />
             <button
-              onClick={() => inputField.callback()}
+              onClick={() => {
+                inputField.callback();
+              }}
               className="button leksehjelp--button-success"
             >
               {inputField.buttonText}

@@ -5,3 +5,11 @@ build/
 .DS_Store
 *.log
 WebRTCConfig.ts
+.idea/
+.vscode/
+
+\.idea/
+
+package-lock\.json
+
+tags

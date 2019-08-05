@@ -5,7 +5,10 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import { HeaderComponent as Header, ChatQueueComponent } from './components';
+import {
+  HeaderComponent as Header,
+  ChatQueue,
+} from './components';
 import {
   QuestionContainer,
   AnswerQuestionContainer,
@@ -26,7 +29,7 @@ const Routes = ({ onLogout }: IProps) => {
         <Route exaxt path="/profile" component={ProfileContainer} />
         <Route exact path="/questions" component={QuestionContainer} />
         <Route exact path="/messages" component={ChatContainer} />
-        <Route exact path="/queue" component={ChatQueueComponent} />
+        <Route exact path="/queue" component={ChatQueue} />
         <Route
           path="/questions/:id/:type"
           render={({ match }) => (

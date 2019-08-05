@@ -3,10 +3,14 @@ import {
   IEnterQueueMessage,
   ISocketMessage,
   ITextMessage,
+  ISocketFile,
+  IStudent,
+  IChat,
   IFile,
+  IJoin,
+  IReconnectMessage,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
-import { IReconnectMessage } from '../interfaces/IReconnectMessage';
 
 const {
   QUEUE_LIST,
@@ -14,10 +18,19 @@ const {
   GENERATE_ROOM,
   TEXT,
   RECONNECT,
+  JOIN_CHAT,
+  PING,
+  AVAILABLE_CHAT,
 } = MESSAGE_TYPES;
 
 const createMessage = (
-  payload: ITextMessage | IEnterQueueMessage | IGenerateRoomMessage | {},
+  payload:
+    | ITextMessage
+    | IEnterQueueMessage
+    | IGenerateRoomMessage
+    | IReconnectMessage
+    | IJoin
+    | {},
   type: string,
 ): ISocketMessage => {
   return {
@@ -30,63 +43,105 @@ export const createGetQueueMessage = (): ISocketMessage => {
   return createMessage({}, QUEUE_LIST);
 };
 
-class ReconnectMessage {
-  private readonly oldUniqueID: string;
-  private readonly uniqueID: string;
-  private readonly roomIDs: string[];
+export const createPingMessage = (): ISocketMessage => {
+  return createMessage({}, PING);
+};
 
-  public constructor(reconnectMessageBuilder: ReconnectMessageBuilder) {
-    this.oldUniqueID = reconnectMessageBuilder.oldUniqueID;
-    this.uniqueID = reconnectMessageBuilder.uniqueID;
-    this.roomIDs = reconnectMessageBuilder.roomIDs;
+export const createGetAvailableQueueMessage = (): ISocketMessage => {
+  return createMessage({}, AVAILABLE_CHAT);
+};
+
+export const createJoinChatMessage = (
+  studentInfo: IStudent,
+  uniqueID: string,
+  chatHistory: ITextMessage[],
+  roomID: string,
+) => {
+  const msg: IJoin = {
+    studentInfo,
+    uniqueID,
+    chatHistory,
+    roomID,
+  };
+  return createMessage(msg, JOIN_CHAT);
+};
+
+class JoinChatMessage {
+  private readonly studentInfo: IStudent;
+  private readonly uniqueID: string;
+  private readonly chatHistory: ITextMessage[];
+  private readonly roomID: string;
+
+  public constructor(joinChatMessageBuilder: JoinChatMessageBuilder) {
+    this.studentInfo = joinChatMessageBuilder.studentInfo;
+    this.uniqueID = joinChatMessageBuilder.uniqueID;
+    this.chatHistory = joinChatMessageBuilder.chatHistory;
+    this.roomID = joinChatMessageBuilder.roomID;
   }
 
-  public get createMessage(): ISocketMessage {
-    const msg: IReconnectMessage = {
-      oldUniqueID: this.oldUniqueID,
-      uniqueID: this.uniqueID,
-      roomIDs: this.roomIDs,
-    };
-    return createMessage(msg, RECONNECT);
+  public createMessage(): ISocketMessage {
+    return createMessage(
+      {
+        studentInfo: this.studentInfo,
+        uniqueID: this.uniqueID,
+        chatHistory: this.chatHistory,
+        roomID: this.roomID,
+      },
+      JOIN_CHAT,
+    );
   }
 }
 
-export class ReconnectMessageBuilder {
-  private readonly _uniqueID: string;
-  private _oldUniqueID: string;
-  private _roomIDs: string[];
+export class JoinChatMessageBuilder {
+  private _studentInfo: IStudent;
+  private _uniqueID: string;
+  private _chatHistory: ITextMessage[];
+  private _roomID: string;
 
-  public constructor(uniqueID: string) {
-    this._uniqueID = uniqueID;
+  public build(): JoinChatMessage {
+    return new JoinChatMessage(this);
+  }
+
+  public withStudentInfo(value: IStudent) {
+    this._studentInfo = value;
     return this;
   }
 
-  public withOldUniqueID(value: string): ReconnectMessageBuilder {
-    this._oldUniqueID = value;
+  public withUniqueID(value: string) {
+    this._uniqueID = value;
     return this;
   }
 
-  public withRoomIDs(value: string[]): ReconnectMessageBuilder {
-    this._roomIDs = value;
+  public withChatHistory(value: ITextMessage[]) {
+    this._chatHistory = value;
     return this;
   }
 
-  public build(): ReconnectMessage {
-    return new ReconnectMessage(this);
+  public withRoomID(value: string) {
+    this._roomID = value;
+    return this;
+  }
+
+  public get studentInfo(): IStudent {
+    return this._studentInfo;
+  }
+
+  public get chatHistory(): ITextMessage[] {
+    return this._chatHistory;
   }
 
   public get uniqueID(): string {
     return this._uniqueID;
   }
 
-  public get oldUniqueID(): string {
-    return this._oldUniqueID;
-  }
-
-  public get roomIDs(): string[] {
-    return this._roomIDs;
+  public get roomID(): string {
+    return this._roomID;
   }
 }
+export const createReconnectMessage = (uniqueID: string): ISocketMessage => {
+  const msg: IReconnectMessage = { uniqueID };
+  return createMessage(msg, RECONNECT);
+};
 
 class LeaveChatMessage {
   private readonly roomID: string;
@@ -232,6 +287,8 @@ class TextMessage {
   private readonly roomID: string;
   private readonly uniqueID: string;
   private readonly message: string;
+  private readonly author: string;
+  private readonly imgUrl: string;
   private readonly files: IFile[];
 
   public constructor(textMessageBuilder: TextMessageBuilder) {
@@ -239,6 +296,8 @@ class TextMessage {
     this.message = textMessageBuilder.message;
     this.uniqueID = textMessageBuilder.uniqueID;
     this.files = textMessageBuilder.files;
+    this.author = textMessageBuilder.author;
+    this.imgUrl = textMessageBuilder.imgUrl;
   }
 
   public get createMessage(): {
@@ -246,10 +305,11 @@ class TextMessage {
     socketMessage: ISocketMessage;
   } {
     const msg: ITextMessage = {
-      author: 'frivillig',
+      author: this.author,
       uniqueID: this.uniqueID,
       roomID: this.roomID,
       message: this.message,
+      imgUrl: this.imgUrl,
       files: this.files,
     };
     return {
@@ -263,6 +323,8 @@ export class TextMessageBuilder {
   private readonly _uniqueID: string;
   private _roomID: string;
   private _message: string;
+  private _author: string;
+  private _imgUrl: string;
   private _files: IFile[];
 
   public constructor(uniqueID: string) {
@@ -293,6 +355,9 @@ export class TextMessageBuilder {
     return this._roomID;
   }
 
+  public get imgUrl(): string {
+    return this._imgUrl;
+  }
   public get uniqueID(): string {
     return this._uniqueID;
   }
@@ -303,5 +368,18 @@ export class TextMessageBuilder {
 
   public get files(): IFile[] {
     return this._files;
+  }
+
+  public get author(): string {
+    return this._author;
+  }
+  public withAuthor(author: string): TextMessageBuilder {
+    this._author = author;
+    return this;
+  }
+
+  public withImg(imgUrl: string): TextMessageBuilder {
+    this._imgUrl = imgUrl;
+    return this;
   }
 }

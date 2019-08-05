@@ -6,20 +6,27 @@ import React, {
   FunctionComponent,
 } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
-import { IGetMessage, ISocketMessage } from '../interfaces';
+import {
+  IGetMessage,
+  ISocketMessage,
+  ITalky,
+  ITextMessage,
+} from '../interfaces';
 import {
   addMessageAction,
   addRoomIDAction,
   chatReducer,
   hasLeftChatAction,
+  joinChatAction,
   leaveChatAction,
   reconnectChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { number } from 'prop-types';
-import { ReconnectMessageBuilder } from '../services';
+import { getVolunteer, createReconnectMessage } from '../services';
+import { createPingMessage } from '../services';
+import { IVolunteer } from '../interfaces/IVolunteer';
 
 toast.configure({
   autoClose: 5000,
@@ -42,6 +49,20 @@ export const SocketContext = createContext({
 
   activeChatIndex: 0 as number,
   setActiveChatIndex(index: number): void {},
+
+  talky: null as null | ITalky,
+
+  name: '' as string,
+
+  availableVolunteers: [] as string[],
+
+  volunteerInfo: {
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+  },
 });
 
 let socket;
@@ -58,7 +79,16 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [activeChatIndex, setActiveChatIndex] = useState<number>(0);
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
-  const [talkyID, setTalkyID] = useState<string>('');
+  const [talky, setTalky] = useState<ITalky | null>(null);
+  const [name, setName] = useState<string>('');
+  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
+  const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+  });
   const {
     DISTRIBUTE_ROOM,
     CONNECTION,
@@ -66,6 +96,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     TEXT,
     LEAVE_CHAT,
     ERROR_LEAVING_CHAT,
+    JOIN_CHAT,
+    AVAILABLE_CHAT,
     RECONNECT,
   } = MESSAGE_TYPES;
 
@@ -74,44 +106,48 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   };
 
   const reconnectSuccessHandler = (roomIDs: string[]): void => {
-    const chatsFromSessionStorage = localStorage.getItem('chats');
+    const chatsFromSessionStorage = sessionStorage.getItem('chats');
     if (chatsFromSessionStorage) {
       const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
         chatsFromSessionStorage,
       );
 
+      const talkyFromSessionStorage = sessionStorage.getItem('talky');
+      let parsedTalkyFromSessionStorage: ITalky;
+      if (talkyFromSessionStorage) {
+        parsedTalkyFromSessionStorage = JSON.parse(talkyFromSessionStorage);
+      }
+
       const successFullReconnectedChats = parsedChatsFromSessionStorage.filter(
         chat => {
           if (roomIDs.includes(chat.roomID)) {
+            if (
+              parsedTalkyFromSessionStorage &&
+              roomIDs.includes(parsedTalkyFromSessionStorage.roomID)
+            ) {
+              setTalky(parsedTalkyFromSessionStorage);
+            }
             return chat;
           }
         },
       );
-      dispatchChats(reconnectChatAction(successFullReconnectedChats));
+      if (successFullReconnectedChats.length > 0) {
+        dispatchChats(reconnectChatAction(successFullReconnectedChats));
+      } else {
+        sessionStorage.removeItem('chats');
+      }
     }
   };
 
-  const getRoomNumbersFromChat = (chats: IChat[]): string[] => {
-    return chats.map(chat => chat.roomID);
-  };
-
   const reconnectHandler = (uniqueID: string): void => {
-    const chatsFromSessionStorage = localStorage.getItem('chats');
     const oldUniqueID = sessionStorage.getItem('oldUniqueID');
 
-    if (chatsFromSessionStorage && oldUniqueID) {
-      /*
-       * If not both chatsFromSessionStorage and oldUniqueID is present
-       * then there is no point in reconnecting.
-       */
-      const parsedChatsFromSessionStorage: IChat[] = JSON.parse(
-        chatsFromSessionStorage,
-      );
-      const msg = new ReconnectMessageBuilder(uniqueID)
-        .withRoomIDs(getRoomNumbersFromChat(parsedChatsFromSessionStorage))
-        .withOldUniqueID(oldUniqueID)
-        .build();
-      socketSend(msg.createMessage);
+    if (oldUniqueID) {
+      setUniqueID(oldUniqueID);
+      const message = createReconnectMessage(oldUniqueID);
+      socketSend(message);
+    } else {
+      setUniqueID(uniqueID);
     }
   };
 
@@ -129,6 +165,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
             datetime: payload['datetime'],
+            imgUrl: payload['imgUrl'],
             files: payload['files'],
           },
           true,
@@ -138,11 +175,22 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       case DISTRIBUTE_ROOM:
         action = addRoomIDAction(payload['roomID'], payload['studentID']);
         dispatchChats(action);
-        setTalkyID(payload['talkyID']);
+        if (!talky && payload['talkyID']) {
+          setTalky({
+            talkyID: payload['talkyID'],
+            roomID: payload['roomID'],
+            opened: false,
+          });
+        }
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+        });
+
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
-        //reconnectHandler(payload['uniqueID']);
+        setInterval(() => socketSend(createPingMessage()), 300000);
+        reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
         setQueue(payload['queueMembers']);
@@ -151,6 +199,9 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         if (payload['uniqueID'] === uniqueID) {
           action = leaveChatAction(payload['roomID']);
           toast.success('Du forlot rommet');
+          if (talky && talky.roomID === payload['roomID']) {
+            setTalky(null);
+          }
         } else {
           action = hasLeftChatAction(payload['roomID'], payload['name']);
         }
@@ -161,7 +212,20 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
       case RECONNECT:
-        //reconnectSuccessHandler(payload['roomIDs']);
+        reconnectSuccessHandler(payload['roomIDs']);
+        break;
+      case JOIN_CHAT:
+        const student: IStudent = payload['studentInfo'];
+        const messages: ITextMessage[] = payload['chatHistory'];
+        action = joinChatAction(student, messages, payload['roomID']);
+        dispatchChats(action);
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+        });
+
+        break;
+      case AVAILABLE_CHAT:
+        setAvailableVolunteers(payload['queueMembers']);
         break;
     }
   };
@@ -171,16 +235,23 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   }, []);
 
   useEffect(() => {
-    if (talkyID) {
+    if (talky && !talky.opened) {
+      const newTalky: ITalky = {
+        talkyID: talky.talkyID,
+        roomID: talky.roomID,
+        opened: true,
+      };
+      setTalky(newTalky);
+      sessionStorage.setItem('talky', JSON.stringify(newTalky));
       const windowObjectReference = window.open(
-        `https://talky.io/${talkyID}`,
+        `https://talky.io/${talky.talkyID}`,
         '_blank',
       );
       if (windowObjectReference) {
         windowObjectReference.focus();
       }
     }
-  }, [talkyID]);
+  }, [talky]);
 
   useEffect(() => {
     if (chats.length > 0) {
@@ -206,6 +277,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         socketSend,
         activeChatIndex,
         setActiveChatIndex,
+        talky,
+        name,
+        availableVolunteers,
+        volunteerInfo,
       }}
     >
       {children}

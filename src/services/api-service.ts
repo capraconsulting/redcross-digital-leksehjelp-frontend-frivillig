@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, IFeedback, IProfile } from '../interfaces';
+import { IQuestion, IAnswer, IFeedback, IProfile, IOpen } from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -18,6 +18,20 @@ export async function getFeedbackList(id?: string): Promise<IFeedback[]> {
   return await api
     .get(id ? `feedback/question/${id}` : 'feedback')
     .then(res => res.data);
+}
+
+export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
+  return api
+    .get('isopen')
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function toggleIsLeksehjelpOpen<T>(): Promise<IOpen> {
+  return api
+    .post('isopen')
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
 }
 
 export async function getQuestionList<T>(parameter?: string): Promise<T> {
@@ -63,6 +77,9 @@ export async function getMestringSubjectList<T>(): Promise<T> {
   return await api.get('subjects?isMestring=1').then(res => res.data);
 }
 
+export async function getVolunteer<T>(): Promise<T> {
+  return await api.get('volunteers/self').then(res => res.data);
+}
 export async function postAnswer(
   data: IAnswer,
   type?: string,
