@@ -63,14 +63,16 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
                 >
                   {fileName}{' '}
                 </a>
-                <IconButton
-                  onClick={() => {
-                    setQuestion({
-                      ...question,
-                      files: question.files.filter((_, i) => i !== index),
-                    });
-                  }}
-                ></IconButton>{' '}
+                {fileName && (
+                  <IconButton
+                    onClick={() => {
+                      setQuestion({
+                        ...question,
+                        files: question.files.filter((_, i) => i !== index),
+                      });
+                    }}
+                  ></IconButton>
+                )}{' '}
               </span>
             </li>
           );
