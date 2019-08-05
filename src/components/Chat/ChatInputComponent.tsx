@@ -24,7 +24,7 @@ const ChatInputComponent = (props: IProps) => {
   );
   const { uniqueID, roomID, setModal } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
-
+  const { name, imgUrl } = volunteerInfo;
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
       return uploadFileToAzureBlobStorage('chatfiles', roomID, file);
@@ -36,8 +36,8 @@ const ChatInputComponent = (props: IProps) => {
     event.preventDefault();
     if (message.length > 0 || files.length > 0) {
       const msg = new TextMessageBuilder(uniqueID)
-        .withAuthor(volunteerInfo.name)
-        .withImg(volunteerInfo.imgUrl)
+        .withAuthor(name)
+        .withImg(imgUrl)
         .withMessage(message)
         .withFiles(files)
         .toRoom(roomID)
