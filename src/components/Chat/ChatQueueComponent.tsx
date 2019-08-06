@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { IStudent } from '../../interfaces';
 import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -25,7 +25,12 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
   const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
     SocketContext,
   );
-  const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
+  const {
+    LEKSEHJELP_VIDEO,
+    MESTRING_VIDEO,
+    MESTRING_TEXT,
+    LEKSEHJELP_TEXT,
+  } = CHAT_TYPES;
 
   const createNewChatRoom = (student: IStudent) => {
     const { chatType, uniqueID, nickname, grade, introText, subject } = student;
@@ -58,52 +63,75 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     socketSend(socketMessage);
   };
 
-  const queueElement = useMemo(
-    () =>
-      queue.map((student, index) => {
-        const { introText, themes } = student;
-        return (
-          <div className="queue-item-container" key={index}>
-            <div className="queue-item">
-              <ChatQueueHeader student={student} />
-              <hr />
-              <div className="queue-body">{introText}</div>
-              <hr />
+  const renderQueues = (textAllowed: string, videoAllowed: string) =>
+    useMemo(() => {
+      let hasQueue: boolean = false;
+      const queueToRender = queue.map((student, index) => {
+        const { introText, themes, chatType } = student;
+        if (chatType === textAllowed || chatType === videoAllowed) {
+          hasQueue = true;
+          return (
+            <div className="queue-item-container" key={index}>
+              <div className="queue-item">
+                <ChatQueueHeader student={student} />
+                <hr />
+                <div className="queue-body">{introText}</div>
+                <hr />
+              </div>
+              <div className="queue-item-button-container tags">
+                {themes &&
+                  themes.map(theme => (
+                    <div
+                      key={theme}
+                      className="leksehjelp--tag question--list-themes-element"
+                    >
+                      <p>{theme}</p>
+                    </div>
+                  ))}
+              </div>
+              <div className="queue-item-button-container controls">
+                <button className="leksehjelp--button-warning">
+                  Avslutt Leksehjelp
+                </button>
+                <button
+                  className="leksehjelp--button-success"
+                  onClick={() => createNewChatRoom(student)}
+                >
+                  Start chat
+                </button>
+              </div>
             </div>
-            <div className="queue-item-button-container tags">
-              {themes &&
-                themes.map(theme => (
-                  <div
-                    key={theme}
-                    className="leksehjelp--tag question--list-themes-element"
-                  >
-                    <p>{theme}</p>
-                  </div>
-                ))}
-            </div>
-            <div className="queue-item-button-container controls">
-              <button className="leksehjelp--button-warning">
-                Avslutt Leksehjelp
-              </button>
-              <button
-                className="leksehjelp--button-success"
-                onClick={() => createNewChatRoom(student)}
-              >
-                Start chat
-              </button>
-            </div>
-          </div>
-        );
-      }),
-    [queue, talky],
-  );
+          );
+        }
+      });
+      if (hasQueue) {
+        return queueToRender;
+      } else {
+        return <div>Køen er tom</div>;
+      }
+    }, [queue, talky]);
 
   return (
     <div className="queue-container">
       <button className="leksehjelp--button-success" onClick={updateQueue}>
         Update queue
       </button>
-      <div className="queue-category-container">{queueElement}</div>
+      <div className="chat-queue-body-container">
+        <div className="queue-title">
+          Leksehjelp
+        </div>
+        <div className="queue-category-container">
+          {renderQueues(LEKSEHJELP_TEXT, LEKSEHJELP_VIDEO)}
+        </div>
+      </div>
+      <div className="chat-queue-body-container">
+        <div className="queue-title">
+          Mestring
+        </div>
+        <div className="queue-category-container">
+          {renderQueues(MESTRING_TEXT, MESTRING_VIDEO)}
+        </div>
+      </div>
     </div>
   );
 };
