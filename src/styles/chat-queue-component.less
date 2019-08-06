@@ -2,58 +2,68 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  > .queue-category-container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: auto;
-    @media (max-width: 770px) {
-      grid-template-columns: 100%;
+  > .chat-queue-body-container {
+    display: flex;
+    flex-direction: column;
+    > .queue-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.4rem;
+      padding: 1rem;
+      border-bottom: solid 1px black;
     }
-    > .queue-item-container {
-      margin: 0 0.5rem;
-      border: 1px solid black;
+    > .queue-category-container {
+      display: flex;
+      padding: 1rem;
+      flex-direction: row;
+      flex-wrap: wrap;
 
-      > .queue-item-button-container {
-        display: flex;
-        flex-direction: row;
-      }
-      > .controls {
-        position: relative;
-        bottom: 0;
-      }
-      > .tags {
-        flex-wrap: wrap;
-      }
-      > .queue-item {
-        margin: 1rem;
-        > .queue-header {
+      > .queue-item-container {
+        margin: .5rem .5rem;
+        border: 1px solid black;
+
+        > .queue-item-button-container {
           display: flex;
-          flex-direction: column;
-          > .queue-header-item {
+          flex-direction: row;
+        }
+        > .controls {
+          position: relative;
+          bottom: 0;
+        }
+        > .tags {
+          flex-wrap: wrap;
+        }
+        > .queue-item {
+          margin: 1rem;
+          > .queue-header {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            flex-direction: column;
+            > .queue-header-item {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
 
-            &:first-child {
-              padding-bottom: 1rem;
-              font-weight: bold;
-            }
-            > .queue-nickname {
-              color: @primary-color;
-            }
-            > .queue-grade {
-              > span {
-                &:first-child {
-                  color: @label-color;
+              &:first-child {
+                padding-bottom: 1rem;
+                font-weight: bold;
+              }
+              > .queue-nickname {
+                color: @primary-color;
+              }
+              > .queue-grade {
+                > span {
+                  &:first-child {
+                    color: @label-color;
+                  }
                 }
               }
             }
           }
-        }
-        > .queue-body {
-          padding: 0.3rem 0;
-          line-height: 1.5rem;
-          white-space: pre-wrap;
+          > .queue-body {
+            padding: 0.3rem 0;
+            line-height: 1.5rem;
+            white-space: pre-wrap;
+          }
         }
       }
     }
