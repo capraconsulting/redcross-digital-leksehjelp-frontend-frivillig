@@ -4,6 +4,7 @@ import React, {
   useReducer,
   useState,
   FunctionComponent,
+  useMemo,
 } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import {
@@ -24,7 +25,11 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { getVolunteer, createReconnectMessage } from '../services';
+import {
+  getVolunteer,
+  createReconnectMessage,
+  getTimeStringNow,
+} from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
@@ -156,6 +161,13 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     const { payload, msgType } = parsedMessage;
     let action;
 
+    const time = () =>
+      new Date().getHours() +
+      ':' +
+      new Date().getMinutes() +
+      ' ' +
+      new Date().getSeconds();
+
     switch (msgType) {
       case TEXT:
         action = addMessageAction(
@@ -164,7 +176,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             author: payload['author'],
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
-            datetime: payload['datetime'],
+            datetime: getTimeStringNow(),
             imgUrl: payload['imgUrl'],
             files: payload['files'],
           },

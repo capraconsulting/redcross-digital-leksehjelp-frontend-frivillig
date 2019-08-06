@@ -2,6 +2,7 @@ import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   createGetAvailableQueueMessage,
+  getTimeStringNow,
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
@@ -43,7 +44,12 @@ const ChatInputComponent = (props: IProps) => {
         .toRoom(roomID)
         .build();
       const { textMessage, socketMessage } = msg.createMessage;
-      dispatchChats(addMessageAction(textMessage));
+      dispatchChats(
+        addMessageAction({
+          ...textMessage,
+          datetime: getTimeStringNow(),
+        }),
+      );
       socketSend(socketMessage);
       setMessage('');
       setTempFiles([] as any[]);
