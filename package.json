@@ -66,6 +66,7 @@
     "core-js": "^3.1.4",
     "dotenv-webpack": "^1.7.0",
     "draft-js": "^0.11.0",
+    "draft-js-import-html": "^1.4.1",
     "draftjs-to-html": "^0.8.4",
     "prop-types": "^15.7.2",
     "react": "16.8.6",

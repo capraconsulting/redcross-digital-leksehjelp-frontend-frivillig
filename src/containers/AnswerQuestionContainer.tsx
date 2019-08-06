@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromHTML,
+} from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { stateFromHTML } from 'draft-js-import-html';
 
 import {
   getQuestion,
@@ -18,11 +26,19 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
+  const { type, id, history } = props;
+
   const [question, setQuestion] = useState<IQuestion>({
     id: '',
     title: '',
     questionText: '',
-    answerText: EditorState.createEmpty(),
+    answerText: EditorState.createWithContent(
+      stateFromHTML(
+        type == 'inbox'
+          ? '<p>Hei,</p><p>Takk for at du bruker Digital Leksehjelp!</p><p>Med vennlig hilsen.</p><p>Digital Leksehjelp</p>'
+          : '<p></p>',
+      ),
+    ),
     studentGrade: '',
     questionDate: '',
     subject: '',
@@ -43,13 +59,21 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     studentGrade,
     questionDate,
     themes,
+    answerText,
   } = question;
-  const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     getQuestion(id).then(question => {
-      setQuestion(question);
+      console.log(question.answerText);
+      setQuestion({
+        ...question,
+        answerText: EditorState.createWithContent(
+          ContentState.createFromBlockArray(
+            convertFromHTML(question.answerText),
+          ),
+        ),
+      });
       getSubjectList<ISubject[]>().then(data => {
         const list = data
           .filter(e => e.subjectTitle === question.subject)
@@ -59,12 +83,14 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     });
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
+  console.log(question.answerText);
 
   const createBody = () => {
     const data = {
       ...question,
       questionId: id,
       themes: themes.map(e => e.id),
+      answerText: draftToHtml(convertToRaw(answerText.getCurrentContent())),
     };
     return data;
   };
