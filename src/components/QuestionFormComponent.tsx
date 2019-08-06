@@ -34,6 +34,18 @@ const QuestionFormComponent = ({
     );
   }, [question.themes]);
 
+  useEffect(() => {
+    type === 'inbox' &&
+      setQuestion({
+        ...question,
+        answerText:
+          'Hei, \n\n' +
+          'Takk for at du bruker digital leksehjelp!\n\n\n\n' +
+          'Med vennlig hilsen\n' +
+          'Digital Leksehjelp',
+      });
+  }, []);
+
   const onAdd = ({ value, label }: Option) => {
     if (!(chosenThemes.filter(e => e.value === value).length > 0)) {
       setChosenThemes([...[{ value, label }], ...chosenThemes]);
