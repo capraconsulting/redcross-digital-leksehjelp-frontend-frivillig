@@ -58,13 +58,16 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    getQuestion(id).then(question => {
-      console.log(question.answerText);
+    getQuestion(id).then(resquestion => {
       setQuestion({
-        ...question,
+        ...resquestion,
         answerText: EditorState.createWithContent(
           ContentState.createFromBlockArray(
-            convertFromHTML(question.answerText),
+            convertFromHTML(
+              resquestion.answerText.length > 0
+                ? resquestion.answerText
+                : question.answerText,
+            ),
           ),
         ),
       });
