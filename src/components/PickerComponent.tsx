@@ -13,7 +13,7 @@ interface IProps {
     type: string,
     event: MouseEvent,
   ): void;
-  title: string;
+  title?: string;
   type: string;
   placeholder: string;
 }
@@ -30,7 +30,7 @@ const PickerComponent = ({
   <div className="profile--component">
     <h3>{title}</h3>
     <Dropdown
-      className="subject--dropdown"
+      className="leksehjelp--dropdown"
       options={optionList}
       onChange={option => addSubject(option, type)}
       placeholder={placeholder}

@@ -1,16 +1,18 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
-import { timeStringFromDate } from '../../services';
+import { IVolunteer } from '../../interfaces/IVolunteer';
 
 interface IProps {
   message: ITextMessage;
+  volunteerInfo: IVolunteer;
 }
 
 const ChatMessageComponent = (props: IProps) => {
-  const { message, author, uniqueID, files } = props.message;
+  const { message, author, uniqueID, files, datetime, imgUrl } = props.message;
+
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
-  const authorType = author === 'frivillig' ? 'self' : 'other';
+  const authorType = author === props.volunteerInfo.name ? 'self' : 'other';
 
   const downloadFile = file => {
     const a = document.createElement('a');
@@ -72,18 +74,13 @@ const ChatMessageComponent = (props: IProps) => {
     );
   } else {
     return (
-      <div>
-        <div className="chat-message">
-          <p className={`chat-message--author-${authorType}`}>
-            <span>{authorType === 'self' ? 'Deg' : props.message.author}</span>,
-            kl.{' '}
-            <span>
-              {props.message.datetime &&
-                timeStringFromDate(props.message.datetime)}
-            </span>
-          </p>
-          {renderMessage()}
-        </div>
+      <div className="chat-message">
+        <img height={10} width={10} src={imgUrl} />
+        <p className={`chat-message--author-${authorType}`}>
+          <span>{authorType === 'self' ? 'Deg' : author}</span>, kl.{' '}
+          <span>{datetime && datetime}</span>
+        </p>
+        {renderMessage()}
         {RenderFiles()}
       </div>
     );

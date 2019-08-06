@@ -4,21 +4,34 @@ import React, {
   useReducer,
   useState,
   FunctionComponent,
+  useMemo,
 } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
-import { IGetMessage, ISocketMessage, ITalky } from '../interfaces';
+import {
+  IGetMessage,
+  ISocketMessage,
+  ITalky,
+  ITextMessage,
+} from '../interfaces';
 import {
   addMessageAction,
   addRoomIDAction,
   chatReducer,
   hasLeftChatAction,
+  joinChatAction,
   leaveChatAction,
   reconnectChatAction,
 } from '../reducers';
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { createReconnectMessage } from '../services';
+import {
+  getVolunteer,
+  createReconnectMessage,
+  getTimeStringNow,
+} from '../services';
+import { createPingMessage } from '../services';
+import { IVolunteer } from '../interfaces/IVolunteer';
 
 toast.configure({
   autoClose: 5000,
@@ -43,6 +56,18 @@ export const SocketContext = createContext({
   setActiveChatIndex(index: number): void {},
 
   talky: null as null | ITalky,
+
+  name: '' as string,
+
+  availableVolunteers: [] as string[],
+
+  volunteerInfo: {
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+  },
 });
 
 let socket;
@@ -60,6 +85,15 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talky, setTalky] = useState<ITalky | null>(null);
+  const [name, setName] = useState<string>('');
+  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
+  const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
+    id: '',
+    bioText: '',
+    email: '',
+    name: '',
+    imgUrl: '',
+  });
   const {
     DISTRIBUTE_ROOM,
     CONNECTION,
@@ -67,6 +101,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     TEXT,
     LEAVE_CHAT,
     ERROR_LEAVING_CHAT,
+    JOIN_CHAT,
+    AVAILABLE_CHAT,
     RECONNECT,
   } = MESSAGE_TYPES;
 
@@ -95,7 +131,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
               roomIDs.includes(parsedTalkyFromSessionStorage.roomID)
             ) {
               setTalky(parsedTalkyFromSessionStorage);
-              console.log(parsedTalkyFromSessionStorage);
             }
             return chat;
           }
@@ -126,6 +161,13 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     const { payload, msgType } = parsedMessage;
     let action;
 
+    const time = () =>
+      new Date().getHours() +
+      ':' +
+      new Date().getMinutes() +
+      ' ' +
+      new Date().getSeconds();
+
     switch (msgType) {
       case TEXT:
         action = addMessageAction(
@@ -134,7 +176,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             author: payload['author'],
             roomID: payload['roomID'],
             uniqueID: payload['uniqueID'],
-            datetime: payload['datetime'],
+            datetime: getTimeStringNow(),
+            imgUrl: payload['imgUrl'],
             files: payload['files'],
           },
           true,
@@ -151,9 +194,14 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             opened: false,
           });
         }
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+        });
+
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
+        setInterval(() => socketSend(createPingMessage()), 300000);
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
@@ -178,6 +226,19 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
       case RECONNECT:
         reconnectSuccessHandler(payload['roomIDs']);
         break;
+      case JOIN_CHAT:
+        const student: IStudent = payload['studentInfo'];
+        const messages: ITextMessage[] = payload['chatHistory'];
+        action = joinChatAction(student, messages, payload['roomID']);
+        dispatchChats(action);
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+        });
+
+        break;
+      case AVAILABLE_CHAT:
+        setAvailableVolunteers(payload['queueMembers']);
+        break;
     }
   };
 
@@ -187,7 +248,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
 
   useEffect(() => {
     if (talky && !talky.opened) {
-      console.log(talky);
       const newTalky: ITalky = {
         talkyID: talky.talkyID,
         roomID: talky.roomID,
@@ -230,6 +290,9 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         activeChatIndex,
         setActiveChatIndex,
         talky,
+        name,
+        availableVolunteers,
+        volunteerInfo,
       }}
     >
       {children}

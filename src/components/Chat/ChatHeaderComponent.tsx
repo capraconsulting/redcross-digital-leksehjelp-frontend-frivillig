@@ -12,7 +12,7 @@ interface IProps {
 
 const ChatHeaderComponent = (props: IProps) => {
   const { roomID } = props.activeChat;
-  const { nickname, course, chatType } = props.activeChat.student;
+  const { nickname, subject, chatType } = props.activeChat.student;
   const { socketSend, dispatchChats, uniqueID, talky } = useContext(
     SocketContext,
   );
@@ -61,7 +61,7 @@ const ChatHeaderComponent = (props: IProps) => {
         </span>
         <span className="queue-type btn">{renderChatType()}</span>
         <span className="chat-header--text--right">
-          <p>{course}</p>
+          <p>{subject}</p>
           <button
             onClick={() => setModalOpen(true)}
             className="leksehjelp--button-success"

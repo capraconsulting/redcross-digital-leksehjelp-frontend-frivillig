@@ -3,6 +3,10 @@ export const timeStringFromDate = (zonedDateTime): string => {
   return `${hour}:${minute}`;
 };
 
+export const getTimeStringNow = (): string => {
+  return new Date().getHours() + ':' + new Date().getMinutes();
+};
+
 const formatAsDate = (value: string): string => {
   return value
     .split('-')

@@ -1,8 +1,6 @@
 export { default as HeaderComponent } from './HeaderComponent';
-export { default as HomeComponent } from './HomeComponent';
 export { default as AdminQuestionList } from './AdminQuestionListComponent';
 export { default as QuestionListComponent } from './QuestionListComponent';
-export { default as ChatQueueComponent } from './Chat/ChatQueueComponent';
 export { default as FeedbackListComponent } from './FeedbackListComponent';
 export { default as ChatBody } from './Chat/ChatBodyComponent';
 export { default as ChatHeader } from './Chat/ChatHeaderComponent';
@@ -15,3 +13,5 @@ export { default as Modal } from './ModalComponent';
 export { default as IconButton } from './IconButton';
 export { default as Picker } from './PickerComponent';
 export { default as ProfileForm } from './ProfileFormComponent';
+export { default as QuestionHeader } from './QuestionHeaderComponent';
+export { default as QuestionForm } from './QuestionFormComponent';

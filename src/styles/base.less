@@ -16,7 +16,7 @@
 body {
   font-family: sans-serif;
   font-weight: lighter;
-  margin: 10px 20px;
+  margin: 1rem 2rem;
 }
 
 p,
@@ -40,13 +40,14 @@ p {
   font-size: 1rem;
 }
 
-textarea, input {
+textarea,
+input {
   font-size: 1rem;
   padding: 0.5rem;
   margin-top: 0.5rem;
   border: thin solid @dropdown-border-color;
   font: inherit;
-  outline: inherit
+  outline: inherit;
 }
 
 .modal--open {
@@ -104,7 +105,11 @@ button {
   font-size: 1rem;
   cursor: pointer;
   margin: 0.5rem;
-  width: 10rem;
+  width: 12rem;
+}
+
+.leksehjelp--dropdown {
+  background-color: @white;
 }
 
 .leksehjelp--button {
@@ -132,12 +137,31 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    &:hover {
+      filter: brightness(80%);
+    }
   }
-  &-abort {
-    border: thin solid @danger-color;
-    color: @danger-color;
-    padding: 0.5rem;
-    margin: 0;
+  &--outline {
+    &-warning {
+      border: thin solid @danger-color;
+      color: @danger-color;
+      padding: 0.5rem;
+      margin: 0;
+      &:hover {
+        border-color: @danger-hover-color;
+        color: @danger-hover-color;
+      }
+    }
+    &-success {
+      border: thin solid @secondary-color;
+      color: @secondary-color;
+      padding: 0.5rem;
+      margin: 0;
+      &:hover {
+        border-color: @link-hover-color;
+        color: @link-hover-color;
+      }
+    }
   }
 }
 
@@ -173,6 +197,17 @@ button {
     color: @disabled-color;
     margin: 0.5rem;
   }
+}
+
+.leksehjelp--tag {
+  border: thin solid @tag-color;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: max-content;
+  color: @tag-color;
+  padding: 0.5rem;
+  min-width: 4rem;
 }
 
 .switch {

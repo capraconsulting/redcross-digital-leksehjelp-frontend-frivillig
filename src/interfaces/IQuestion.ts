@@ -1,4 +1,4 @@
-import { IFile } from '.';
+import { IFile, ITheme } from '.';
 
 export interface IQuestion extends IQuestionMeta {
   title: string;
@@ -13,4 +13,5 @@ export interface IQuestionMeta {
   subject: string;
   questionDate: string;
   studentGrade: string;
+  themes: ITheme[];
 }
