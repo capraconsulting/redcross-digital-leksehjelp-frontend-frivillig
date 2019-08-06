@@ -61,7 +61,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
   const queueElement = useMemo(
     () =>
       queue.map((student, index) => {
-        const { introText } = student;
+        const { introText, themes } = student;
         return (
           <div className="queue-item-container" key={index}>
             <div className="queue-item">
@@ -70,15 +70,28 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
               <div className="queue-body">{introText}</div>
               <hr />
             </div>
-            <button className="leksehjelp--button-warning">
-              Avslutt Leksehjelp
-            </button>
-            <button
-              className="leksehjelp--button-success"
-              onClick={() => createNewChatRoom(student)}
-            >
-              Start chat
-            </button>
+            <div className="queue-item-button-container tags">
+              {themes &&
+                themes.map(theme => (
+                  <div
+                    key={theme}
+                    className="leksehjelp--tag question--list-themes-element"
+                  >
+                    <p>{theme}</p>
+                  </div>
+                ))}
+            </div>
+            <div className="queue-item-button-container controls">
+              <button className="leksehjelp--button-warning">
+                Avslutt Leksehjelp
+              </button>
+              <button
+                className="leksehjelp--button-success"
+                onClick={() => createNewChatRoom(student)}
+              >
+                Start chat
+              </button>
+            </div>
           </div>
         );
       }),
