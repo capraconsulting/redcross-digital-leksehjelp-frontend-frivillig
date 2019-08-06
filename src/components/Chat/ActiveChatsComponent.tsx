@@ -30,7 +30,7 @@ const ActiveChatsComponent = (props: IProps) => {
         >
           <div className="chat-info">
             <span className="name">{chat.student.nickname}</span>
-            <span className="subject">{chat.student.course}</span>
+            <span className="subject">{chat.student.subject}</span>
           </div>
           <span className="dot">{chat.unread}</span>
         </div>

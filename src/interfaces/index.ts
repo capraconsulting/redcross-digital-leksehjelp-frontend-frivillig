@@ -16,6 +16,7 @@ export * from './IProfile';
 export * from './IFile';
 export * from './ITempFile';
 export * from './ITalky';
+export * from './IOpen';
 export * from './IJoin';
 export * from './IReconnectMessage';
 export * from './IVolunteer';
