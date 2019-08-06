@@ -74,7 +74,7 @@ export async function getSubjectList<T>(): Promise<T> {
 }
 
 export async function getMestringSubjectList<T>(): Promise<T> {
-  return await api.get('subjects?isMestring=1').then(res => res.data);
+  return await api.get('subjects?isMestring=true').then(res => res.data);
 }
 
 export async function getVolunteer<T>(): Promise<T> {

@@ -33,9 +33,9 @@ const ChatBodyComponent = (props: IProps) => {
   };
 
   const createFrivilligOptions = () => {
-    return availableVolunteers.map((volunteerID: string) => {
+    return availableVolunteers.map(volunteer => {
       return {
-        inputText: volunteerID,
+        inputText: volunteer.name,
         buttonText: 'Legg til',
         callback: () =>
           socketSend(
@@ -43,7 +43,7 @@ const ChatBodyComponent = (props: IProps) => {
               .withRoomID(chats[activeChatIndex].roomID)
               .withChatHistory(chats[activeChatIndex].messages)
               .withStudentInfo(chats[activeChatIndex].student)
-              .withUniqueID(volunteerID)
+              .withUniqueID(volunteer.chatID)
               .build()
               .createMessage(),
           ),
