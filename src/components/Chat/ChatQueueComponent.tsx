@@ -28,7 +28,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
   const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
   const createNewChatRoom = (student: IStudent) => {
-    const { chatType, uniqueID, nickname, grade, introText, course } = student;
+    const { chatType, uniqueID, nickname, grade, introText, subject } = student;
     if (
       talky &&
       (chatType === LEKSEHJELP_VIDEO || chatType === MESTRING_VIDEO)
@@ -46,7 +46,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withStudentID(uniqueID)
         .withNickname(nickname)
         .withGrade(grade)
-        .withCourse(course)
+        .withCourse(subject)
         .withIntroText(introText)
         .build();
       socketSend(msg.createMessage);

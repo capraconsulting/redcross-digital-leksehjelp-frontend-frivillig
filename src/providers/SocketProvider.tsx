@@ -193,6 +193,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
+        console.log(payload);
         setQueue(payload['queueMembers']);
         break;
       case LEAVE_CHAT:
