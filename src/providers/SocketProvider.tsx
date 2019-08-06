@@ -24,7 +24,11 @@ import {
 import { IAction, IChat, IStudent } from '../interfaces';
 
 import { toast } from 'react-toastify';
-import { getVolunteer, createReconnectMessage } from '../services';
+import {
+  getVolunteer,
+  createReconnectMessage,
+  createVolunteerMessage,
+} from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
@@ -54,7 +58,7 @@ export const SocketContext = createContext({
 
   name: '' as string,
 
-  availableVolunteers: [] as string[],
+  availableVolunteers: [] as IVolunteer[],
 
   volunteerInfo: {
     id: '',
@@ -62,6 +66,7 @@ export const SocketContext = createContext({
     email: '',
     name: '',
     imgUrl: '',
+    chatID: '',
   },
 });
 
@@ -81,13 +86,14 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talky, setTalky] = useState<ITalky | null>(null);
   const [name, setName] = useState<string>('');
-  const [availableVolunteers, setAvailableVolunteers] = useState<string[]>([]);
+  const [availableVolunteers, setAvailableVolunteers] = useState<IVolunteer[]>([]);
   const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
     id: '',
     bioText: '',
     email: '',
     name: '',
     imgUrl: '',
+    chatID: '',
   });
   const {
     DISTRIBUTE_ROOM,
@@ -184,6 +190,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         }
         getVolunteer().then((data: IVolunteer) => {
           setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
         });
 
         break;
@@ -193,6 +200,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
+        });
         setQueue(payload['queueMembers']);
         break;
       case LEAVE_CHAT:
@@ -221,8 +232,8 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         dispatchChats(action);
         getVolunteer().then((data: IVolunteer) => {
           setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
         });
-
         break;
       case AVAILABLE_CHAT:
         setAvailableVolunteers(payload['queueMembers']);

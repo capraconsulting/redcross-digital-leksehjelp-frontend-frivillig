@@ -9,6 +9,7 @@ import {
   IFile,
   IJoin,
   IReconnectMessage,
+  IVolunteer,
 } from '../interfaces';
 import { MESSAGE_TYPES } from '../config';
 
@@ -21,6 +22,7 @@ const {
   JOIN_CHAT,
   PING,
   AVAILABLE_CHAT,
+  SET_VOLUNTEER,
 } = MESSAGE_TYPES;
 
 const createMessage = (
@@ -47,6 +49,9 @@ export const createPingMessage = (): ISocketMessage => {
   return createMessage({}, PING);
 };
 
+export const createVolunteerMessage = (volunteer: IVolunteer): ISocketMessage => {
+  return createMessage(volunteer, SET_VOLUNTEER);
+}
 export const createGetAvailableQueueMessage = (): ISocketMessage => {
   return createMessage({}, AVAILABLE_CHAT);
 };

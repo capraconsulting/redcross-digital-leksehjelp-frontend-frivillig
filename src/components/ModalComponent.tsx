@@ -35,6 +35,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
 
   const createInputFields = () => {
     if (inputFields) {
+      console.log(inputFields);
       return inputFields.map((inputField, index) => {
         return (
           <div className="input-field" key={index}>

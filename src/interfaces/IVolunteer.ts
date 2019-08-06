@@ -4,4 +4,5 @@ export interface IVolunteer {
   bioText: string;
   email: string;
   imgUrl: string;
+  chatID: string;
 }

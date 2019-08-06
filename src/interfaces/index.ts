@@ -18,3 +18,4 @@ export * from './ITempFile';
 export * from './ITalky';
 export * from './IJoin';
 export * from './IReconnectMessage';
+export * from './IVolunteer';
