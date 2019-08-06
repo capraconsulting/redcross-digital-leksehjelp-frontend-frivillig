@@ -7,6 +7,6 @@ export interface ITextMessage {
   message?: string;
   imgUrl: string;
   files?: IFile[];
-  datetime?: Date;
+  datetime?: string;
   unread?: number;
 }

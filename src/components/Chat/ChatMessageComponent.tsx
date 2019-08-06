@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { ITextMessage } from '../../interfaces';
-import { timeStringFromDate } from '../../services';
 import { IVolunteer } from '../../interfaces/IVolunteer';
 
 interface IProps {
@@ -14,10 +13,7 @@ const ChatMessageComponent = (props: IProps) => {
   // Placeholder for when we get users
   // TODO: change when we have users, to use the username instead
   const authorType = author === props.volunteerInfo.name ? 'self' : 'other';
-  const time = useMemo(
-    () => new Date().getHours() + ':' + new Date().getMinutes(),
-    [],
-  );
+
   const downloadFile = file => {
     const a = document.createElement('a');
     a.href = String(file.fileUrl);
@@ -59,7 +55,7 @@ const ChatMessageComponent = (props: IProps) => {
   const renderMessage = () => {
     return (
       message &&
-      (typeof message === 'string' && message.length > 0) && (
+      message.length > 0 && (
         <p
           className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
         >
@@ -82,9 +78,10 @@ const ChatMessageComponent = (props: IProps) => {
         <img height={10} width={10} src={imgUrl} />
         <p className={`chat-message--author-${authorType}`}>
           <span>{authorType === 'self' ? 'Deg' : author}</span>, kl.{' '}
-          <span>{datetime && timeStringFromDate(datetime)}</span>
+          <span>{datetime && datetime}</span>
         </p>
         {renderMessage()}
+        {RenderFiles()}
       </div>
     );
   }
