@@ -35,29 +35,29 @@ export async function toggleIsLeksehjelpOpen<T>(): Promise<IOpen> {
 }
 
 export async function getQuestionList<T>(parameter?: string): Promise<T> {
-  let url = '';
+  let state = '';
   switch (parameter) {
     case 'inbox':
-      url = '/unanswered';
+      state = '?state=1';
       break;
     case 'started':
-      url = '/inprogress';
+      state = '?state=2';
       break;
     case 'approval':
-      url = '/unapproved';
-      break;
-    case 'public':
-      url = '/public';
+      state = '?state=3';
       break;
     case 'unpublished':
-      url = '/unpublished';
+      state = '?state=4';
+      break;
+    case 'public':
+      state = '?state=5';
       break;
     default:
-      url = '';
+      state = '';
       break;
   }
   return await api
-    .get(parameter !== undefined ? `questions${url}` : 'questions')
+    .get(parameter !== undefined ? `questions${state}` : 'questions')
     .then(res => res.data);
 }
 
@@ -85,41 +85,31 @@ export async function postAnswer(
   type?: string,
 ): Promise<IQuestion> {
   const { questionId } = data;
-  let url = '';
+  let body = {};
   switch (type) {
     case 'inbox':
-      url = '/submit';
+      body = { ...data, state: 3 };
       break;
     case 'started':
-      url = '/submit';
+      body = { ...data, state: 3 };
       break;
     case 'approval':
-      return await api
-        .post(`questions/${questionId}/send`)
-        .then(res => res.data);
+      body = { ...data, state: 4 };
+      break;
+    case 'save':
+      body = { ...data, state: 2 };
+      break;
+    case 'publish':
+      body = { ...data, state: 5 };
+      break;
+    case 'approve':
+      body = { ...data, state: 4 };
+      break;
     default:
-      url = '';
+      body = { ...data, state: 2 };
       break;
   }
-  return await api
-    .post(`questions/${questionId}${url}`, data)
-    .then(res => res.data);
-}
-
-export async function saveAnswer(data: IAnswer): Promise<IQuestion> {
-  const { questionId } = data;
-  return await api
-    .post(`questions/${questionId}/edit`, data)
-    .then(res => res.data)
-    .catch(err => err.response);
-}
-
-export async function publishQuestion(id: string): Promise<{}> {
-  return await api.post(`questions/${id}/publish`).then(res => res.data);
-}
-
-export async function approveQuestion(id: string): Promise<{}> {
-  return await api.post(`questions/${id}/approve`).then(res => res.data);
+  return await api.post(`questions/${questionId}`, body).then(res => res.data);
 }
 
 export async function deleteFeedback(id: string): Promise<{}> {
