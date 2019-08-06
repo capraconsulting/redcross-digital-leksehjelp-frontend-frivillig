@@ -37,8 +37,8 @@ const ProfileContainer = () => {
       const volunteerSubjectList = await getVolunteerSubjectList<
         IVolunteerSubject[]
       >().then(data => {
-        const themes = data.filter(e => e.isMestring === 1);
-        const courses = data.filter(e => e.isMestring !== 1);
+        const themes = data.filter(e => e.isMestring === true);
+        const courses = data.filter(e => e.isMestring === false);
         setCourseList(courses);
         setThemeList(themes);
         return { courses, themes };
@@ -83,14 +83,14 @@ const ProfileContainer = () => {
   const addSubject = (subject: IOption, type: string): void => {
     const { value, label } = subject;
     if (type === 'fag') {
-      const course = { subject: label, id: Number(value), isMestring: 0 };
+      const course = { subject: label, id: Number(value), isMestring: false };
       if (!(courseList.filter(e => e.id === Number(value)).length > 0)) {
         setCourseList([...[course], ...courseList]);
       }
       const subjects = subjectList.filter(e => e.value !== subject.value);
       setSubjectList(subjects);
     } else {
-      const theme = { subject: label, id: Number(value), isMestring: 0 };
+      const theme = { subject: label, id: Number(value), isMestring: true };
       if (!(themeList.filter(e => e.id === Number(value)).length > 0)) {
         setThemeList([...[theme], ...themeList]);
       }
