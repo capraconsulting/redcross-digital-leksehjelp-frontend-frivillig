@@ -59,18 +59,28 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
 
   useEffect(() => {
     getQuestion(id).then(resquestion => {
-      setQuestion({
-        ...resquestion,
-        answerText: EditorState.createWithContent(
-          ContentState.createFromBlockArray(
-            convertFromHTML(
-              resquestion.answerText.length > 0
-                ? resquestion.answerText
-                : question.answerText,
+      if (resquestion.answerText) {
+        setQuestion({
+          ...resquestion,
+          answerText: EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(resquestion.answerText),
             ),
           ),
-        ),
-      });
+        });
+      } else {
+        setQuestion({
+          ...resquestion,
+          answerText: EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(
+                '<p>Hei,</p><p>Takk for at du bruker Digital Leksehjelp!</p><p>Med vennlig hilsen.</p><p>Digital Leksehjelp</p>',
+              ),
+            ),
+          ),
+        });
+      }
+
       getSubjectList<ISubject[]>().then(data => {
         const list = data
           .filter(e => e.subjectTitle === question.subject)

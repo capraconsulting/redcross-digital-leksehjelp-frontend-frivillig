@@ -179,6 +179,7 @@ const QuestionFormComponent = ({
         <label className="question-form--item">
           Tittel
           <input
+            readOnly={type === 'approval'}
             className="question-form--input"
             value={title}
             type="text"
@@ -189,6 +190,7 @@ const QuestionFormComponent = ({
         <label className="question-form--item">
           Spørsmål
           <textarea
+            readOnly={type === 'approval'}
             className="question-form--question"
             value={questionText}
             name="question"
@@ -197,21 +199,23 @@ const QuestionFormComponent = ({
             }
           />
         </label>
-        <label className="question-form--item">
-          <Dropdown
-            className="leksehjelp--dropdown"
-            options={options}
-            onChange={option => onAdd(option)}
-            placeholder={'Velg tema'}
-          />
-        </label>
+        {type !== 'approval' && (
+          <label className="question-form--item">
+            <Dropdown
+              className="leksehjelp--dropdown"
+              options={options}
+              onChange={option => onAdd(option)}
+              placeholder={'Velg tema'}
+            />
+          </label>
+        )}
         <label className="question-form--item question-form--tagg">
           {chosenThemes.map(({ value, label }, index) => (
             <div key={index} className="subject--list-element">
               <p>{label}</p>
               <button
                 className="leksehjelp--button-close"
-                onClick={e => onRemove(value, e)}
+                onClick={e => type !== 'approval' && onRemove(value, e)}
               >
                 <Cross color="#8b51c6" />
               </button>
