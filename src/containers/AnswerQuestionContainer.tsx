@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import React, { useState, useEffect } from 'react';
+
+//Editor imports
+import { EditorState, convertToRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CopyIcon from '@material-ui/icons/FileCopy';
+
 import {
   getQuestion,
   postAnswer,
@@ -9,6 +16,9 @@ import {
   deleteFeedback,
   publishQuestion,
   approveQuestion,
+  uploadFileToAzureBlobStorage,
+  deleteFileFromBlob,
+  copyStringToClipboard,
 } from '../services';
 import { IQuestion, IFeedback, IFile } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -20,63 +30,126 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
-  const [question, setQuestion] = React.useState<IQuestion>({
+  const [question, setQuestion] = useState<IQuestion>({
     id: '',
     title: '',
     questionText: '',
-    answerText: '',
+    answerText: EditorState.createEmpty(),
     studentGrade: '',
     questionDate: '',
     subject: '',
     isPublic: false,
     files: [] as IFile[],
   });
-  const [hideModalButtons, setHideModalButtons] = React.useState<boolean>(
-    false,
-  );
-  const [modalText, setModalText] = React.useState<string>('');
-  const [feedbackQuestions, setFeedbackQuestions] = React.useState<IFeedback[]>(
-    [],
-  );
+  const [publicFiles, setPublicFiles] = useState<IFile[]>([]);
+  const [hideModalButtons, setHideModalButtons] = useState<boolean>(false);
+  const [modalText, setModalText] = useState<string>('');
+  const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>([]);
   const { questionText, title, answerText, isPublic } = question;
   const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getQuestion(id).then(setQuestion);
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
+  const uploadPromises = files => {
+    return files.map(async file => {
+      return uploadFileToAzureBlobStorage('public', id, file);
+    });
+  };
+
+  const openFileDialog = () => {
+    const ref = document.getElementById('public-file-dialog');
+    ref && ref.click();
+  };
+
   const FileList = () => {
     return (
       <ul className="filelist">
-        {question.files.map((file, index) => {
-          const { fileName, fileUrl } = file;
-          return (
-            <li key={index}>
-              <span>
-                <a
-                  className="filelist-ankertag"
-                  href={fileUrl}
-                  title={fileName}
-                  download={fileName}
-                >
-                  {fileName}{' '}
-                </a>
-                {fileName && (
-                  <IconButton
-                    onClick={() => {
-                      setQuestion({
-                        ...question,
-                        files: question.files.filter((_, i) => i !== index),
-                      });
-                    }}
-                  ></IconButton>
-                )}{' '}
-              </span>
-            </li>
-          );
-        })}
+        {question &&
+          question.files &&
+          question.files.length > 0 &&
+          question.files.map((file, index) => {
+            const { directory, share, fileName, fileUrl } = file;
+            return (
+              <li key={index} className="element">
+                <span>
+                  <a
+                    className="filelist-ankertag"
+                    href={fileUrl}
+                    title={fileName}
+                    download={fileName}
+                  >
+                    {fileName}{' '}
+                  </a>
+                  {fileName && (
+                    <IconButton
+                      onClick={() => {
+                        copyStringToClipboard(fileUrl);
+                      }}
+                      icon={<CopyIcon />}
+                    ></IconButton>
+                  )}
+                  {fileName && (
+                    <IconButton
+                      onClick={() => {
+                        share &&
+                          directory &&
+                          deleteFileFromBlob(share, directory, fileName);
+                        setQuestion({
+                          ...question,
+                          files: question.files.filter((_, i) => i !== index),
+                        });
+                      }}
+                      icon={<DeleteIcon />}
+                    ></IconButton>
+                  )}{' '}
+                </span>
+              </li>
+            );
+          })}
+        {publicFiles.length > 0 &&
+          publicFiles.map((file, index) => {
+            const { fileName, fileUrl, share, directory } = file;
+            return (
+              <li key={index}>
+                <span>
+                  <a
+                    className="filelist-ankertag"
+                    href={fileUrl}
+                    title={fileName}
+                    download={fileName}
+                    id="filetag"
+                  >
+                    {fileName}{' '}
+                  </a>
+                  {fileName && (
+                    <IconButton
+                      onClick={() => {
+                        copyStringToClipboard(fileUrl);
+                      }}
+                      icon={<CopyIcon />}
+                    ></IconButton>
+                  )}
+                  {fileName && (
+                    <IconButton
+                      onClick={() => {
+                        directory &&
+                          share &&
+                          deleteFileFromBlob(share, directory, fileName);
+                        setPublicFiles({
+                          ...publicFiles.filter((_, i) => i !== index),
+                        });
+                      }}
+                      icon={<DeleteIcon />}
+                    ></IconButton>
+                  )}{' '}
+                </span>
+              </li>
+            );
+          })}
       </ul>
     );
   };
@@ -276,19 +349,52 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               />
             </label>
             <FileList />
-            <label className="question-form--item">Svar</label>
-            <CKEditor
-              disabled={type === 'approval'}
-              editor={ClassicEditor}
-              data={answerText || '<p></p>'}
-              onInit={editor => {}}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                setQuestion({ ...question, answerText: data });
-              }}
-              onBlur={editor => {}}
-              onFocus={editor => {}}
-            />
+
+            <label className="question-form--item">
+              <span>Svar </span>
+              <Editor
+                editorState={answerText}
+                onEditorStateChange={event =>
+                  setQuestion({ ...question, answerText: event })
+                }
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                editorStyle={{
+                  backgroundColor: 'white',
+                  maxHeight: '40vh',
+                  padding: '1rem',
+                }}
+                toolbarCustomButtons={[]}
+              />
+              <textarea
+                disabled
+                value={
+                  answerText &&
+                  draftToHtml(convertToRaw(answerText.getCurrentContent()))
+                }
+              />
+              <input
+                type="file"
+                id="public-file-dialog"
+                className="input-file"
+                accept="image/*|.pdf|.doc|.docx|.csv"
+                onChange={event => {
+                  let { files } = event.target;
+                  let newFiles = [] as any;
+                  let steps = (files && files.length) || 0;
+                  for (let i = 0; i < steps; i++) {
+                    let item = (files && files.item(i)) || 'null';
+                    newFiles.push(item);
+                  }
+                  return Promise.all<IFile>(uploadPromises(newFiles)).then(
+                    results => {
+                      setPublicFiles([...publicFiles, ...results]);
+                    },
+                  );
+                }}
+              />
+            </label>
           </form>
           {type === 'approval' ? (
             <div className="question-form--button-container">
@@ -312,6 +418,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
               </button>
               <button className="leksehjelp--button-success" onClick={onSave}>
                 Lagre
+              </button>
+              <button
+                className="leksehjelp--button-success"
+                onClick={() => openFileDialog()}
+              >
+                Last opp fil
               </button>
             </div>
           )}
@@ -343,40 +455,5 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     </div>
   );
 };
-
-class MyUploadAdapter {
-  loader: any;
-  xhr: any;
-  constructor(loader) {
-    // The file loader instance to use during the upload.
-    this.loader = loader;
-  }
-
-  // Starts the upload process.
-  upload() {
-    return this.loader.file.then(
-      file =>
-        new Promise((resolve, reject) => {
-          console.log(file);
-        }),
-    );
-  }
-
-  // Aborts the upload process.
-  abort() {
-    return;
-  }
-}
-
-// ...
-
-function MyCustomUploadAdapterPlugin(editor) {
-  editor.plugins.get('FileRepository').createUploadAdapter = loader => {
-    // Configure the URL to the upload script in your back-end here!
-    return new MyUploadAdapter(loader);
-  };
-}
-
-// ...
 
 export default withRouter(AnswerQuestionContainer);

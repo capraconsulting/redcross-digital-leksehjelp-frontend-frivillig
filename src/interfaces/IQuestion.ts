@@ -3,7 +3,7 @@ import { IFile } from '.';
 export interface IQuestion extends IQuestionMeta {
   title: string;
   questionText: string;
-  answerText: string;
+  answerText;
   isPublic: boolean;
   files: IFile[];
 }

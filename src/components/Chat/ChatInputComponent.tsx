@@ -9,6 +9,7 @@ import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 import { IconButton } from '../';
 import '../../styles/chat-input-component.less';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface IProps {
   roomID: string;
@@ -90,6 +91,7 @@ const ChatInputComponent = (props: IProps) => {
                   onClick={() => {
                     setTempFiles(tempFiles.filter((_, i) => i !== index));
                   }}
+                  icon={<DeleteIcon />}
                 ></IconButton>{' '}
               </span>
             </li>
