@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  EditorState,
-  convertToRaw,
-  ContentState,
-  convertFromHTML,
-} from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { stateFromHTML } from 'draft-js-import-html';
+import { stateToHTML } from 'draft-js-export-html';
 
 import {
   getQuestion,
@@ -83,14 +77,13 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     });
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
-  console.log(question.answerText);
 
   const createBody = () => {
     const data = {
       ...question,
       questionId: id,
       themes: themes.map(e => e.id),
-      answerText: draftToHtml(convertToRaw(answerText.getCurrentContent())),
+      answerText: stateToHTML(answerText.getCurrentContent()),
     };
     return data;
   };
