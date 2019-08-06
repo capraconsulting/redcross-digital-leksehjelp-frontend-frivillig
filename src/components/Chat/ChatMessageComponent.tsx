@@ -85,6 +85,7 @@ const ChatMessageComponent = (props: IProps) => {
           <span>{datetime && timeStringFromDate(datetime)}</span>
         </p>
         {renderMessage()}
+        {RenderFiles()}
       </div>
     );
   }
