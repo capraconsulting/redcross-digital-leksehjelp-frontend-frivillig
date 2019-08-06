@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const ChatQueueHeaderComponent = (props: IProps) => {
-  const { course, nickname, grade, chatType } = props.student;
+  const { subject, nickname, grade, chatType, positionInQueue } = props.student;
   const {
     LEKSEHJELP_VIDEO,
     LEKSEHJELP_TEXT,
@@ -17,13 +17,8 @@ const ChatQueueHeaderComponent = (props: IProps) => {
 
   return (
     <div className="queue-header">
-      <div className="queue-header-item">{course}</div>
       <div className="queue-header-item">
-        <span className="queue-nickname">{nickname}</span>
-        <span className="queue-grade">
-          <span>Klasse: </span>
-          <span>{grade}</span>
-        </span>
+        <span>{subject}</span>
         <span className="queue-type">
           {(chatType === LEKSEHJELP_VIDEO || chatType === MESTRING_VIDEO) && (
             <img
@@ -37,6 +32,19 @@ const ChatQueueHeaderComponent = (props: IProps) => {
               alt="Text Chat"
             />
           )}
+        </span>
+      </div>
+      <div className="queue-header-item">
+        <span className="queue-nickname">{nickname}</span>
+      </div>
+      <div className="queue-header-item">
+        <span className="queue-grade">
+          <span>Klasse: </span>
+          <span>{grade}</span>
+        </span>
+        <span className="queue-grade">
+          <span>Posisjon i kø: </span>
+          <span>{positionInQueue}</span>
         </span>
       </div>
     </div>
