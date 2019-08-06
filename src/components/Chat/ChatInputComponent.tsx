@@ -184,7 +184,7 @@ const ChatInputComponent = (props: IProps) => {
           </button>
           <button
             onClick={() => {
-              socketSend(createGetAvailableQueueMessage());
+              socketSend(createGetAvailableQueueMessage(roomID));
               setModal(true);
             }}
           >
