@@ -87,87 +87,84 @@ const QuestionFormComponent = ({
   const FileList = () => {
     return (
       <ul className="filelist">
-        {files &&
-          files.length > 0 &&
-          files.map((file, index) => {
-            const { directory, share, fileName, fileUrl } = file;
-            return (
-              <li key={index} className="element">
-                <span>
-                  <a
-                    className="filelist-ankertag"
-                    href={fileUrl}
-                    title={fileName}
-                    download={fileName}
-                  >
-                    {fileName}{' '}
-                  </a>
-                  {fileName && (
-                    <IconButton
-                      onClick={() => {
-                        copyStringToClipboard(fileUrl);
-                      }}
-                      icon={<CopyIcon />}
-                    ></IconButton>
-                  )}
-                  {fileName && (
-                    <IconButton
-                      onClick={() => {
-                        share &&
-                          directory &&
-                          deleteFileFromBlob(share, directory, fileName);
-                        setQuestion({
-                          ...question,
-                          files: question.files.filter((_, i) => i !== index),
-                        });
-                      }}
-                      icon={<DeleteIcon />}
-                    ></IconButton>
-                  )}{' '}
-                </span>
-              </li>
-            );
-          })}
-        {publicFiles.length > 0 &&
-          publicFiles.map((file, index) => {
-            const { fileName, fileUrl, share, directory } = file;
-            return (
-              <li key={index}>
-                <span>
-                  <a
-                    className="filelist-ankertag"
-                    href={fileUrl}
-                    title={fileName}
-                    download={fileName}
-                    id="filetag"
-                  >
-                    {fileName}{' '}
-                  </a>
-                  {fileName && (
-                    <IconButton
-                      onClick={() => {
-                        copyStringToClipboard(fileUrl);
-                      }}
-                      icon={<CopyIcon />}
-                    ></IconButton>
-                  )}
-                  {fileName && (
-                    <IconButton
-                      onClick={() => {
+        {Array(...files).map((file, index) => {
+          const { directory, share, fileName, fileUrl } = file;
+          return (
+            <li key={index} className="element">
+              <span>
+                <a
+                  className="filelist-ankertag"
+                  href={fileUrl}
+                  title={fileName}
+                  download={fileName}
+                >
+                  {fileName}{' '}
+                </a>
+                {fileName && (
+                  <IconButton
+                    onClick={() => {
+                      copyStringToClipboard(fileUrl);
+                    }}
+                    icon={<CopyIcon />}
+                  ></IconButton>
+                )}
+                {fileName && (
+                  <IconButton
+                    onClick={() => {
+                      share &&
                         directory &&
-                          share &&
-                          deleteFileFromBlob(share, directory, fileName);
-                        setPublicFiles({
-                          ...publicFiles.filter((_, i) => i !== index),
-                        });
-                      }}
-                      icon={<DeleteIcon />}
-                    ></IconButton>
-                  )}{' '}
-                </span>
-              </li>
-            );
-          })}
+                        deleteFileFromBlob(share, directory, fileName);
+                      setQuestion({
+                        ...question,
+                        files: Array(...files).filter((_, i) => i !== index),
+                      });
+                    }}
+                    icon={<DeleteIcon />}
+                  ></IconButton>
+                )}{' '}
+              </span>
+            </li>
+          );
+        })}
+        {Array(...publicFiles).map((file, index) => {
+          const { fileName, fileUrl, share, directory } = file;
+          return (
+            <li key={index}>
+              <span>
+                <a
+                  className="filelist-ankertag"
+                  href={fileUrl}
+                  title={fileName}
+                  download={fileName}
+                  id="filetag"
+                >
+                  {fileName}{' '}
+                </a>
+                {fileName && (
+                  <IconButton
+                    onClick={() => {
+                      copyStringToClipboard(fileUrl);
+                    }}
+                    icon={<CopyIcon />}
+                  ></IconButton>
+                )}
+                {fileName && (
+                  <IconButton
+                    onClick={() => {
+                      directory &&
+                        share &&
+                        deleteFileFromBlob(share, directory, fileName);
+                      setPublicFiles({
+                        ...Array(...publicFiles).filter((_, i) => i !== index),
+                      });
+                    }}
+                    icon={<DeleteIcon />}
+                  ></IconButton>
+                )}{' '}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     );
   };
