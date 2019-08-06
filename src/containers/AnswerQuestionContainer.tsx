@@ -236,6 +236,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     event.preventDefault();
   };
 
+  console.log(question);
   return (
     <div className="answer-question--container">
       {modalOpen && (
