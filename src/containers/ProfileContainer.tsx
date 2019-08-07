@@ -128,12 +128,18 @@ const ProfileContainer = () => {
     let isSubjectUpdateSuccess = false;
     let isProfileUpdateSuccess = false;
 
-    if (isSubjectChanged) {
+    if (isProfileChanged && isSubjectChanged) {
+      isProfileUpdateSuccess = await updateProfile(volunteerProfile)
+        .then(() => true)
+        .catch(() => false);
       isSubjectUpdateSuccess = await saveSubjects(list)
         .then(() => true)
         .catch(() => false);
-    }
-    if (isProfileChanged) {
+    } else if (isSubjectChanged) {
+      isSubjectUpdateSuccess = await saveSubjects(list)
+        .then(() => true)
+        .catch(() => false);
+    } else if (isProfileChanged) {
       isProfileUpdateSuccess = await updateProfile(volunteerProfile)
         .then(() => true)
         .catch(() => false);
