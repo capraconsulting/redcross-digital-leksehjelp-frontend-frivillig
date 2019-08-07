@@ -49,11 +49,15 @@ export const createPingMessage = (): ISocketMessage => {
   return createMessage({}, PING);
 };
 
-export const createVolunteerMessage = (volunteer: IVolunteer): ISocketMessage => {
+export const createVolunteerMessage = (
+  volunteer: IVolunteer,
+): ISocketMessage => {
   return createMessage(volunteer, SET_VOLUNTEER);
-}
-export const createGetAvailableQueueMessage = (roomID: string): ISocketMessage => {
-  return createMessage({'roomID' : roomID}, AVAILABLE_CHAT);
+};
+export const createGetAvailableQueueMessage = (
+  roomID: string,
+): ISocketMessage => {
+  return createMessage({ roomID: roomID }, AVAILABLE_CHAT);
 };
 
 export const createJoinChatMessage = (
