@@ -12,13 +12,6 @@ import { ChatQueueHeader } from '..';
 import { CHAT_TYPES } from '../../config';
 import { toast } from 'react-toastify';
 
-toast.configure({
-  autoClose: 8000,
-  draggable: false,
-  position: 'top-center',
-  closeButton: false,
-  closeOnClick: true,
-});
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
