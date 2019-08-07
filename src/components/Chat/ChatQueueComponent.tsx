@@ -12,7 +12,6 @@ import { ChatQueueHeader } from '..';
 import { CHAT_TYPES } from '../../config';
 import { toast } from 'react-toastify';
 
-
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
   const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
