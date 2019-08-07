@@ -232,6 +232,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
       case RECONNECT:
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
+        });
         reconnectSuccessHandler(payload['roomIDs']);
         break;
       case JOIN_CHAT:
