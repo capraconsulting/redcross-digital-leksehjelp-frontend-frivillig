@@ -80,10 +80,9 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           ),
         });
       }
-
       getSubjectList<ISubject[]>().then(data => {
         const list = data
-          .filter(e => e.subjectTitle === question.subject)
+          .filter(e => e.subjectTitle === resquestion.subject)
           .flatMap(e => e.themes);
         setThemeList(list);
       });
@@ -246,7 +245,6 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     event.preventDefault();
   };
 
-  console.log(question);
   return (
     <div className="answer-question--container">
       {modalOpen && (

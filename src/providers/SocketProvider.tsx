@@ -305,7 +305,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         name,
         availableVolunteers,
         volunteerInfo,
-        setVolunteerInfo
+        setVolunteerInfo,
       }}
     >
       {children}
