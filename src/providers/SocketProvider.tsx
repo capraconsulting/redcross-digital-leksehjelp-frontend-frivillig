@@ -29,7 +29,8 @@ import {
   getVolunteer,
   createReconnectMessage,
   createVolunteerMessage,
-  getTimeStringNow, TextMessageBuilder,
+  getTimeStringNow,
+  TextMessageBuilder,
 } from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
@@ -249,11 +250,13 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
 
         const msg = new TextMessageBuilder('NOTIFICATION')
           .withAuthor(name)
-          .withMessage('Hei, mitt navn er ' + name + '! Jeg skal nå prøve å hjelpe deg.')
+          .withMessage(
+            'Hei, mitt navn er ' + name + '! Jeg skal nå prøve å hjelpe deg.',
+          )
           .toRoom(payload['roomID'])
           .build();
         const { textMessage, socketMessage } = msg.createMessage;
-        socketSend(socketMessage)
+        socketSend(socketMessage);
         break;
       case AVAILABLE_CHAT:
         setAvailableVolunteers(payload['queueMembers']);
