@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
+  const { queue, setQueue, dispatchChats, socketSend, talky, setActiveChatIndex, chats } = useContext(
     SocketContext,
   );
   const {
@@ -37,6 +37,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     }
 
     if (student) {
+      setActiveChatIndex(chats.length);
       dispatchChats(addNewChatAction(student));
       setQueue(queue.filter(studentInQueue => studentInQueue !== student));
       const msg = new GenerateRoomMessageBuilder(uniqueID)

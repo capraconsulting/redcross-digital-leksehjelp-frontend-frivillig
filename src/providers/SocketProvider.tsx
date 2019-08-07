@@ -4,7 +4,6 @@ import React, {
   useReducer,
   useState,
   FunctionComponent,
-  useMemo,
 } from 'react';
 import { CHAT_URL, MESSAGE_TYPES } from '../config';
 import {
@@ -35,6 +34,7 @@ import {
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
+// Toast notification config (for entire App)
 toast.configure({
   autoClose: 1500,
   draggable: false,
@@ -43,45 +43,33 @@ toast.configure({
   closeOnClick: true,
 });
 
-export const SocketContext = createContext({
-  uniqueID: '' as string,
-
-  chats: [{}] as IChat[],
-  dispatchChats(action: IAction): void {},
-
-  queue: [] as IStudent[],
-  setQueue(state: IStudent[]): void {},
-
-  socketSend(message: ISocketMessage | IGetMessage): void {},
-
-  activeChatIndex: 0 as number,
-  setActiveChatIndex(index: number): void {},
-
-  talky: null as null | ITalky,
-
-  name: '' as string,
-
-  availableVolunteers: [] as IVolunteer[],
-
-  volunteerInfo: {
-    id: '',
-    bioText: '',
-    email: '',
-    name: '',
-    imgUrl: '',
-    chatID: '',
-  },
-  setVolunteerInfo(data: IVolunteer): void {},
-});
-
+// Websocket
 let socket;
-
 const getSocket = (): WebSocket => {
   if (!socket) {
     socket = new WebSocket(CHAT_URL);
   }
   return socket;
 };
+
+export const SocketContext = createContext({
+  // Values available with context
+  uniqueID: '' as string,
+  chats: [{}] as IChat[],
+  queue: [] as IStudent[],
+  activeChatIndex: 0 as number,
+  talky: null as null | ITalky,
+  name: '' as string,
+  availableVolunteers: [] as IVolunteer[],
+  volunteerInfo: {} as IVolunteer,
+
+  // Functions available with context
+  dispatchChats(action: IAction): void {},
+  setQueue(state: IStudent[]): void {},
+  socketSend(message: ISocketMessage | IGetMessage): void {},
+  setActiveChatIndex(index: number): void {},
+  setVolunteerInfo(data: IVolunteer): void {},
+});
 
 export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
@@ -168,13 +156,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     const { payload, msgType } = parsedMessage;
     let action;
 
-    const time = () =>
-      new Date().getHours() +
-      ':' +
-      new Date().getMinutes() +
-      ' ' +
-      new Date().getSeconds();
-
     switch (msgType) {
       case TEXT:
         action = addMessageAction(
@@ -250,8 +231,14 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     }
   };
 
+  const socketCloseHandler = () => {
+    socket = null;
+    getSocket().onmessage = socketHandler;
+  };
+
   useEffect(() => {
     getSocket().onmessage = socketHandler;
+    getSocket().onclose = socketCloseHandler;
 
     getVolunteer().then((data: IVolunteer) => {
       setVolunteerInfo(data);
