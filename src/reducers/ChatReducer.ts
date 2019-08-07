@@ -98,7 +98,7 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
   });
   chatHistory.push({
     author: name,
-    message: name + ' har blitt med i rommet',
+    message: 'Ny frivllig har blitt med i rommet',
     roomID: roomID,
     uniqueID: 'NOTIFICATION',
     imgUrl: imgUrl,
@@ -123,7 +123,7 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
   if (chatWhereAUserLeaves) {
     chatWhereAUserLeaves.messages.push({
       author: name,
-      message: 'Har forlatt rommet',
+      message: 'Frivillig har forlatt rommet',
       roomID: roomID,
       uniqueID: 'NOTIFICATION',
       imgUrl: imgUrl,
