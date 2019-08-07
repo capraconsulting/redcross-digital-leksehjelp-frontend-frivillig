@@ -1,4 +1,5 @@
 import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
+
 import {
   getVolunteerSubjectList,
   getSubjectList,
@@ -20,7 +21,6 @@ const ProfileContainer = () => {
   const [themeList, setThemeList] = useState<IVolunteerSubject[]>([]);
   const [subjectList, setSubjectList] = useState<IOption[]>([]);
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
   const [volunteerProfile, setVolunteerProfile] = useState<IProfile>({
@@ -63,19 +63,20 @@ const ProfileContainer = () => {
         });
       volunteerSubjectList &&
         getMestringSubjectList<ISubject[]>().then(list => {
-          const filteredList = list
+          const filteredMestringList = list
             .filter(e => {
               const { themes } = volunteerSubjectList;
               if (
                 !(
-                  themes.filter(course => e.id === Number(course.id)).length > 0
+                  themes.filter(course => e.subjectTitle === course.subject)
+                    .length > 0
                 )
               ) {
                 return true;
               }
             })
             .map(e => ({ value: e.id.toString(), label: e.subjectTitle }));
-          setMestringSubjectList(filteredList);
+          setMestringSubjectList(filteredMestringList);
         });
     })();
   }, []);
@@ -117,7 +118,7 @@ const ProfileContainer = () => {
       const list = themeList.filter(({ id }) => id !== Number(item));
       setThemeList(list);
       const subjectObj = { label: subject, value: item.toString() };
-      setMestringSubjectList([...[subjectObj], ...subjectList]);
+      setMestringSubjectList([...[subjectObj], ...mestringSubjectList]);
     }
     setIsSubjectChanged(true);
     e.preventDefault();
@@ -128,12 +129,18 @@ const ProfileContainer = () => {
     let isSubjectUpdateSuccess = false;
     let isProfileUpdateSuccess = false;
 
-    if (isSubjectChanged) {
+    if (isProfileChanged && isSubjectChanged) {
+      isProfileUpdateSuccess = await updateProfile(volunteerProfile)
+        .then(() => true)
+        .catch(() => false);
       isSubjectUpdateSuccess = await saveSubjects(list)
         .then(() => true)
         .catch(() => false);
-    }
-    if (isProfileChanged) {
+    } else if (isSubjectChanged) {
+      isSubjectUpdateSuccess = await saveSubjects(list)
+        .then(() => true)
+        .catch(() => false);
+    } else if (isProfileChanged) {
       isProfileUpdateSuccess = await updateProfile(volunteerProfile)
         .then(() => true)
         .catch(() => false);

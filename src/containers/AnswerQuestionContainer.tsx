@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
+import { stateFromHTML } from 'draft-js-import-html';
+import { stateToHTML } from 'draft-js-export-html';
+
 import {
   getQuestion,
   postAnswer,
@@ -7,8 +11,8 @@ import {
   getSubjectList,
 } from '../services';
 import { IQuestion, IFeedback, ITheme, ISubject, IFile } from '../interfaces';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { Modal, QuestionHeader, QuestionForm, IconButton } from '../components';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Modal, QuestionHeader, QuestionForm } from '../components';
 
 interface IProps {
   id: string;
@@ -16,11 +20,19 @@ interface IProps {
 }
 
 const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
+  const { type, id, history } = props;
+
   const [question, setQuestion] = useState<IQuestion>({
     id: '',
     title: '',
     questionText: '',
-    answerText: '',
+    answerText: EditorState.createWithContent(
+      stateFromHTML(
+        type == 'inbox'
+          ? '<p>Hei,</p><p>Takk for at du bruker Digital Leksehjelp!</p><p>Med vennlig hilsen.</p><p>Digital Leksehjelp</p>'
+          : '<p></p>',
+      ),
+    ),
     studentGrade: '',
     questionDate: '',
     subject: '',
@@ -28,6 +40,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     themes: [],
     files: [] as IFile[],
   });
+  const [publicFiles, setPublicFiles] = useState<IFile[]>([]);
   const [hideModalButtons, setHideModalButtons] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
   const [feedbackQuestions, setFeedbackQuestions] = useState<IFeedback[]>([]);
@@ -40,13 +53,34 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     studentGrade,
     questionDate,
     themes,
+    answerText,
   } = question;
-  const { type, id, history } = props;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    getQuestion(id).then(question => {
-      setQuestion(question);
+    getQuestion(id).then(resquestion => {
+      if (resquestion.answerText) {
+        setQuestion({
+          ...resquestion,
+          answerText: EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(resquestion.answerText),
+            ),
+          ),
+        });
+      } else {
+        setQuestion({
+          ...resquestion,
+          answerText: EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(
+                '<p>Hei,</p><p>Takk for at du bruker Digital Leksehjelp!</p><p>Med vennlig hilsen.</p><p>Digital Leksehjelp</p>',
+              ),
+            ),
+          ),
+        });
+      }
+
       getSubjectList<ISubject[]>().then(data => {
         const list = data
           .filter(e => e.subjectTitle === question.subject)
@@ -57,43 +91,12 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     getFeedbackList(id).then(setFeedbackQuestions);
   }, []);
 
-  const FileList = () => {
-    return (
-      <ul className="filelist">
-        {question.files.map((file, index) => {
-          const { fileName, fileUrl } = file;
-          return (
-            <li key={index}>
-              <span>
-                <a
-                  className="filelist-ankertag"
-                  href={fileUrl}
-                  title={fileName}
-                  download={fileName}
-                >
-                  {fileName}{' '}
-                </a>
-                <IconButton
-                  onClick={() => {
-                    setQuestion({
-                      ...question,
-                      files: question.files.filter((_, i) => i !== index),
-                    });
-                  }}
-                ></IconButton>{' '}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  };
-
   const createBody = () => {
     const data = {
       ...question,
       questionId: id,
       themes: themes.map(e => e.id),
+      answerText: stateToHTML(answerText.getCurrentContent()),
     };
     return data;
   };
@@ -243,6 +246,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
     event.preventDefault();
   };
 
+  console.log(question);
   return (
     <div className="answer-question--container">
       {modalOpen && (
@@ -265,6 +269,8 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       <QuestionForm
         question={question}
         setQuestion={setQuestion}
+        publicFiles={publicFiles}
+        setPublicFiles={setPublicFiles}
         onApprove={onApprove}
         onDisapprove={onDisapprove}
         onSave={onSave}

@@ -29,7 +29,7 @@ import {
   getVolunteer,
   createReconnectMessage,
   createVolunteerMessage,
-  getTimeStringNow
+  getTimeStringNow,
 } from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
@@ -88,7 +88,9 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talky, setTalky] = useState<ITalky | null>(null);
   const [name, setName] = useState<string>('');
-  const [availableVolunteers, setAvailableVolunteers] = useState<IVolunteer[]>([]);
+  const [availableVolunteers, setAvailableVolunteers] = useState<IVolunteer[]>(
+    [],
+  );
   const [volunteerInfo, setVolunteerInfo] = useState<IVolunteer>({
     id: '',
     bioText: '',
@@ -228,6 +230,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
       case RECONNECT:
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
+        });
         reconnectSuccessHandler(payload['roomIDs']);
         break;
       case JOIN_CHAT:
