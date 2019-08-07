@@ -243,19 +243,24 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         const messages: ITextMessage[] = payload['chatHistory'];
         action = joinChatAction(student, messages, payload['roomID']);
         dispatchChats(action);
-        getVolunteer().then((data: IVolunteer) => {
-          setVolunteerInfo(data);
-          socketSend(createVolunteerMessage(data));
-        }).then(() => {
-          const msg = new TextMessageBuilder(uniqueID)
-            .withAuthor(volunteerInfo.name)
-            .withMessage('Hei, mitt navn er ' + volunteerInfo.name + '! Jeg skal nå prøve å hjelpe deg.')
-            .toRoom(payload['roomID'])
-            .build();
-          const { textMessage, socketMessage } = msg.createMessage;
-          socketSend(socketMessage)
-        });
-
+        getVolunteer()
+          .then((data: IVolunteer) => {
+            setVolunteerInfo(data);
+            socketSend(createVolunteerMessage(data));
+          })
+          .then(() => {
+            const msg = new TextMessageBuilder(uniqueID)
+              .withAuthor(volunteerInfo.name)
+              .withMessage(
+                'Hei, mitt navn er ' +
+                  volunteerInfo.name +
+                  '! Jeg skal nå prøve å hjelpe deg.',
+              )
+              .toRoom(payload['roomID'])
+              .build();
+            const { textMessage, socketMessage } = msg.createMessage;
+            socketSend(socketMessage);
+          });
 
         break;
       case AVAILABLE_CHAT:

@@ -184,7 +184,8 @@ const ChatInputComponent = (props: IProps) => {
               ></polygon>
             </svg>
           </button>
-          <button className="leksehjelp--button-success"
+          <button
+            className="leksehjelp--button-success"
             onClick={() => {
               socketSend(createGetAvailableQueueMessage(roomID));
               setModal(true);

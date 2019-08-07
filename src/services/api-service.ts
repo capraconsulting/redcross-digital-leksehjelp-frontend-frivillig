@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { API_URL, HEADERS } from '../config';
-import { IQuestion, IAnswer, IFeedback, IProfile, IOpen } from '../interfaces';
+import {
+  IQuestion,
+  IAnswer,
+  IFeedbackQuestion,
+  IProfile,
+  IOpen,
+} from '../interfaces';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,7 +20,9 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export async function getFeedbackList(id?: string): Promise<IFeedback[]> {
+export async function getFeedbackList(
+  id?: string,
+): Promise<IFeedbackQuestion[]> {
   return await api
     .get(id ? `feedback/question/${id}` : 'feedback')
     .then(res => res.data);

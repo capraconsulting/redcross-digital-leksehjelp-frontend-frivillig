@@ -12,7 +12,6 @@ const FeedbackListComponent = (props: IProps & RouteComponentProps) => {
   if (feedbackList.length < 1) {
     return <p>Denne listen er tom for øyeblikket</p>;
   }
-
   return (
     <div className="question--list">
       {feedbackList.map(

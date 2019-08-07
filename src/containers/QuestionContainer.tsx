@@ -19,8 +19,8 @@ const QuestionContainer = () => {
   const [apiFail, setApiFail] = useState<boolean>(false);
 
   const setFeedback = async () => {
-    const feedbackList = await getFeedbackList().then(feedbackList =>
-      feedbackList.map(
+    const feedbackList = await getFeedbackList().then(feedbackList => {
+      return feedbackList.map(
         async feedback =>
           await getQuestion(feedback.id.toString()).then(question => {
             const { studentGrade, subject, questionDate } = question;
@@ -28,12 +28,12 @@ const QuestionContainer = () => {
             return {
               ...feedback,
               studentGrade,
-              subject,
               questionDate,
+              subject: feedback.subject,
             };
           }),
-      ),
-    );
+      );
+    });
 
     Promise.all(feedbackList)
       .then(setFeedbackQuestions)

@@ -181,7 +181,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
               className={`header--list-item ${subPath === 'information' &&
                 'active'}`}
             >
-             Informasjon
+              Informasjon
             </li>
             <li
               className={`header--list-item ${subPath === 'users' && 'active'}`}
