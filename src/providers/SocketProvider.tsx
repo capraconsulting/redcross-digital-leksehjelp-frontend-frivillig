@@ -36,7 +36,7 @@ import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces/IVolunteer';
 
 toast.configure({
-  autoClose: 5000,
+  autoClose: 1500,
   draggable: false,
   position: 'top-center',
   closeButton: false,
