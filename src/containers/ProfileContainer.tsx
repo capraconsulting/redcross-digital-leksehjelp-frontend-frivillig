@@ -68,7 +68,8 @@ const ProfileContainer = () => {
               const { themes } = volunteerSubjectList;
               if (
                 !(
-                  themes.filter(course => e.subjectTitle === course.subject).length > 0
+                  themes.filter(course => e.subjectTitle === course.subject)
+                    .length > 0
                 )
               ) {
                 return true;
