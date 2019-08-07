@@ -98,7 +98,7 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
   });
   chatHistory.push({
     author: name,
-    message: 'Har blitt med i rommet',
+    message: name + ' har blitt med i rommet',
     roomID: roomID,
     uniqueID: 'NOTIFICATION',
     imgUrl: imgUrl,

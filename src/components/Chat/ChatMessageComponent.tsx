@@ -53,6 +53,9 @@ const ChatMessageComponent = (props: IProps) => {
   };
 
   const renderMessage = () => {
+    console.log(author);
+    console.log(props.volunteerInfo.name);
+    console.log(authorType);
     return (
       message &&
       message.length > 0 && (
