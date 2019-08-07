@@ -1,4 +1,10 @@
-import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
+import React, {
+  useState,
+  useEffect,
+  MouseEvent,
+  Fragment,
+  useContext,
+} from 'react';
 
 import {
   getVolunteerSubjectList,
@@ -7,9 +13,17 @@ import {
   getMestringSubjectList,
   getVolunteerProfile,
   updateProfile,
+  getVolunteer,
+  createVolunteerMessage,
 } from '../services';
-import { IVolunteerSubject, ISubject, IProfile } from '../interfaces';
+import {
+  IVolunteerSubject,
+  ISubject,
+  IProfile,
+  IVolunteer,
+} from '../interfaces';
 import { Picker, Modal, ProfileForm } from '../components';
+import { SocketContext } from '../providers';
 
 interface IOption {
   value: string;
@@ -31,6 +45,7 @@ const ProfileContainer = () => {
   });
   const [isSubjectChanged, setIsSubjectChanged] = useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState<boolean>(false);
+  const { socketSend, setVolunteerInfo } = useContext(SocketContext);
 
   useEffect(() => {
     (async () => {
@@ -128,6 +143,11 @@ const ProfileContainer = () => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
     let isSubjectUpdateSuccess = false;
     let isProfileUpdateSuccess = false;
+
+    getVolunteer().then((data: IVolunteer) => {
+      setVolunteerInfo(data);
+      socketSend(createVolunteerMessage(data));
+    });
 
     if (isProfileChanged && isSubjectChanged) {
       isProfileUpdateSuccess = await updateProfile(volunteerProfile)

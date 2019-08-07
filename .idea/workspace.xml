@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1288818-da90-40cf-824b-1fac5bef00c5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/containers/ProfileContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/ProfileContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/providers/SocketProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/providers/SocketProvider.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Chat/ChatQueueComponent.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="657">
-              <caret line="118" column="49" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
+            <state relative-caret-position="385">
+              <caret line="121" column="49" selection-start-line="121" selection-start-column="49" selection-end-line="121" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/providers/SocketProvider.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="238" column="26" lean-forward="true" selection-start-line="238" selection-start-column="26" selection-end-line="238" selection-end-column="26" />
+            <state relative-caret-position="293">
+              <caret line="304" column="13" lean-forward="true" selection-start-line="304" selection-start-column="13" selection-end-line="304" selection-end-column="13" />
               <folding>
                 <element signature="e#0#119#0" expanded="true" />
               </folding>
@@ -54,10 +54,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/containers/ProfileContainer.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-197">
-              <caret line="125" column="8" selection-start-line="125" selection-start-column="8" selection-end-line="125" selection-end-column="8" />
+            <state relative-caret-position="487">
+              <caret line="149" column="7" lean-forward="true" selection-start-line="149" selection-start-column="7" selection-end-line="149" selection-end-column="7" />
               <folding>
-                <element signature="e#0#73#0" expanded="true" />
+                <element signature="e#0#96#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -74,8 +74,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>createJoin</find>
-      <find>b</find>
       <find>join</find>
       <find>vol</find>
       <find>string</find>
@@ -104,6 +102,8 @@
       <find>console.log</find>
       <find>datetime</find>
       <find>content-text</find>
+      <find>s</find>
+      <find>setVol</find>
     </findStrings>
     <replaceStrings>
       <replace>callback</replace>
@@ -156,6 +156,7 @@
         <option value="$PROJECT_DIR$/src/components/Chat/ChatQueueComponent.tsx" />
         <option value="$PROJECT_DIR$/src/styles/chat-queue-component.less" />
         <option value="$PROJECT_DIR$/src/providers/SocketProvider.tsx" />
+        <option value="$PROJECT_DIR$/src/containers/ProfileContainer.tsx" />
       </list>
     </option>
   </component>
@@ -283,12 +284,12 @@
       <workItem from="1565090994688" duration="947000" />
       <workItem from="1565092925587" duration="3049000" />
       <workItem from="1565112498709" duration="2592000" />
-      <workItem from="1565160262013" duration="693000" />
+      <workItem from="1565160262013" duration="1083000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97189000" />
+    <option name="totallyTimeSpent" value="97579000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="6" />
@@ -687,23 +688,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Chat/ChatQueueComponent.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="657">
-          <caret line="118" column="49" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/providers/SocketProvider.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="238" column="26" lean-forward="true" selection-start-line="238" selection-start-column="26" selection-end-line="238" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#119#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/ProfileFormComponent.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -713,12 +697,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Chat/ChatQueueComponent.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="121" column="49" selection-start-line="121" selection-start-column="49" selection-end-line="121" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/providers/SocketProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="304" column="13" lean-forward="true" selection-start-line="304" selection-start-column="13" selection-end-line="304" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#119#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/containers/ProfileContainer.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-197">
-          <caret line="125" column="8" selection-start-line="125" selection-start-column="8" selection-end-line="125" selection-end-column="8" />
+        <state relative-caret-position="487">
+          <caret line="149" column="7" lean-forward="true" selection-start-line="149" selection-start-column="7" selection-end-line="149" selection-end-column="7" />
           <folding>
-            <element signature="e#0#73#0" expanded="true" />
+            <element signature="e#0#96#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -70,6 +70,7 @@ export const SocketContext = createContext({
     imgUrl: '',
     chatID: '',
   },
+  setVolunteerInfo(data: IVolunteer): void {},
 });
 
 let socket;
@@ -304,6 +305,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         name,
         availableVolunteers,
         volunteerInfo,
+        setVolunteerInfo
       }}
     >
       {children}
