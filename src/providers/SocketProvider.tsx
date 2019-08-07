@@ -246,17 +246,17 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         getVolunteer().then((data: IVolunteer) => {
           setVolunteerInfo(data);
           socketSend(createVolunteerMessage(data));
+        }).then(() => {
+          const msg = new TextMessageBuilder(uniqueID)
+            .withAuthor(volunteerInfo.name)
+            .withMessage('Hei, mitt navn er ' + volunteerInfo.name + '! Jeg skal nå prøve å hjelpe deg.')
+            .toRoom(payload['roomID'])
+            .build();
+          const { textMessage, socketMessage } = msg.createMessage;
+          socketSend(socketMessage)
         });
 
-        const msg = new TextMessageBuilder('NOTIFICATION')
-          .withAuthor(name)
-          .withMessage(
-            'Hei, mitt navn er ' + name + '! Jeg skal nå prøve å hjelpe deg.',
-          )
-          .toRoom(payload['roomID'])
-          .build();
-        const { textMessage, socketMessage } = msg.createMessage;
-        socketSend(socketMessage);
+
         break;
       case AVAILABLE_CHAT:
         setAvailableVolunteers(payload['queueMembers']);
