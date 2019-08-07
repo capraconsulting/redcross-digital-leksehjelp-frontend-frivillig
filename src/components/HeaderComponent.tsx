@@ -181,7 +181,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
               className={`header--list-item ${subPath === 'information' &&
                 'active'}`}
             >
-              <Link to="/questions">Informsjon</Link>
+             Informasjon
             </li>
             <li
               className={`header--list-item ${subPath === 'users' && 'active'}`}
@@ -192,7 +192,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
               className={`header--list-item ${subPath === 'topics' &&
                 'active'}`}
             >
-              <Link to="/">Administrer fag</Link>
+              Administrer fag
             </li>
             <li
               className={`header--list-item ${subPath === 'questions' &&
