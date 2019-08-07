@@ -80,12 +80,14 @@ class JoinChatMessage {
   private readonly uniqueID: string;
   private readonly chatHistory: ITextMessage[];
   private readonly roomID: string;
+  private readonly volName: string;
 
   public constructor(joinChatMessageBuilder: JoinChatMessageBuilder) {
     this.studentInfo = joinChatMessageBuilder.studentInfo;
     this.uniqueID = joinChatMessageBuilder.uniqueID;
     this.chatHistory = joinChatMessageBuilder.chatHistory;
     this.roomID = joinChatMessageBuilder.roomID;
+    this.volName = joinChatMessageBuilder.volName;
   }
 
   public createMessage(): ISocketMessage {
@@ -95,6 +97,7 @@ class JoinChatMessage {
         uniqueID: this.uniqueID,
         chatHistory: this.chatHistory,
         roomID: this.roomID,
+        volName: this.volName,
       },
       JOIN_CHAT,
     );
@@ -106,9 +109,15 @@ export class JoinChatMessageBuilder {
   private _uniqueID: string;
   private _chatHistory: ITextMessage[];
   private _roomID: string;
+  private _volName: string;
 
   public build(): JoinChatMessage {
     return new JoinChatMessage(this);
+  }
+
+  public withVolName(value: string) {
+    this._volName = value;
+    return this;
   }
 
   public withStudentInfo(value: IStudent) {
@@ -145,6 +154,10 @@ export class JoinChatMessageBuilder {
 
   public get roomID(): string {
     return this._roomID;
+  }
+
+  public get volName(): string {
+    return this._volName;
   }
 }
 export const createReconnectMessage = (uniqueID: string): ISocketMessage => {

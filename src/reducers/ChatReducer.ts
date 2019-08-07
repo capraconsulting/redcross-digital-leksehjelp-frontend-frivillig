@@ -96,14 +96,6 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
   messages.forEach((message: ITextMessage) => {
     chatHistory.push(message);
   });
-  chatHistory.push({
-    author: name,
-    message: name + ' har blitt med i rommet',
-    roomID: roomID,
-    uniqueID: 'NOTIFICATION',
-    imgUrl: imgUrl,
-    files: [] as IFile[],
-  });
   const newChat: IChat = {
     student: student,
     messages: chatHistory,

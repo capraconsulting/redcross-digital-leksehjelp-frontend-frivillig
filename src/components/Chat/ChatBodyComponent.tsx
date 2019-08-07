@@ -44,6 +44,7 @@ const ChatBodyComponent = (props: IProps) => {
               .withChatHistory(chats[activeChatIndex].messages)
               .withStudentInfo(chats[activeChatIndex].student)
               .withUniqueID(volunteer.chatID)
+              .withVolName(volunteer.name)
               .build()
               .createMessage(),
           ),
