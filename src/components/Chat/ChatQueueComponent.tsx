@@ -65,7 +65,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   const renderQueues = (textAllowed: string, videoAllowed: string) =>
     useMemo(() => {
-      let hasQueue: boolean = false;
+      let hasQueue = false;
       const queueToRender = queue.map((student, index) => {
         const { introText, themes, chatType } = student;
         if (chatType === textAllowed || chatType === videoAllowed) {
@@ -117,17 +117,13 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         Update queue
       </button>
       <div className="chat-queue-body-container">
-        <div className="queue-title">
-          Leksehjelp
-        </div>
+        <div className="queue-title">Leksehjelp</div>
         <div className="queue-category-container">
           {renderQueues(LEKSEHJELP_TEXT, LEKSEHJELP_VIDEO)}
         </div>
       </div>
       <div className="chat-queue-body-container">
-        <div className="queue-title">
-          Mestring
-        </div>
+        <div className="queue-title">Mestring</div>
         <div className="queue-category-container">
           {renderQueues(MESTRING_TEXT, MESTRING_VIDEO)}
         </div>
