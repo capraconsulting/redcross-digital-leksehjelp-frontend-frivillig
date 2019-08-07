@@ -21,6 +21,7 @@ toast.configure({
 });
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
+  const { history } = props;
   const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
     SocketContext,
   );
@@ -95,8 +96,8 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                 <button
                   className="leksehjelp--button-success"
                   onClick={() => {
-                    createNewChatRoom(student)
-                    setTimeout(() => history.push('/messages'), 1000)
+                    createNewChatRoom(student);
+                    setTimeout(() => history.push('/messages'), 1000);
                   }}
                 >
                   Start chat
