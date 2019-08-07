@@ -68,12 +68,8 @@ const ProfileContainer = () => {
               const { themes } = volunteerSubjectList;
               if (
                 !(
-<<<<<<< HEAD
-                  themes.filter(course => e.subjectTitle === course.subject).length > 0
-=======
                   themes.filter(course => e.subjectTitle === course.subject)
                     .length > 0
->>>>>>> dcbb73e7f205640d19b0aa599d92ff8876f1e1c4
                 )
               ) {
                 return true;

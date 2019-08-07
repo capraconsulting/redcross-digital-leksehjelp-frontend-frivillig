@@ -35,7 +35,6 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
 
   const createInputFields = () => {
     if (inputFields) {
-      console.log(inputFields);
       return inputFields.map((inputField, index) => {
         return (
           <div className="input-field" key={index}>
@@ -48,6 +47,7 @@ const ModalComponent = (props: IProps & RouteComponentProps) => {
             <button
               onClick={() => {
                 inputField.callback();
+                closingCallback();
               }}
               className="button leksehjelp--button-success"
             >

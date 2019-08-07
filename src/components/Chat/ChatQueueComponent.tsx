@@ -95,7 +95,10 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                 </button>
                 <button
                   className="leksehjelp--button-success"
-                  onClick={() => createNewChatRoom(student)}
+                  onClick={() => {
+                    createNewChatRoom(student)
+                    setTimeout(() => history.push('/messages'), 1500)
+                  }}
                 >
                   Start chat
                 </button>
