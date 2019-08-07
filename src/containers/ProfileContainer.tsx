@@ -63,19 +63,19 @@ const ProfileContainer = () => {
         });
       volunteerSubjectList &&
         getMestringSubjectList<ISubject[]>().then(list => {
-          const filteredList = list
+          const filteredMestringList = list
             .filter(e => {
               const { themes } = volunteerSubjectList;
               if (
                 !(
-                  themes.filter(course => e.id === Number(course.id)).length > 0
+                  themes.filter(course => e.subjectTitle === course.subject).length > 0
                 )
               ) {
                 return true;
               }
             })
             .map(e => ({ value: e.id.toString(), label: e.subjectTitle }));
-          setMestringSubjectList(filteredList);
+          setMestringSubjectList(filteredMestringList);
         });
     })();
   }, []);
@@ -117,7 +117,7 @@ const ProfileContainer = () => {
       const list = themeList.filter(({ id }) => id !== Number(item));
       setThemeList(list);
       const subjectObj = { label: subject, value: item.toString() };
-      setMestringSubjectList([...[subjectObj], ...subjectList]);
+      setMestringSubjectList([...[subjectObj], ...mestringSubjectList]);
     }
     setIsSubjectChanged(true);
     e.preventDefault();
