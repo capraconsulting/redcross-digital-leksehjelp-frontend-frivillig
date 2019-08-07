@@ -21,7 +21,6 @@ toast.configure({
 });
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
-  const { history } = props;
   const { queue, setQueue, dispatchChats, socketSend, talky } = useContext(
     SocketContext,
   );
