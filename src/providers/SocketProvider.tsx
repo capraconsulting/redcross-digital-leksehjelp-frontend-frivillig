@@ -209,10 +209,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
-        getVolunteer().then((data: IVolunteer) => {
-          setVolunteerInfo(data);
-          socketSend(createVolunteerMessage(data));
-        });
         setQueue(payload['queueMembers']);
         break;
       case LEAVE_CHAT:
@@ -239,10 +235,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         const messages: ITextMessage[] = payload['chatHistory'];
         action = joinChatAction(student, messages, payload['roomID']);
         dispatchChats(action);
-        getVolunteer().then((data: IVolunteer) => {
-          setVolunteerInfo(data);
-          socketSend(createVolunteerMessage(data));
-        });
         break;
       case AVAILABLE_CHAT:
         setAvailableVolunteers(payload['queueMembers']);
@@ -252,6 +244,11 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
 
   useEffect(() => {
     getSocket().onmessage = socketHandler;
+
+    getVolunteer().then((data: IVolunteer) => {
+      setVolunteerInfo(data);
+      socketSend(createVolunteerMessage(data));
+    });
   }, []);
 
   useEffect(() => {
