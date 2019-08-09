@@ -14,9 +14,16 @@ import { toast } from 'react-toastify';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const { queue, setQueue, dispatchChats, socketSend, talky, setActiveChatIndex, chats, volunteerInfo } = useContext(
-    SocketContext,
-  );
+  const {
+    queue,
+    setQueue,
+    dispatchChats,
+    socketSend,
+    talky,
+    setActiveChatIndex,
+    chats,
+    volunteerInfo,
+  } = useContext(SocketContext);
   const {
     LEKSEHJELP_VIDEO,
     MESTRING_VIDEO,

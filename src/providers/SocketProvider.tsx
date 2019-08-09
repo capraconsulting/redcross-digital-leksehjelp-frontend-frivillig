@@ -60,7 +60,14 @@ export const SocketContext = createContext({
   activeChatIndex: 0 as number,
   talky: null as null | ITalky,
   availableVolunteers: [] as IVolunteer[],
-  volunteerInfo: {} as IVolunteer,
+  volunteerInfo: {
+    id: '',
+    name: '',
+    bioText: '',
+    email: '',
+    imgUrl: '',
+    chatID: '',
+  },
 
   // Functions available with context
   dispatchChats(action: IAction): void {},
@@ -291,7 +298,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         availableVolunteers,
         volunteerInfo,
         setVolunteerInfo,
-        setAvailableVolunteers
+        setAvailableVolunteers,
       }}
     >
       {children}

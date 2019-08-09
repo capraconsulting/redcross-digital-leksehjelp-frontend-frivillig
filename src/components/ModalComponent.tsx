@@ -19,7 +19,6 @@ interface IProps {
 }
 
 const ModalComponent = (props: IProps & RouteComponentProps) => {
-
   const {
     content,
     successButtonText,

@@ -220,15 +220,15 @@ const ChatInputComponent = (props: IProps) => {
           </button>
           <button
             className="leksehjelp--button-success no-margin"
-            onClick={(event) => {
+            onClick={event => {
               event.preventDefault();
               socketSend(createGetAvailableQueueMessage(roomID));
               // Wait for response
               /*
-              * Thought process:
-              * It's better to wait 500ms than to send out a list of
-              * Available frivillige every time someone connects
-              */
+               * Thought process:
+               * It's better to wait 500ms than to send out a list of
+               * Available frivillige every time someone connects
+               */
               setTimeout(() => setModalOpen(true), 500);
             }}
           >

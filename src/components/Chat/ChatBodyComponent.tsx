@@ -10,9 +10,7 @@ interface IProps {
 }
 
 const ChatBodyComponent = (props: IProps) => {
-  const {
-    volunteerInfo,
-  } = useContext(SocketContext);
+  const { volunteerInfo } = useContext(SocketContext);
 
   const { messages } = props;
 
