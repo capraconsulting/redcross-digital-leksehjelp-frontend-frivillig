@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
-  const { queue, setQueue, dispatchChats, socketSend, talky, setActiveChatIndex, chats } = useContext(
+  const { queue, setQueue, dispatchChats, socketSend, talky, setActiveChatIndex, chats, volunteerInfo } = useContext(
     SocketContext,
   );
   const {
@@ -46,6 +46,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withGrade(grade)
         .withCourse(subject)
         .withIntroText(introText)
+        .withVolName(volunteerInfo.name)
         .build();
       socketSend(msg.createMessage);
     }
@@ -64,7 +65,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         if (chatType === textAllowed || chatType === videoAllowed) {
           hasQueue = true;
           return (
-            <div className="queue-item-container" key={index}>
+            <div className="queue-item-container side-margin" key={index}>
               <div className="queue-item">
                 <ChatQueueHeader student={student} />
                 <hr />

@@ -246,7 +246,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   };
 
   return (
-    <div className="answer-question--container">
+    <div className="answer-question--container side-margin">
       {modalOpen && (
         <Modal
           content={modalText}

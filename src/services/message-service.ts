@@ -215,6 +215,7 @@ class GenerateRoomMessage {
   private readonly grade: string;
   private readonly introText: string;
   private readonly course: string;
+  private readonly volName: string;
 
   public constructor(generateRoomMessageBuilder: GenerateRoomMessageBuilder) {
     this.uniqueID = generateRoomMessageBuilder.uniqueID;
@@ -223,6 +224,7 @@ class GenerateRoomMessage {
     this.grade = generateRoomMessageBuilder.grade;
     this.introText = generateRoomMessageBuilder.introText;
     this.course = generateRoomMessageBuilder.course;
+    this.volName = generateRoomMessageBuilder.volName;
   }
 
   public get createMessage(): ISocketMessage {
@@ -233,6 +235,7 @@ class GenerateRoomMessage {
       grade: this.grade,
       introText: this.introText,
       course: this.course,
+      volName: this.volName,
     };
     return createMessage(generateRoomMessage, GENERATE_ROOM);
   }
@@ -245,9 +248,15 @@ export class GenerateRoomMessageBuilder {
   private _grade: string;
   private _introText: string;
   private _course: string;
+  private _volName: string;
 
   public constructor(uniqueID: string) {
     this._uniqueID = uniqueID;
+    return this;
+  }
+
+  public withVolName(value: string): GenerateRoomMessageBuilder {
+    this._volName = value;
     return this;
   }
 
@@ -282,6 +291,10 @@ export class GenerateRoomMessageBuilder {
 
   public get uniqueID(): string {
     return this._uniqueID;
+  }
+
+  public get volName(): string {
+    return this._volName;
   }
 
   public get studentID(): string {

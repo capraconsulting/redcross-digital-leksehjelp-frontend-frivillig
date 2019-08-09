@@ -219,7 +219,7 @@ const ChatInputComponent = (props: IProps) => {
             </svg>
           </button>
           <button
-            className="leksehjelp--button-success"
+            className="leksehjelp--button-success no-margin"
             onClick={(event) => {
               event.preventDefault();
               socketSend(createGetAvailableQueueMessage(roomID));

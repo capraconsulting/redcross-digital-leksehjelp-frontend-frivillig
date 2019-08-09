@@ -5,4 +5,5 @@ export interface IGenerateRoomMessage {
   grade: string;
   introText: string;
   course: string;
+  volName: string;
 }

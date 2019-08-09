@@ -59,7 +59,6 @@ export const SocketContext = createContext({
   queue: [] as IStudent[],
   activeChatIndex: 0 as number,
   talky: null as null | ITalky,
-  name: '' as string,
   availableVolunteers: [] as IVolunteer[],
   volunteerInfo: {} as IVolunteer,
 
@@ -78,7 +77,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   const [uniqueID, setUniqueID] = useState<string>('');
   const [queue, setQueue] = useState<IStudent[]>([]);
   const [talky, setTalky] = useState<ITalky | null>(null);
-  const [name, setName] = useState<string>('');
   const [availableVolunteers, setAvailableVolunteers] = useState<IVolunteer[]>(
     [],
   );
@@ -290,7 +288,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         activeChatIndex,
         setActiveChatIndex,
         talky,
-        name,
         availableVolunteers,
         volunteerInfo,
         setVolunteerInfo,

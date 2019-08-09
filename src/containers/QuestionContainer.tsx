@@ -54,7 +54,7 @@ const QuestionContainer = () => {
   }, []);
 
   return (
-    <div>
+    <div className="side-margin">
       <div className="container--header">
         <h3>Spørsmål</h3>
       </div>

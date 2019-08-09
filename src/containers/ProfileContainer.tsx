@@ -188,41 +188,43 @@ const ProfileContainer = () => {
 
   return (
     <Fragment>
-      {modalOpen && (
-        <Modal
-          content={modalText}
-          closingCallback={() => setModalOpen(false)}
-        />
-      )}
-      <div className="profile--container">
-        <Picker
-          title="Mine fag"
-          type="fag"
-          placeholder="Legg til fag"
-          optionList={subjectList}
-          addSubject={addSubject}
-          selectedList={courseList}
-          removeSubject={removeSubject}
-        />
-        <Picker
-          title="Mestring og motivasjon"
-          type="mestring"
-          placeholder="Legg til tema"
-          optionList={mestringSubjectList}
-          addSubject={addSubject}
-          selectedList={themeList}
-          removeSubject={removeSubject}
-        />
-        <ProfileForm
-          profile={volunteerProfile}
-          setProfile={setVolunteerProfile}
-          isChanged={setIsProfileChanged}
-          title="Personlig info"
-        />
-        <div className="profile--footer">
-          <button className="leksehjelp--button-success" onClick={onSave}>
-            Lagre
-          </button>
+      <div className="side-margin">
+        {modalOpen && (
+          <Modal
+            content={modalText}
+            closingCallback={() => setModalOpen(false)}
+          />
+        )}
+        <div className="profile--container">
+          <Picker
+            title="Mine fag"
+            type="fag"
+            placeholder="Legg til fag"
+            optionList={subjectList}
+            addSubject={addSubject}
+            selectedList={courseList}
+            removeSubject={removeSubject}
+          />
+          <Picker
+            title="Mestring og motivasjon"
+            type="mestring"
+            placeholder="Legg til tema"
+            optionList={mestringSubjectList}
+            addSubject={addSubject}
+            selectedList={themeList}
+            removeSubject={removeSubject}
+          />
+          <ProfileForm
+            profile={volunteerProfile}
+            setProfile={setVolunteerProfile}
+            isChanged={setIsProfileChanged}
+            title="Personlig info"
+          />
+          <div className="profile--footer">
+            <button className="leksehjelp--button-success" onClick={onSave}>
+              Lagre
+            </button>
+          </div>
         </div>
       </div>
     </Fragment>

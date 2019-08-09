@@ -18,6 +18,9 @@ const ChatContainer = () => {
     if (display) {
       display.scrollTo(0, display.scrollHeight);
     }
+    if (chats[activeChatIndex]) {
+      dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
+    }
   }, [chats]);
 
   const showMessages = (index: number) => {
@@ -28,22 +31,16 @@ const ChatContainer = () => {
   if (chats.length >= 1) {
     return (
       <div className="chat-container">
-        <div className="chat-list">
-          <ActiveChats showMessages={showMessages} availableChats={chats} />
-        </div>
+        <ActiveChats showMessages={showMessages} availableChats={chats} />
         <div className="chat">
           {chats && chats[activeChatIndex] && (
             <ChatHeader activeChat={chats[activeChatIndex]} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatBody
-              messages={chats[activeChatIndex].messages}
-            />
+            <ChatBody messages={chats[activeChatIndex].messages} />
           )}
           {chats && chats[activeChatIndex] && (
-            <ChatInput
-              roomID={chats[activeChatIndex].roomID}
-            />
+            <ChatInput roomID={chats[activeChatIndex].roomID} />
           )}
         </div>
       </div>
