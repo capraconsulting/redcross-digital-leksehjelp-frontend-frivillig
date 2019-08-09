@@ -69,6 +69,7 @@ export const SocketContext = createContext({
   socketSend(message: ISocketMessage | IGetMessage): void {},
   setActiveChatIndex(index: number): void {},
   setVolunteerInfo(data: IVolunteer): void {},
+  setAvailableVolunteers(vols: IVolunteer[]): void {},
 });
 
 export const SocketProvider: FunctionComponent = ({ children }: any) => {
@@ -186,11 +187,14 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
           setVolunteerInfo(data);
           socketSend(createVolunteerMessage(data));
         });
-
         break;
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
         setInterval(() => socketSend(createPingMessage()), 300000);
+        getVolunteer().then((data: IVolunteer) => {
+          setVolunteerInfo(data);
+          socketSend(createVolunteerMessage(data));
+        });
         reconnectHandler(payload['uniqueID']);
         break;
       case QUEUE_LIST:
@@ -226,6 +230,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         dispatchChats(action);
         break;
       case AVAILABLE_CHAT:
+        console.log(payload['queueMembers']);
         setAvailableVolunteers(payload['queueMembers']);
         break;
     }
@@ -239,11 +244,6 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   useEffect(() => {
     getSocket().onmessage = socketHandler;
     getSocket().onclose = socketCloseHandler;
-
-    getVolunteer().then((data: IVolunteer) => {
-      setVolunteerInfo(data);
-      socketSend(createVolunteerMessage(data));
-    });
   }, []);
 
   useEffect(() => {
@@ -294,6 +294,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         availableVolunteers,
         volunteerInfo,
         setVolunteerInfo,
+        setAvailableVolunteers
       }}
     >
       {children}

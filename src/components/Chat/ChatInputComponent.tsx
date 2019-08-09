@@ -2,34 +2,71 @@ import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   createGetAvailableQueueMessage,
+  createVolunteerMessage,
   getTimeStringNow,
+  getVolunteer,
+  JoinChatMessageBuilder,
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
-import { IFile, ITempFile } from '../../interfaces';
+import { IFile, ITempFile, IVolunteer } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
-import { IconButton } from '../';
+import { IconButton, Modal } from '../';
 import '../../styles/chat-input-component.less';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 interface IProps {
   roomID: string;
-  uniqueID: string;
-  setModal(openModalFlag: boolean): void;
 }
 
 const ChatInputComponent = (props: IProps) => {
   const [message, setMessage] = useState<string>('');
-  const { dispatchChats, socketSend, volunteerInfo } = useContext(
-    SocketContext,
-  );
-  const { uniqueID, roomID, setModal } = props;
+  const {
+    dispatchChats,
+    socketSend,
+    volunteerInfo,
+    availableVolunteers,
+    activeChatIndex,
+    chats,
+    uniqueID,
+    setAvailableVolunteers,
+  } = useContext(SocketContext);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { roomID } = props;
   const [tempFiles, setTempFiles] = useState([] as any[]);
   const { name, imgUrl } = volunteerInfo;
+
   const uploadPromises = tempFiles => {
     return tempFiles.map(async file => {
       return uploadFileToAzureBlobStorage('chatfiles', roomID, file);
+    });
+  };
+
+  const frivilligOptionsCallback = (volunteer: IVolunteer): void => {
+    //setAvailableVolunteers(availableVolunteers.filter(vol => vol !== volunteer));
+    socketSend(createGetAvailableQueueMessage(roomID));
+    socketSend(
+      new JoinChatMessageBuilder()
+        .withRoomID(chats[activeChatIndex].roomID)
+        .withChatHistory(chats[activeChatIndex].messages)
+        .withStudentInfo(chats[activeChatIndex].student)
+        .withUniqueID(volunteer.chatID)
+        .withVolName(volunteer.name)
+        .build()
+        .createMessage(),
+    );
+  };
+
+  const createFrivilligOptions = () => {
+    return availableVolunteers.map(volunteer => {
+      console.log(volunteer.name);
+      return {
+        inputText: volunteer.name,
+        buttonText: 'Legg til',
+        callback: () => frivilligOptionsCallback(volunteer),
+        isDisabled: true,
+      };
     });
   };
 
@@ -108,7 +145,7 @@ const ChatInputComponent = (props: IProps) => {
                     setTempFiles(tempFiles.filter((_, i) => i !== index));
                   }}
                   icon={<DeleteIcon />}
-                ></IconButton>{' '}
+                />{' '}
               </span>
             </li>
           );
@@ -178,17 +215,21 @@ const ChatInputComponent = (props: IProps) => {
             className={'send-message'}
           >
             <svg width="30px" height="30px" viewBox="0 0 30 30">
-              <polygon
-                className="arrow"
-                points="30 15 0 30 5.5 15 0 0"
-              ></polygon>
+              <polygon className="arrow" points="30 15 0 30 5.5 15 0 0" />
             </svg>
           </button>
           <button
             className="leksehjelp--button-success"
-            onClick={() => {
+            onClick={(event) => {
+              event.preventDefault();
               socketSend(createGetAvailableQueueMessage(roomID));
-              setModal(true);
+              // Wait for response
+              /*
+              * Thought process:
+              * It's better to wait 500ms than to send out a list of
+              * Available frivillige every time someone connects
+              */
+              setTimeout(() => setModalOpen(true), 500);
             }}
           >
             Se tilgjengelige
@@ -196,6 +237,14 @@ const ChatInputComponent = (props: IProps) => {
         </form>
         <FileList />
       </div>
+
+      {modalOpen && (
+        <Modal
+          content="Tilgjengelige frivillige"
+          inputFields={createFrivilligOptions()}
+          closingCallback={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
