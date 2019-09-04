@@ -12,6 +12,10 @@ import { ChatQueueHeader } from '..';
 import { CHAT_TYPES } from '../../config';
 import { toast } from 'react-toastify';
 
+import { MixpanelEvents } from '../../mixpanel-events';
+
+declare const mixpanel: any;
+
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
   const {
@@ -56,7 +60,12 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withVolName(volunteerInfo.name)
         .build();
       socketSend(msg.createMessage);
+      mixpanel.track(MixpanelEvents.VOLUNTEER_STARTED_HELP);
     }
+  };
+
+  const handleClick = () => {
+    mixpanel.track(MixpanelEvents.VOLUNTEER_REMOVED_STUDENT_FROM_QUEUE);
   };
 
   const updateQueue = () => {
@@ -91,7 +100,10 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                   ))}
               </div>
               <div className="queue-item-button-container controls">
-                <button className="leksehjelp--button-warning">
+                <button
+                  onClick={handleClick}
+                  className="leksehjelp--button-warning"
+                >
                   Avslutt Leksehjelp
                 </button>
                 <button
