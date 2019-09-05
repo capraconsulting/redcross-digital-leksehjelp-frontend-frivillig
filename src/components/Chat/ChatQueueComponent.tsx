@@ -13,8 +13,7 @@ import { CHAT_TYPES } from '../../config';
 import { toast } from 'react-toastify';
 
 import { MixpanelEvents } from '../../mixpanel-events';
-
-declare const mixpanel: any;
+import { MixpanelService } from '../../services/mixpanel-service';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
@@ -60,12 +59,12 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withVolName(volunteerInfo.name)
         .build();
       socketSend(msg.createMessage);
-      mixpanel.track(MixpanelEvents.VOLUNTEER_STARTED_HELP);
+      MixpanelService.track(MixpanelEvents.VOLUNTEER_STARTED_HELP);
     }
   };
 
   const handleClick = () => {
-    mixpanel.track(MixpanelEvents.VOLUNTEER_REMOVED_STUDENT_FROM_QUEUE);
+    MixpanelService.track(MixpanelEvents.VOLUNTEER_REMOVED_STUDENT_FROM_QUEUE);
   };
 
   const updateQueue = () => {
