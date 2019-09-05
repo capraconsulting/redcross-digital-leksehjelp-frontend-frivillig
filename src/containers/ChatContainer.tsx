@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
@@ -21,7 +21,7 @@ const ChatContainer = () => {
     if (chats[activeChatIndex]) {
       dispatchChats(readMessagesAction(chats[activeChatIndex].roomID));
     }
-  }, [chats]);
+  }, [chats[activeChatIndex]]);
 
   const showMessages = (index: number) => {
     setActiveChatIndex(index);
