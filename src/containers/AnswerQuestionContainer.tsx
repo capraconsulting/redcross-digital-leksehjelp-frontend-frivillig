@@ -13,8 +13,6 @@ import {
 import { IQuestion, IFeedback, ITheme, ISubject, IFile } from '../interfaces';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Modal, QuestionHeader, QuestionForm } from '../components';
-import { MixpanelService } from '../services/mixpanel-service';
-import { MixpanelEvents } from '../mixpanel-events';
 
 interface IProps {
   id: string;
@@ -218,14 +216,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
   const onApprove = async () => {
     const data = createBody();
     const isApprove = await postAnswer(data, 'approve')
-      .then(() => {
-        MixpanelService.track(MixpanelEvents.VOLUNTEER_APPROVED_QUESTION, {
-          subject: subject,
-          grade: studentGrade,
-          theme: themeList,
-        });
-        return true;
-      })
+      .then(() => true)
       .catch(() => false);
     isApprove &&
       postAnswer(data, type).then(() => {

@@ -1,12 +1,27 @@
-import React, { FunctionComponent, MouseEvent, useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router';
+import React, {
+  FunctionComponent,
+  MouseEvent,
+  useContext,
+  useState,
+} from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import Cross from '../assets/Cross';
+import { MixpanelEvents } from '../mixpanel-events';
+import { SocketContext } from '../providers';
+
+const POSSIBLE_REASONS = [
+  'Tekniske problemer',
+  'Eleven dukket ikke opp',
+  'Vakten tok slutt før jeg rakk å hjelpe eleven',
+  'For stor pågang',
+  'Annet',
+];
 
 interface IProps {
   content: string;
   successButtonText?: string;
   warningButtonText?: string;
-  successCallback?(e: MouseEvent): void;
+  successCallback?(helpResult: MixpanelEvents, props: object): void;
   warningCallback?(e: MouseEvent): void;
   hideButtons?: boolean;
   closingCallback(): void;
@@ -23,31 +38,39 @@ const FeedbackModalComponent: FunctionComponent<
   hideButtons,
   closingCallback,
 }) => {
-  const [helpSuccessful, setHelpSuccessful] = useState<boolean>(true);
-  const [descriptionNeeded, setDescriptionNeeded] = useState<boolean>(false);
+  const [helpSuccessful, setHelpSuccessful] = useState(true);
+  const [descriptionNeeded, setDescriptionNeeded] = useState(false);
+  const [selectedReason, setSelectedReason] = useState<string | undefined>(
+    undefined,
+  );
+  const [description, setDescription] = useState<string | undefined>(undefined);
+  const { chats, activeChatIndex } = useContext(SocketContext);
 
-  const reasons = [
-    'Tekniske problemer',
-    'Eleven dukket ikke opp',
-    'Vakten tok slutt før jeg rakk å hjelpe eleven',
-    'For stor pågang',
-    'Annet',
-  ];
+  const handleSuccess = () => {
+    if (successCallback) {
+      const { student } = chats[activeChatIndex];
+      const props = {
+        type: student.chatType,
+        fag: student.subject,
+        trinn: student.grade,
+        tema: student.themes && student.themes.join(','),
+      };
 
-  const handleValueChanged = e => {
-    if (e.target.value == 'Annet') {
-      setDescriptionNeeded(true);
-    } else {
-      setDescriptionNeeded(false);
+      if (helpSuccessful) {
+        successCallback(MixpanelEvents.VOLUNTEER_HELP_SUCCESSFUL, props);
+      } else {
+        successCallback(MixpanelEvents.VOLUNTEER_HELP_FAILED, {
+          ...props,
+          årsak: selectedReason,
+          beskrivelse: description,
+        });
+      }
     }
   };
 
-  const handleHelpOutcome = e => {
-    if (e.target.value == 'success') {
-      setHelpSuccessful(true);
-    } else {
-      setHelpSuccessful(false);
-    }
+  const handleReasonChanged = e => {
+    setSelectedReason(e.target.value);
+    setDescriptionNeeded(e.target.value === 'Annet');
   };
 
   return (
@@ -65,39 +88,44 @@ const FeedbackModalComponent: FunctionComponent<
         <div className="leksehjelp--button--schema">
           <button
             className="leksehjelp--button--outline-success"
-            value="success"
-            onClick={handleHelpOutcome}
+            onClick={() => {
+              setHelpSuccessful(true);
+              setDescriptionNeeded(false);
+            }}
           >
             Utført
           </button>
           <button
             className="leksehjelp--button--outline-success"
-            value="failed"
-            onClick={handleHelpOutcome}
+            onClick={() => setHelpSuccessful(false)}
           >
             Feilet
           </button>
         </div>
         {!helpSuccessful && (
-          <form>
-            <div style={{ display: 'block' }}>
-              {reasons.map(reason => (
+          <form className="leksehjelp--feedback--reasons--container">
+            <div>
+              {POSSIBLE_REASONS.map(reason => (
                 <div key={reason}>
                   <input
                     type="radio"
                     name="helpFailedReasons"
                     value={reason}
-                    onClick={handleValueChanged}
-                  ></input>
+                    onClick={handleReasonChanged}
+                  />
                   <label>{reason}</label>
                 </div>
               ))}
             </div>
             {descriptionNeeded && (
-              <form>
-                <label>Begrunnelse</label>
-                <input className="question-form--input" type="text"></input>
-              </form>
+              <>
+                <textarea
+                  className="leksehjelp--feedback--reasons-textarea"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Beskriv hvorfor leksehjelpen ikke ble utført."
+                />
+              </>
             )}
           </form>
         )}
@@ -106,7 +134,7 @@ const FeedbackModalComponent: FunctionComponent<
             <div className="modal--button-container">
               {successButtonText && (
                 <button
-                  onClick={successCallback}
+                  onClick={handleSuccess}
                   className="leksehjelp--button-success"
                 >
                   {successButtonText}

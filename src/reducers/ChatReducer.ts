@@ -115,7 +115,7 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
   if (chatWhereAUserLeaves) {
     chatWhereAUserLeaves.messages.push({
       author: name,
-      message: 'Frivillig har forlatt rommet',
+      message: 'Frivillig har forlatt rommet', //TODO: Sandra, her vises det at frivillig har forlatt når det er student som har forlatt
       roomID: roomID,
       uniqueID: 'NOTIFICATION',
       imgUrl: imgUrl,

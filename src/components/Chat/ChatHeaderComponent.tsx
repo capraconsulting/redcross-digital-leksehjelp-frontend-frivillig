@@ -3,8 +3,7 @@ import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
-import { LeaveChatMessageBuilder } from '../../services';
-import { CHAT_TYPES } from '../../config';
+import { CHAT_TYPES, MESSAGE_TYPES } from '../../config';
 import { MixpanelService } from '../../services/mixpanel-service';
 import { MixpanelEvents } from '../../mixpanel-events';
 import FeedbackModalComponent from '../FeedbackModalComponent';
@@ -24,14 +23,17 @@ const ChatHeaderComponent = (props: IProps) => {
   const [shouldGiveFeedback, setShouldGiveFeedback] = useState<boolean>(false);
   const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
-  const leaveChat = () => {
+  const leaveChat = (helpResult: MixpanelEvents, props: object) => {
     dispatchChats(leaveChatAction(roomID));
-    const msg = new LeaveChatMessageBuilder(uniqueID).toRoom(roomID).build();
-    socketSend(msg.createMessage);
-    //TODO: Må ha vært i leksehjelp i over 4 minutter for å kalle mixpanel
-    MixpanelService.track(MixpanelEvents.VOLUNTEER_HELPED_STUDENT, {
-      type: 'missing',
+    socketSend({
+      msgType: MESSAGE_TYPES.LEAVE_CHAT,
+      payload: {
+        author: 'TODO',
+        uniqueID,
+        roomID,
+      },
     });
+    MixpanelService.track(helpResult, props);
     setModalOpen(false);
   };
 
@@ -60,11 +62,6 @@ const ChatHeaderComponent = (props: IProps) => {
     return (
       <img src={require('../../assets/images/chat-icon.svg')} alt="Text Chat" />
     );
-  };
-
-  const onFeedbackSubmitted = () => {
-    leaveChat();
-    console.log('worked!');
   };
 
   return (
@@ -105,7 +102,7 @@ const ChatHeaderComponent = (props: IProps) => {
           content="Tilbakemeldingsskjema"
           successButtonText="Send inn skjema"
           warningButtonText="Avbryt"
-          successCallback={() => onFeedbackSubmitted()}
+          successCallback={leaveChat}
           warningCallback={() => {
             setFeedbackModalOpen(false);
           }}

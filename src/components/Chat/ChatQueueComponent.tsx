@@ -59,18 +59,12 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
         .withVolName(volunteerInfo.name)
         .build();
       socketSend(msg.createMessage);
-
-      MixpanelService.track(MixpanelEvents.VOLUNTEER_STARTED_HELP, {
-        type: chatType,
-        subject: subject,
-        grade: grade,
-      });
     }
   };
 
   const handleClick = () => {
     MixpanelService.track(MixpanelEvents.VOLUNTEER_REMOVED_STUDENT_FROM_QUEUE, {
-      type: 'missing',
+      type: 'TODO',
     });
   };
 
