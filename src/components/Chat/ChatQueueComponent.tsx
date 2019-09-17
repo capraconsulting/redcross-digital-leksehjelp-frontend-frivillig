@@ -9,11 +9,8 @@ import {
 } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
-import { CHAT_TYPES } from '../../config';
+import { CHAT_TYPES, MESSAGE_TYPES } from '../../config';
 import { toast } from 'react-toastify';
-
-import { MixpanelEvents } from '../../mixpanel-events';
-import { MixpanelService } from '../../services/mixpanel-service';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
   const { history } = props;
@@ -26,6 +23,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     setActiveChatIndex,
     chats,
     volunteerInfo,
+    //cleanState,
   } = useContext(SocketContext);
   const {
     LEKSEHJELP_VIDEO,
@@ -62,10 +60,18 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     }
   };
 
-  const handleClick = () => {
-    MixpanelService.track(MixpanelEvents.VOLUNTEER_REMOVED_STUDENT_FROM_QUEUE, {
-      type: 'TODO',
-    });
+  const removeStudentFromQueue = (student: IStudent) => {
+    //cleanState(); TODO: Sjekk om dette er nødvendig
+    if (student.uniqueID) {
+      socketSend({
+        msgType: MESSAGE_TYPES.REMOVE_STUDENT_FROM_QUEUE,
+        payload: {
+          uniqueID: student.uniqueID,
+          removedBy: 'volunteer',
+        },
+      });
+    }
+    setQueue(queue.filter(studentInQueue => studentInQueue !== student));
   };
 
   const updateQueue = () => {
@@ -101,7 +107,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
               </div>
               <div className="queue-item-button-container controls">
                 <button
-                  onClick={handleClick}
+                  onClick={() => removeStudentFromQueue(student)}
                   className="leksehjelp--button-warning"
                 >
                   Avslutt Leksehjelp

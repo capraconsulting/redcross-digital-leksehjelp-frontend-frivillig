@@ -23,17 +23,18 @@ const ChatHeaderComponent = (props: IProps) => {
   const [shouldGiveFeedback, setShouldGiveFeedback] = useState<boolean>(false);
   const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
-  const leaveChat = (helpResult: MixpanelEvents, props: object) => {
+  const leaveChat = (helpResult: MixpanelEvents, eventProps: object) => {
     dispatchChats(leaveChatAction(roomID));
     socketSend({
       msgType: MESSAGE_TYPES.LEAVE_CHAT,
       payload: {
-        author: 'TODO',
+        studentInfo: props.activeChat.student,
+        author: 'TODO', // TODO: Send med unik ID fra frivillig,
         uniqueID,
         roomID,
       },
     });
-    MixpanelService.track(helpResult, props);
+    MixpanelService.track(helpResult, eventProps);
     setModalOpen(false);
   };
 
