@@ -47,7 +47,11 @@ toast.configure({
 let socket;
 const getSocket = (): WebSocket => {
   if (!socket) {
-    socket = new WebSocket(CHAT_URL);
+    if (process.env.NODE_ENV === 'production') {
+      socket = new WebSocket(process.env.CHAT_URL || '');
+    } else {
+      socket = new WebSocket(CHAT_URL);
+    }
   }
   return socket;
 };

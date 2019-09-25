@@ -87,7 +87,7 @@ const FeedbackModalComponent: FunctionComponent<
         <p>Ble leksehjelpen utført?</p>
         <div className="leksehjelp--button--schema">
           <button
-            className="leksehjelp--button--outline-success"
+            className="leksehjelp--button--outline-success feedback"
             onClick={() => {
               setHelpSuccessful(true);
               setDescriptionNeeded(false);
@@ -96,7 +96,7 @@ const FeedbackModalComponent: FunctionComponent<
             Utført
           </button>
           <button
-            className="leksehjelp--button--outline-success"
+            className="leksehjelp--button--outline-success feedback"
             onClick={() => setHelpSuccessful(false)}
           >
             Feilet
@@ -138,14 +138,6 @@ const FeedbackModalComponent: FunctionComponent<
                   className="leksehjelp--button-success"
                 >
                   {successButtonText}
-                </button>
-              )}
-              {warningButtonText && (
-                <button
-                  onClick={warningCallback}
-                  className="leksehjelp--button-warning"
-                >
-                  {warningButtonText}
                 </button>
               )}
             </div>

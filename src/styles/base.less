@@ -117,6 +117,10 @@ button {
   margin-bottom: auto;
 }
 
+.leksehjelp--button--schema button:not(:last-child) {
+  border-right: none;
+}
+
 .leksehjelp--button--group button {
   border: 1px solid black;
   color: white;
@@ -124,8 +128,10 @@ button {
   float: left;
 }
 
-.leksehjelp--button--group button:not(:last-child) {
-  border-right: none;
+.feedback:focus{
+  background-color: @secondary-color;
+  color: white;
+  border: 0;
 }
 
 .leksehjelp--feedback--schema {
