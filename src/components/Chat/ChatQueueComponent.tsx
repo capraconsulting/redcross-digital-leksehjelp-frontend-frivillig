@@ -1,12 +1,9 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { IStudent } from '../../interfaces';
 import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import {
-  createGetQueueMessage,
-  GenerateRoomMessageBuilder,
-} from '../../services';
+import { GenerateRoomMessageBuilder } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
 import { CHAT_TYPES, MESSAGE_TYPES } from '../../config';
@@ -74,11 +71,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     setQueue(queue.filter(studentInQueue => studentInQueue !== student));
   };
 
-  const updateQueue = () => {
-    const socketMessage = createGetQueueMessage();
-    socketSend(socketMessage);
-  };
-
   const renderQueues = (textAllowed: string, videoAllowed: string) =>
     useMemo(() => {
       let hasQueue = false;
@@ -119,7 +111,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                     setTimeout(() => history.push('/messages'), 1000);
                   }}
                 >
-                  Start chat
+                  Åpne {chatType === LEKSEHJELP_TEXT ? 'chat' : 'videochat'}.
                 </button>
               </div>
             </div>
@@ -135,9 +127,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
 
   return (
     <div className="queue-container">
-      <button className="leksehjelp--button-success" onClick={updateQueue}>
-        Update queue
-      </button>
       <div className="chat-queue-body-container">
         <div className="queue-title">Leksehjelp</div>
         <div className="queue-category-container">

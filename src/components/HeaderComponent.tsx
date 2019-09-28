@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { StateContext } from '../providers/';
+import { SocketContext, StateContext } from '../providers/';
 import { Modal } from './';
 import { getIsLeksehjelpOpen, toggleIsLeksehjelpOpen } from '../services';
 import { toast } from 'react-toastify';
@@ -18,6 +18,8 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
   const [onDropDown, setOnDropDown] = useState<boolean>(false);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const { queue } = useContext(SocketContext);
 
   const {
     activeState,
@@ -87,6 +89,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             }}
           >
             <Link to="/queue">Elever i kø</Link>
+            <span className="dot">{queue.length}</span>
           </li>
           <li
             className={`header--list-item ${path === 'chat' && 'active'}`}
