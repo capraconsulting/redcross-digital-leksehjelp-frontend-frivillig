@@ -32,7 +32,6 @@ const FeedbackModalComponent: FunctionComponent<
 > = ({
   content,
   successButtonText,
-  warningButtonText,
   successCallback,
   warningCallback,
   hideButtons,
@@ -112,7 +111,7 @@ const FeedbackModalComponent: FunctionComponent<
             Feilet
           </button>
         </div>
-        {!helpSuccessful && (
+        {helpSuccessful === false && (
           <form className="feedback-reasons-form">
             <div className="feedback-reasons">
               {POSSIBLE_REASONS.map(reason => (

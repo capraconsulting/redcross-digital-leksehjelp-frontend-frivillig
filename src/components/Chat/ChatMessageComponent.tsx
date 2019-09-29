@@ -1,6 +1,6 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
-import { IVolunteer } from '../../interfaces/IVolunteer';
+import { IVolunteer } from '../../interfaces';
 
 interface IProps {
   message: ITextMessage;
