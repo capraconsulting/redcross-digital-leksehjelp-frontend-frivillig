@@ -34,7 +34,8 @@ export const reconnectChatAction = createAction('RECONNECT', callback => {
 });
 
 export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
-  return (roomID: string, name: string) => callback({ roomID, name });
+  return (roomID: string, name: string, message?: string) =>
+    callback({ roomID, name, message });
 });
 
 export const joinChatAction = createAction('JOIN_CHAT', callback => {
@@ -107,7 +108,7 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
 };
 
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
-  const { name, roomID, imgUrl } = action.payload;
+  const { name, roomID, imgUrl, message } = action.payload;
 
   const chatWhereAUserLeaves: IChat | undefined = state.find(
     chat => chat.roomID === roomID,
@@ -115,7 +116,7 @@ const handleHasLeftChat = (state: IChat[], action: IAction) => {
   if (chatWhereAUserLeaves) {
     chatWhereAUserLeaves.messages.push({
       author: name,
-      message: 'Frivillig har forlatt rommet', //TODO: Sandra, her vises det at frivillig har forlatt når det er student som har forlatt
+      message: message || `${name || 'Frivillig'} har forlatt rommet`,
       roomID: roomID,
       uniqueID: 'NOTIFICATION',
       imgUrl: imgUrl,

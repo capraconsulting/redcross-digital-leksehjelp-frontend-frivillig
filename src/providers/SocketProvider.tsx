@@ -216,7 +216,11 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             setTalky(null);
           }
         } else {
-          action = hasLeftChatAction(payload['roomID'], payload['name']);
+          action = hasLeftChatAction(
+            payload['roomID'],
+            payload['name'],
+            payload['message'],
+          );
         }
         setActiveChatIndex(0);
         dispatchChats(action);
