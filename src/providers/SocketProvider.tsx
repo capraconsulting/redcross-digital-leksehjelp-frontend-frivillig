@@ -29,10 +29,9 @@ import {
   createReconnectMessage,
   createVolunteerMessage,
   getTimeStringNow,
-  TextMessageBuilder,
 } from '../services';
 import { createPingMessage } from '../services';
-import { IVolunteer } from '../interfaces/IVolunteer';
+import { IVolunteer } from '../interfaces';
 
 // Toast notification config (for entire App)
 toast.configure({
@@ -47,7 +46,11 @@ toast.configure({
 let socket;
 const getSocket = (): WebSocket => {
   if (!socket) {
-    socket = new WebSocket(CHAT_URL);
+    if (process.env.NODE_ENV === 'production') {
+      socket = new WebSocket(process.env.CHAT_URL || '');
+    } else {
+      socket = new WebSocket(CHAT_URL);
+    }
   }
   return socket;
 };
@@ -213,7 +216,11 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
             setTalky(null);
           }
         } else {
-          action = hasLeftChatAction(payload['roomID'], payload['name']);
+          action = hasLeftChatAction(
+            payload['roomID'],
+            payload['name'],
+            payload['message'],
+          );
         }
         setActiveChatIndex(0);
         dispatchChats(action);

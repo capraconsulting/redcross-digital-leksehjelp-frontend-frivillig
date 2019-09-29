@@ -1,5 +1,5 @@
 export const API_URL = 'http://localhost:8080/';
-export const CHAT_URL = 'ws://localhost:3002/events';
+export const CHAT_URL = 'ws://localhost:8080/ws';
 
 const token = sessionStorage ? sessionStorage.getItem('msal.idtoken') : '';
 export const HEADERS = {
@@ -24,6 +24,7 @@ export const MESSAGE_TYPES = {
   CLOSE_CHAT: 'CLOSE_CHAT',
   OPEN_CHAT: 'OPEN_CHAT',
   SET_VOLUNTEER: 'SET_VOLUNTEER',
+  REMOVE_STUDENT_FROM_QUEUE: 'REMOVE_STUDENT_FROM_QUEUE',
 };
 
 export const CHAT_TYPES = {
@@ -34,6 +35,5 @@ export const CHAT_TYPES = {
 };
 
 export const AZURE_TOKENS = {
-  PUBLIC_SAS_TOKEN:
-    '?sv=2018-03-28&ss=bf&srt=sco&sp=rwac&se=2019-11-30T23:40:43Z&st=2019-07-28T14:40:43Z&spr=https&sig=AUX0rslHKTcTfS7bsUf7UoYRY6gGiHdcdveXFccR9kA%3D',
+  PUBLIC_SAS_TOKEN: process.env.PUBLIC_SAS_TOKEN,
 };

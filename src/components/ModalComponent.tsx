@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React, { FunctionComponent, MouseEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
 
@@ -18,18 +18,16 @@ interface IProps {
   closingCallback(): void;
 }
 
-const ModalComponent = (props: IProps & RouteComponentProps) => {
-  const {
-    content,
-    successButtonText,
-    warningButtonText,
-    successCallback,
-    warningCallback,
-    hideButtons,
-    inputFields,
-    closingCallback,
-  } = props;
-
+const ModalComponent: FunctionComponent<IProps & RouteComponentProps> = ({
+  content,
+  successButtonText,
+  warningButtonText,
+  successCallback,
+  warningCallback,
+  hideButtons,
+  inputFields,
+  closingCallback,
+}) => {
   const createInputFields = () => {
     if (inputFields) {
       return inputFields.map((inputField, index) => {

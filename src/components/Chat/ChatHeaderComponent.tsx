@@ -3,8 +3,12 @@ import { IChat } from '../../interfaces';
 import { SocketContext } from '../../providers';
 import { leaveChatAction } from '../../reducers';
 import { Modal } from '../../components';
-import { LeaveChatMessageBuilder } from '../../services';
-import { CHAT_TYPES } from '../../config';
+import { CHAT_TYPES, MESSAGE_TYPES } from '../../config';
+import { MixpanelService } from '../../services/mixpanel-service';
+import { MixpanelEvents } from '../../mixpanel-events';
+import FeedbackModalComponent from '../FeedbackModalComponent';
+
+type ModalState = 'closed' | 'regular' | 'feedback';
 
 interface IProps {
   activeChat: IChat;
@@ -16,14 +20,34 @@ const ChatHeaderComponent = (props: IProps) => {
   const { socketSend, dispatchChats, uniqueID, talky } = useContext(
     SocketContext,
   );
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const [modalState, setModalState] = useState<ModalState>('closed');
   const { LEKSEHJELP_VIDEO, MESTRING_VIDEO } = CHAT_TYPES;
 
-  const leaveChat = () => {
+  const closeModals = () => {
+    setModalState('closed');
+  };
+
+  const openFeedbackModal = () => {
+    setModalState('feedback');
+  };
+
+  const openRegularModal = () => {
+    setModalState('regular');
+  };
+
+  const leaveChat = (helpResult: MixpanelEvents, eventProps: object) => {
     dispatchChats(leaveChatAction(roomID));
-    const msg = new LeaveChatMessageBuilder(uniqueID).toRoom(roomID).build();
-    socketSend(msg.createMessage);
-    setModalOpen(false);
+    socketSend({
+      msgType: MESSAGE_TYPES.LEAVE_CHAT,
+      payload: {
+        studentInfo: props.activeChat.student,
+        uniqueID,
+        roomID,
+      },
+    });
+    MixpanelService.track(helpResult, eventProps);
+    closeModals();
   };
 
   const openTalky = () => {
@@ -63,20 +87,31 @@ const ChatHeaderComponent = (props: IProps) => {
         <span className="chat-header--text--right">
           <p>{subject}</p>
           <button
-            onClick={() => setModalOpen(true)}
+            onClick={openRegularModal}
             className="leksehjelp--button-success"
           >
             Forlat Chatten
           </button>
         </span>
       </div>
-      {modalOpen && (
+      {modalState === 'regular' && (
         <Modal
           content="Er du sikker på at du vil forlate chatten?"
           warningButtonText="Forlat Chatten"
-          warningCallback={leaveChat}
+          warningCallback={openFeedbackModal}
           successButtonText="Bli i Chatten"
-          closingCallback={() => setModalOpen(false)}
+          successCallback={closeModals}
+          closingCallback={closeModals}
+        />
+      )}
+      {modalState === 'feedback' && (
+        <FeedbackModalComponent
+          content="Tilbakemeldingsskjema"
+          successButtonText="Send inn skjema"
+          warningButtonText="Avbryt"
+          successCallback={leaveChat}
+          warningCallback={closeModals}
+          closingCallback={closeModals}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { IStudent } from '../../interfaces';
 import { addNewChatAction } from '../../reducers';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -9,7 +9,7 @@ import {
 } from '../../services';
 import { SocketContext } from '../../providers';
 import { ChatQueueHeader } from '..';
-import { CHAT_TYPES } from '../../config';
+import { CHAT_TYPES, MESSAGE_TYPES } from '../../config';
 import { toast } from 'react-toastify';
 
 const ChatQueueComponent = (props: RouteComponentProps) => {
@@ -59,6 +59,19 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     }
   };
 
+  const removeStudentFromQueue = (student: IStudent) => {
+    if (student.uniqueID) {
+      socketSend({
+        msgType: MESSAGE_TYPES.REMOVE_STUDENT_FROM_QUEUE,
+        payload: {
+          uniqueID: student.uniqueID,
+          removedBy: 'volunteer',
+        },
+      });
+    }
+    setQueue(queue.filter(studentInQueue => studentInQueue !== student));
+  };
+
   const updateQueue = () => {
     const socketMessage = createGetQueueMessage();
     socketSend(socketMessage);
@@ -91,7 +104,10 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                   ))}
               </div>
               <div className="queue-item-button-container controls">
-                <button className="leksehjelp--button-warning">
+                <button
+                  onClick={() => removeStudentFromQueue(student)}
+                  className="leksehjelp--button-warning"
+                >
                   Avslutt Leksehjelp
                 </button>
                 <button
