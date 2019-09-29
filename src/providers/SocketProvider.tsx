@@ -29,10 +29,9 @@ import {
   createReconnectMessage,
   createVolunteerMessage,
   getTimeStringNow,
-  TextMessageBuilder,
 } from '../services';
 import { createPingMessage } from '../services';
-import { IVolunteer } from '../interfaces/IVolunteer';
+import { IVolunteer } from '../interfaces';
 
 // Toast notification config (for entire App)
 toast.configure({

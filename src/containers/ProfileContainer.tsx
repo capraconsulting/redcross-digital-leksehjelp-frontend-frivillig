@@ -52,8 +52,8 @@ const ProfileContainer = () => {
       const volunteerSubjectList = await getVolunteerSubjectList<
         IVolunteerSubject[]
       >().then(data => {
-        const themes = data.filter(e => e.isMestring === true);
-        const courses = data.filter(e => e.isMestring === false);
+        const themes = data.filter(e => e.isMestring);
+        const courses = data.filter(e => !e.isMestring);
         setCourseList(courses);
         setThemeList(themes);
         return { courses, themes };
@@ -141,29 +141,22 @@ const ProfileContainer = () => {
 
   const onSave = async () => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
-    let isSubjectUpdateSuccess = false;
-    let isProfileUpdateSuccess = false;
+    const isProfileUpdateSuccess =
+      isProfileChanged &&
+      (await updateProfile(volunteerProfile)
+        .then(() => true)
+        .catch(() => false));
 
-    getVolunteer().then((data: IVolunteer) => {
-      setVolunteerInfo(data);
-      socketSend(createVolunteerMessage(data));
-    });
+    const isSubjectUpdateSuccess =
+      isSubjectChanged &&
+      (await saveSubjects(list)
+        .then(() => true)
+        .catch(() => false));
 
-    if (isProfileChanged && isSubjectChanged) {
-      isProfileUpdateSuccess = await updateProfile(volunteerProfile)
-        .then(() => true)
-        .catch(() => false);
-      isSubjectUpdateSuccess = await saveSubjects(list)
-        .then(() => true)
-        .catch(() => false);
-    } else if (isSubjectChanged) {
-      isSubjectUpdateSuccess = await saveSubjects(list)
-        .then(() => true)
-        .catch(() => false);
-    } else if (isProfileChanged) {
-      isProfileUpdateSuccess = await updateProfile(volunteerProfile)
-        .then(() => true)
-        .catch(() => false);
+    if (isProfileUpdateSuccess || isSubjectUpdateSuccess) {
+      const volunteerInfo = await getVolunteer<IVolunteer>();
+      setVolunteerInfo(volunteerInfo);
+      socketSend(createVolunteerMessage(volunteerInfo));
     }
 
     if (

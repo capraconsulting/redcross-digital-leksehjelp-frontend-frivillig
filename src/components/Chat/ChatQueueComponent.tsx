@@ -23,7 +23,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
     setActiveChatIndex,
     chats,
     volunteerInfo,
-    //cleanState,
   } = useContext(SocketContext);
   const {
     LEKSEHJELP_VIDEO,
@@ -61,7 +60,6 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
   };
 
   const removeStudentFromQueue = (student: IStudent) => {
-    //cleanState(); TODO: Sjekk om dette er nødvendig
     if (student.uniqueID) {
       socketSend({
         msgType: MESSAGE_TYPES.REMOVE_STUDENT_FROM_QUEUE,

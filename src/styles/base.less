@@ -10,6 +10,7 @@
 @import 'chat-queue-component';
 @import 'active-chats-component';
 @import 'modal-component';
+@import 'feedbackmodal-component';
 @import 'profile-component';
 @import '~react-toastify/dist/ReactToastify.min.css';
 
@@ -110,51 +111,6 @@ button {
   cursor: pointer;
   margin: 0.5rem;
   width: 12rem;
-}
-
-.leksehjelp--button--schema {
-  margin-top: 1rem;
-  margin-bottom: auto;
-}
-
-.leksehjelp--button--schema button:not(:last-child) {
-  border-right: none;
-}
-
-.leksehjelp--button--group button {
-  border: 1px solid black;
-  color: white;
-  cursor: pointer;
-  float: left;
-}
-
-.feedback:focus{
-  background-color: @secondary-color;
-  color: white;
-  border: 0;
-}
-
-.leksehjelp--feedback--schema {
-  min-height: 500px;
-  height: 35vh;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.leksehjelp--feedback--schema--buttons {
-  margin-bottom: 2rem;
-}
-
-.leksehjelp--feedback--reasons--container {
-  display: block;
-  height: 300px;
-}
-
-.leksehjelp--feedback--reasons-textarea {
-  min-width: 19rem;
-  min-height: 30px;
-  height: 90px;
 }
 
 .leksehjelp--dropdown {

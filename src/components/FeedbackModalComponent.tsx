@@ -38,7 +38,9 @@ const FeedbackModalComponent: FunctionComponent<
   hideButtons,
   closingCallback,
 }) => {
-  const [helpSuccessful, setHelpSuccessful] = useState(true);
+  const [helpSuccessful, setHelpSuccessful] = useState<boolean | undefined>(
+    undefined,
+  );
   const [descriptionNeeded, setDescriptionNeeded] = useState(false);
   const [selectedReason, setSelectedReason] = useState<string | undefined>(
     undefined,
@@ -76,7 +78,7 @@ const FeedbackModalComponent: FunctionComponent<
   return (
     <div className="modal-container">
       <div className="backdrop" onClick={closingCallback} />
-      <div className="modal leksehjelp--feedback--schema">
+      <div className="modal feedback-schema">
         <button
           className="modal--close leksehjelp--button-close"
           onClick={closingCallback}
@@ -85,9 +87,13 @@ const FeedbackModalComponent: FunctionComponent<
         </button>
         <h2 className="content-text">{content}</h2>
         <p>Ble leksehjelpen utført?</p>
-        <div className="leksehjelp--button--schema">
+        <div className="feedback-button-group">
           <button
-            className="leksehjelp--button--outline-success feedback"
+            className={
+              helpSuccessful
+                ? 'feedback-outcome'
+                : 'leksehjelp--button--outline-success'
+            }
             onClick={() => {
               setHelpSuccessful(true);
               setDescriptionNeeded(false);
@@ -96,15 +102,19 @@ const FeedbackModalComponent: FunctionComponent<
             Utført
           </button>
           <button
-            className="leksehjelp--button--outline-success feedback"
+            className={
+              helpSuccessful === false
+                ? 'feedback-outcome'
+                : 'leksehjelp--button--outline-success'
+            }
             onClick={() => setHelpSuccessful(false)}
           >
             Feilet
           </button>
         </div>
         {!helpSuccessful && (
-          <form className="leksehjelp--feedback--reasons--container">
-            <div>
+          <form className="feedback-reasons-form">
+            <div className="feedback-reasons">
               {POSSIBLE_REASONS.map(reason => (
                 <div key={reason}>
                   <input
@@ -120,7 +130,6 @@ const FeedbackModalComponent: FunctionComponent<
             {descriptionNeeded && (
               <>
                 <textarea
-                  className="leksehjelp--feedback--reasons-textarea"
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   placeholder="Beskriv hvorfor leksehjelpen ikke ble utført."
@@ -129,7 +138,7 @@ const FeedbackModalComponent: FunctionComponent<
             )}
           </form>
         )}
-        <div className="button-container leksehjelp--feedback--schema--buttons">
+        <div className="button-container">
           {!hideButtons && (
             <div className="modal--button-container">
               {successButtonText && (
