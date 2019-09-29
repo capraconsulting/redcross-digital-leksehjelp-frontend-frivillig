@@ -5,4 +5,5 @@ export interface IChat {
   messages: ITextMessage[];
   roomID: string;
   unread: number;
+  volunteerCount: number;
 }

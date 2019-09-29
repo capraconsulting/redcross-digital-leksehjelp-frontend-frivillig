@@ -19,7 +19,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const { queue } = useContext(SocketContext);
+  const { queue, chats } = useContext(SocketContext);
 
   const {
     activeState,
@@ -99,6 +99,9 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             }}
           >
             <Link to="/messages">Chat</Link>
+            <span className="dot">
+              {chats.reduce((sum, chat) => sum + chat.unread, 0)}
+            </span>
           </li>
           <li
             className={`header--list-item ${path === 'questions' && 'active'}`}

@@ -215,14 +215,15 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
           if (talky && talky.roomID === payload['roomID']) {
             setTalky(null);
           }
+          setActiveChatIndex(0);
         } else {
           action = hasLeftChatAction(
             payload['roomID'],
             payload['name'],
+            payload['volunteerCount'],
             payload['message'],
           );
         }
-        setActiveChatIndex(0);
         dispatchChats(action);
         break;
       case ERROR_LEAVING_CHAT:
@@ -236,9 +237,12 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
         reconnectSuccessHandler(payload['roomIDs']);
         break;
       case JOIN_CHAT:
-        const student: IStudent = payload['studentInfo'];
-        const messages: ITextMessage[] = payload['chatHistory'];
-        action = joinChatAction(student, messages, payload['roomID']);
+        action = joinChatAction(
+          payload['studentInfo'],
+          payload['chatHistory'],
+          payload['roomID'],
+          payload['volunteerCount'],
+        );
         dispatchChats(action);
         break;
       case AVAILABLE_CHAT:
