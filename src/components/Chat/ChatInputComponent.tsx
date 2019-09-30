@@ -45,6 +45,7 @@ const ChatInputComponent = (props: IProps) => {
 
   const frivilligOptionsCallback = (volunteer: IVolunteer): void => {
     //setAvailableVolunteers(availableVolunteers.filter(vol => vol !== volunteer));
+    chats[activeChatIndex].volunteerCount += 1;
     socketSend(createGetAvailableQueueMessage(roomID));
     socketSend(
       new JoinChatMessageBuilder()

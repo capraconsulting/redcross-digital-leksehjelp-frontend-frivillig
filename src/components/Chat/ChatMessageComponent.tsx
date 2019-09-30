@@ -67,9 +67,7 @@ const ChatMessageComponent = (props: IProps) => {
   if (uniqueID === 'NOTIFICATION') {
     return (
       <div className="chat-message">
-        <p className="chat-message--notification">
-          {author} {message}
-        </p>
+        <p className="chat-message--notification">{message}</p>
       </div>
     );
   } else {

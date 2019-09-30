@@ -34,38 +34,43 @@ export const reconnectChatAction = createAction('RECONNECT', callback => {
 });
 
 export const hasLeftChatAction = createAction('HAS_LEFT_CHAT', callback => {
-  return (roomID: string, name: string, message?: string) =>
-    callback({ roomID, name, message });
+  return (
+    roomID: string,
+    name: string,
+    volunteerCount: number,
+    message?: string,
+  ) => callback({ roomID, name, message, volunteerCount });
 });
 
 export const joinChatAction = createAction('JOIN_CHAT', callback => {
-  return (student: IStudent, messages: ITextMessage[], roomID: string) =>
-    callback({ student, messages, roomID });
+  return (
+    student: IStudent,
+    messages: ITextMessage[],
+    roomID: string,
+    volunteerCount: number,
+  ) => callback({ student, messages, roomID, volunteerCount });
 });
 
-const handleAddRoomID = (state: IChat[], action: IAction) => {
-  const roomToSetID = state.find(
-    chat => chat.student.uniqueID.localeCompare(action.payload.studentID) === 0,
+const handleAddRoomID = (state: IChat[], action: IAction) =>
+  state.map(chat =>
+    chat.student.uniqueID === action.payload.studentID
+      ? {
+          ...chat,
+          roomID: action.payload.roomID,
+        }
+      : chat,
   );
-  if (roomToSetID) {
-    roomToSetID.roomID = action.payload.roomID;
-  }
-  return [...state];
-};
 
-const handleAddMessage = (state: IChat[], action: IAction) => {
-  const room = state.find(
-    chat => chat.roomID === action.payload.message.roomID,
+const handleAddMessage = (state: IChat[], action: IAction) =>
+  state.map(chat =>
+    chat.roomID === action.payload.message.roomID
+      ? {
+          ...chat,
+          unread: action.payload.unread ? chat.unread + 1 : chat.unread,
+          messages: [...chat.messages, action.payload.message],
+        }
+      : chat,
   );
-  if (room) {
-    if (action.payload.unread) {
-      room.unread += 1;
-    }
-    const message: ITextMessage = action.payload.message;
-    room.messages.push(message);
-  }
-  return [...state];
-};
 
 const handleReadMessages = (state: IChat[], action: IAction) => {
   const chat = state.find(chat => chat.roomID === action.payload.roomID);
@@ -79,6 +84,7 @@ const handleAddNewChat = (state: IChat[], action: IAction) => {
     messages: [],
     roomID: '',
     unread: 0,
+    volunteerCount: 1,
   };
   return [...state, newChat];
 };
@@ -93,7 +99,7 @@ const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
 
 const joinChatHandler = (state: IChat[], action: IAction) => {
   let chatHistory: ITextMessage[] = [];
-  const { name, roomID, imgUrl, student, messages } = action.payload;
+  const { roomID, student, messages, volunteerCount } = action.payload;
   messages.forEach((message: ITextMessage) => {
     chatHistory.push(message);
   });
@@ -102,28 +108,34 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
     messages: chatHistory,
     roomID: roomID,
     unread: 0,
+    volunteerCount,
   };
 
   return [...state, newChat];
 };
 
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
-  const { name, roomID, imgUrl, message } = action.payload;
-
-  const chatWhereAUserLeaves: IChat | undefined = state.find(
-    chat => chat.roomID === roomID,
+  const { name, roomID, imgUrl, message, volunteerCount } = action.payload;
+  console.log(message, name);
+  return state.map(chat =>
+    chat.roomID === roomID
+      ? {
+          ...chat,
+          volunteerCount,
+          messages: [
+            ...chat.messages,
+            {
+              author: name,
+              message: message || `${name || 'Frivillig'} har forlatt rommet`,
+              roomID: roomID,
+              uniqueID: 'NOTIFICATION',
+              imgUrl: imgUrl,
+              files: [] as IFile[],
+            },
+          ],
+        }
+      : chat,
   );
-  if (chatWhereAUserLeaves) {
-    chatWhereAUserLeaves.messages.push({
-      author: name,
-      message: message || `${name || 'Frivillig'} har forlatt rommet`,
-      roomID: roomID,
-      uniqueID: 'NOTIFICATION',
-      imgUrl: imgUrl,
-      files: [] as IFile[],
-    });
-  }
-  return [...state];
 };
 
 const handleReconnectChat = (state: IChat[], action: IAction) => {

@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const ChatHeaderComponent = (props: IProps) => {
-  const { roomID } = props.activeChat;
+  const { roomID, volunteerCount } = props.activeChat;
   const { nickname, subject, chatType } = props.activeChat.student;
   const { socketSend, dispatchChats, uniqueID, talky } = useContext(
     SocketContext,
@@ -36,7 +36,7 @@ const ChatHeaderComponent = (props: IProps) => {
     setModalState('regular');
   };
 
-  const leaveChat = (helpResult: MixpanelEvents, eventProps: object) => {
+  const leaveChat = () => {
     dispatchChats(leaveChatAction(roomID));
     socketSend({
       msgType: MESSAGE_TYPES.LEAVE_CHAT,
@@ -46,8 +46,15 @@ const ChatHeaderComponent = (props: IProps) => {
         roomID,
       },
     });
-    MixpanelService.track(helpResult, eventProps);
     closeModals();
+  };
+
+  const leaveChatAndTrack = (
+    helpResult: MixpanelEvents,
+    eventProps: object,
+  ) => {
+    leaveChat();
+    MixpanelService.track(helpResult, eventProps);
   };
 
   const openTalky = () => {
@@ -98,7 +105,13 @@ const ChatHeaderComponent = (props: IProps) => {
         <Modal
           content="Er du sikker på at du vil forlate chatten?"
           warningButtonText="Forlat Chatten"
-          warningCallback={openFeedbackModal}
+          warningCallback={() => {
+            if (volunteerCount === 1) {
+              openFeedbackModal();
+            } else {
+              leaveChat();
+            }
+          }}
           successButtonText="Bli i Chatten"
           successCallback={closeModals}
           closingCallback={closeModals}
@@ -109,7 +122,7 @@ const ChatHeaderComponent = (props: IProps) => {
           content="Tilbakemeldingsskjema"
           successButtonText="Send inn skjema"
           warningButtonText="Avbryt"
-          successCallback={leaveChat}
+          successCallback={leaveChatAndTrack}
           warningCallback={closeModals}
           closingCallback={closeModals}
         />
