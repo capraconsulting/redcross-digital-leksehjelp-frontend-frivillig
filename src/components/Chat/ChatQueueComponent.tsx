@@ -109,7 +109,7 @@ const ChatQueueComponent = (props: RouteComponentProps) => {
                     setTimeout(() => history.push('/messages'), 1000);
                   }}
                 >
-                  Åpne {chatType === LEKSEHJELP_TEXT ? 'chat' : 'videochat'}.
+                  Åpne {chatType === LEKSEHJELP_TEXT ? 'chat' : 'videochat'}
                 </button>
               </div>
             </div>
