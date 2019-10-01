@@ -1,18 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { ITextMessage } from '../../interfaces';
 import ChatMessageComponent from './ChatMessageComponent';
-import { Modal } from '../../components';
 import { SocketContext } from '../../providers';
-import { createJoinChatMessage, JoinChatMessageBuilder } from '../../services';
 
 interface IProps {
   messages: ITextMessage[];
 }
 
-const ChatBodyComponent = (props: IProps) => {
+const ChatBodyComponent = ({ messages }: IProps) => {
   const { volunteerInfo } = useContext(SocketContext);
-
-  const { messages } = props;
 
   const listMessages = () => {
     return messages.map((message, index) => (

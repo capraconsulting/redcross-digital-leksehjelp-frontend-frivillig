@@ -98,15 +98,11 @@ const handleSetChatFromLocalStorage = (state: IChat[], action: IAction) => {
 };
 
 const joinChatHandler = (state: IChat[], action: IAction) => {
-  let chatHistory: ITextMessage[] = [];
   const { roomID, student, messages, volunteerCount } = action.payload;
-  messages.forEach((message: ITextMessage) => {
-    chatHistory.push(message);
-  });
   const newChat: IChat = {
-    student: student,
-    messages: chatHistory,
-    roomID: roomID,
+    student,
+    messages,
+    roomID,
     unread: 0,
     volunteerCount,
   };
@@ -116,7 +112,6 @@ const joinChatHandler = (state: IChat[], action: IAction) => {
 
 const handleHasLeftChat = (state: IChat[], action: IAction) => {
   const { name, roomID, imgUrl, message, volunteerCount } = action.payload;
-  console.log(message, name);
   return state.map(chat =>
     chat.roomID === roomID
       ? {
