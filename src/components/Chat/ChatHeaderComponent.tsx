@@ -97,7 +97,7 @@ const ChatHeaderComponent = (props: IProps) => {
             onClick={openRegularModal}
             className="leksehjelp--button-success"
           >
-            Forlat Chatten
+            Avslutt leksehjelp
           </button>
         </span>
       </div>

@@ -4,6 +4,8 @@
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
+  overflow-wrap: break-word;
+  max-width: 50vw;
 
   &--notification {
     border-bottom: @message-separator 1px solid;
@@ -31,9 +33,9 @@
     font-size: 1.1rem;
     padding: 0.3rem;
     font-weight: 300;
-    overflow-wrap: break-spaces;
     border: solid 0px @select-color;
     border-radius: 0.2rem;
+    overflow-wrap: break-word;
   }
 
   &--self {
