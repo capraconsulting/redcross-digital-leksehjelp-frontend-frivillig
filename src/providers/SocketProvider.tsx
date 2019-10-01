@@ -258,8 +258,10 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
   };
 
   useEffect(() => {
-    getSocket().onmessage = socketHandler;
-    getSocket().onclose = socketCloseHandler;
+    let socket = getSocket();
+
+    socket.onmessage = socketHandler;
+    socket.onclose = socketCloseHandler;
   }, []);
 
   useEffect(() => {
