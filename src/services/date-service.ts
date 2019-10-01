@@ -3,8 +3,12 @@ export const timeStringFromDate = (zonedDateTime): string => {
   return `${hour}:${minute}`;
 };
 
+const zeroPad = (input: number) =>
+  input < 10 ? `0${input}` : input.toString();
+
 export const getTimeStringNow = (): string => {
-  return new Date().getHours() + ':' + new Date().getMinutes();
+  const now = new Date();
+  return `${zeroPad(now.getHours())}:${zeroPad(now.getMinutes())}`;
 };
 
 const formatAsDate = (value: string): string => {

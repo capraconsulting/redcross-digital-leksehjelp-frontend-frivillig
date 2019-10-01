@@ -8,8 +8,6 @@ WebRTCConfig.ts
 .idea/
 .vscode/
 
-\.idea/
-
 package-lock\.json
 
 tags
