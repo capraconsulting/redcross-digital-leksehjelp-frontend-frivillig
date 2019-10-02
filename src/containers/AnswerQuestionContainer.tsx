@@ -95,6 +95,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
       ...question,
       questionId: id,
       themes: themes.map(e => e.id),
+      themesNames: themes.map(e => e.theme),
       answerText: stateToHTML(answerText.getCurrentContent()),
     };
     return data;
