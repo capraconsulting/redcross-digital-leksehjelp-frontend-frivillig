@@ -12,7 +12,7 @@ buildConfig([
   dockerNode {
     checkout scm
 
-    def img = docker.image('circleci/node:11-browsers')
+    def img = docker.image('circleci/node:12-browsers')
     img.pull()
     img.inside {
       stage('Install dependencies') {
