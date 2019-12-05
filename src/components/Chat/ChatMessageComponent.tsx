@@ -1,6 +1,7 @@
 import React from 'react';
 import { ITextMessage } from '../../interfaces';
 import { IVolunteer } from '../../interfaces';
+import Linkify from 'react-linkify';
 
 interface IProps {
   message: ITextMessage;
@@ -52,15 +53,23 @@ const ChatMessageComponent = (props: IProps) => {
     );
   };
 
+  const messageLinkDecorator = (href, text, key) => (
+    <a href={href} key={key} target="_blank" rel="noopener noreferrer">
+      {text}
+    </a>
+  );
+
   const renderMessage = () => {
     return (
       message &&
       message.length > 0 && (
-        <p
-          className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
-        >
-          {message}
-        </p>
+        <Linkify componentDecorator={messageLinkDecorator}>
+          <p
+            className={`chat-message--message chat-message--${authorType} chat-message--${authorType}--message`}
+          >
+            {message}
+          </p>
+        </Linkify>
       )
     );
   };
