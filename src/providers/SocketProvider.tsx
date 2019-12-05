@@ -110,8 +110,19 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     RECONNECT,
   } = MESSAGE_TYPES;
 
+  const waitForSocketReady = callback => {
+    if (socket.readyState === 1) {
+      callback();
+    } else {
+      setTimeout(() => waitForSocketReady(callback), 100);
+    }
+  };
+
   const socketSend = (message: ISocketMessage | IGetMessage): void => {
-    getSocket().send(JSON.stringify(message));
+    const s = getSocket();
+    waitForSocketReady(() => {
+      s.send(JSON.stringify(message));
+    });
   };
 
   const reconnectSuccessHandler = (roomIDs: string[]): void => {
