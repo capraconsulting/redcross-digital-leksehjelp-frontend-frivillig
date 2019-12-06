@@ -84,24 +84,28 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           <li
             className={`header--list-item ${path === 'queue' && 'active'}`}
             onClick={() => {
-              setPath('que');
+              setPath('queue');
               setOnDropDown(false);
             }}
           >
-            <Link to="/queue">Elever i kø</Link>
-            <span className="dot">{queue.length}</span>
+            <Link to="/queue">
+              Elever i kø
+              <span className="dot">{queue.length}</span>
+            </Link>
           </li>
           <li
-            className={`header--list-item ${path === 'chat' && 'active'}`}
+            className={`header--list-item ${path === 'messages' && 'active'}`}
             onClick={() => {
-              setPath('chat');
+              setPath('messages');
               setOnDropDown(false);
             }}
           >
-            <Link to="/messages">Chat</Link>
-            <span className="dot">
-              {chats.reduce((sum, chat) => sum + chat.unread, 0)}
-            </span>
+            <Link to="/messages">
+              Chat
+              <span className="dot" onClick={() => setPath('messages')}>
+                {chats.reduce((sum, chat) => sum + chat.unread, 0)}
+              </span>
+            </Link>
           </li>
           <li
             className={`header--list-item ${path === 'questions' && 'active'}`}
@@ -139,14 +143,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           </li>
         </ul>
         <div className="header--list-split" />
-        <ul className="header--list">
-          <div className="header--list-button">
-            Min status
-            <label className="switch">
-              <input type="checkbox" />
-              <span className="slider" onClick={onSlide} />
-            </label>
-          </div>
+        <ul className="header--list header--list-right">
           <li className="header--list-item">
             <button
               onClick={handleOpenModal}
@@ -156,7 +153,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
                   : 'leksehjelp--button--outline-success'
               }
             >
-              {isLeksehjelpOpen ? 'Steng Leksehjelpen' : 'Åpne Leksehjelpen'}
+              {isLeksehjelpOpen ? 'Steng leksehjelpen' : 'Åpne leksehjelpen'}
             </button>
             {modalOpen && (
               <Modal

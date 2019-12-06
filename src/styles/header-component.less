@@ -8,11 +8,17 @@
     justify-content: space-between;
     align-items: center;
     flex-grow: 1;
+
     &-split {
       margin: 0 2rem;
       border-left-style: solid;
       border-left-width: thin;
       height: 1.5rem;
+    }
+
+    &-right {
+      display: flex;
+      justify-content: flex-end;
     }
     &-item,
     &-item a {
@@ -37,6 +43,10 @@
 .active a {
   color: @link-color;
   text-decoration: underline;
+}
+
+.active a span {
+  text-decoration: none;
 }
 
 .header--component {
