@@ -47,27 +47,31 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
   let state = '';
   switch (parameter) {
     case 'inbox':
-      state = '?state=1';
+      state = '&state=1';
       break;
     case 'started':
-      state = '?state=2';
+      state = '&state=2';
       break;
     case 'approval':
-      state = '?state=3';
+      state = '&state=3';
       break;
     case 'unpublished':
-      state = '?state=4';
+      state = '&state=4';
       break;
     case 'public':
-      state = '?state=5';
+      state = '&state=5';
       break;
     default:
       state = '';
       break;
   }
-  return await api
-    .get(parameter !== undefined ? `questions${state}` : 'questions')
-    .then(res => res.data);
+  const response = await api.get(
+    parameter !== undefined
+      ? `questions?includeAll=true${state}`
+      : 'questions?includeAll=true',
+  );
+
+  return response.data;
 }
 
 export async function getVolunteerSubjectList<T>(): Promise<T> {
