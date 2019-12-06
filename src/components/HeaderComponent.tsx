@@ -194,8 +194,12 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             <li
               className={`header--list-item ${subPath === 'topics' &&
                 'active'}`}
+              onClick={() => {
+                setPath('admin');
+                setSubPath('subjects');
+              }}
             >
-              Administrer fag
+              <Link to="/admin/subjects">Administrer fag</Link>
             </li>
             <li
               className={`header--list-item ${subPath === 'questions' &&

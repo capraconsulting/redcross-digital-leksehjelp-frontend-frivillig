@@ -10,6 +10,7 @@ import {
   QuestionContainer,
   AnswerQuestionContainer,
   ChatContainer,
+  AdminSubjectsContainer,
   AdminQuestionsContainer,
   ProfileContainer,
 } from './containers';
@@ -37,9 +38,14 @@ const Routes = ({ onLogout }: IProps) => {
           )}
         />
         <Route
-          exaxt
+          exact
           path="/admin/questions"
           component={AdminQuestionsContainer}
+        />
+        <Route
+          exact
+          path="/admin/subjects"
+          component={AdminSubjectsContainer}
         />
         <Redirect from="/*" to="/profile" />
       </Switch>

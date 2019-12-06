@@ -1,0 +1,26 @@
+.admin-subjects {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: row;
+
+  &--item {
+    border: 1px solid black;
+    margin: 2rem;
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 40%;
+    height: 100%;
+  }
+
+  &--header {
+    border-bottom: 1px solid black;
+  }
+
+  &--new {
+    margin-top: 4rem;
+  }
+
+  @media(max-width: 785px) {
+    flex-wrap: wrap;
+  }
+}

@@ -41,10 +41,6 @@ p {
   font-size: 1rem;
 }
 
-a {
-  color: @link-color;
-}
-
 textarea,
 input {
   font-size: 1rem;
@@ -127,6 +123,9 @@ button {
     &:hover {
       background-color: @link-hover-color;
     }
+    &-small {
+      width: 50px;
+    }
   }
 
   &-warning {
@@ -159,6 +158,13 @@ button {
       &:hover {
         border-color: @danger-hover-color;
         color: @danger-hover-color;
+      }
+      &-small {
+        border: 0;
+        border-bottom: 1px solid @warning-color;
+        padding: 0;
+        color: @danger-color;
+        max-width: 30px;
       }
     }
     &-success {
@@ -291,4 +297,8 @@ input:checked + .slider:before {
       color: @dropdown-caret-color;
     }
   }
+}
+
+#expand {
+  visibility: hidden;
 }
