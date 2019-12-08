@@ -64,7 +64,7 @@
     "draft-js": "^0.11.0",
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
-    "draftjs-to-html": "^0.8.4",
+    "draftjs-to-html": "^0.9.0",
     "mixpanel-browser": "2.31.0",
     "prop-types": "^15.7.2",
     "react": "16.12.0",
