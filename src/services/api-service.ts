@@ -78,12 +78,63 @@ export async function getVolunteerProfile<T>(): Promise<T> {
   return await api.get('volunteers/self').then(res => res.data);
 }
 
+export async function postSubject(
+  subjectTitle: string,
+  isMestring: number,
+): Promise<boolean> {
+  const body = {
+    subjectTitle,
+    isMestring,
+  };
+  try {
+    await api.post('subjects', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteSubject(id: number): Promise<boolean> {
+  try {
+    await api.delete(`subjects/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export async function getSubjectList<T>(): Promise<T> {
   return await api.get('subjects').then(res => res.data);
 }
 
 export async function getMestringSubjectList<T>(): Promise<T> {
   return await api.get('subjects?isMestring=1').then(res => res.data);
+}
+
+export async function postTheme(
+  themeTitle: string,
+  subjectId: number,
+): Promise<boolean> {
+  const body = {
+    themeTitle,
+    subjectId,
+  };
+
+  try {
+    await api.post('themes', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteTheme(id: string): Promise<boolean> {
+  try {
+    await api.delete(`themes/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 export async function getVolunteer<T>(): Promise<T> {
