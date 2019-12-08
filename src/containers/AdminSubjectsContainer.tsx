@@ -14,43 +14,33 @@ import '../styles/admin-subjects.less';
 const AdminSubjectsContainer = () => {
   const [leksehjelpSubjects, setLeksehjelpSubjects] = useState<ISubject[]>([]);
   const [mestringSubjects, setMestringSubjects] = useState<ISubject[]>([]);
-  const [leksehjelpSubjectsUpdated, setLeksehjelpSubjectsUpdated] = useState(
-    false,
-  );
-  const [mestringSubjectsUpdated, setMestringSubjectsUpdated] = useState(false);
+  const [updatedSubjects, setUpdatedSubjects] = useState(false);
+  const [updatedMestringSubjects, setUpdatedMestringSubjects] = useState(false);
 
   useEffect(() => {
     (async () => {
       const subjects = await getSubjectList<ISubject[]>();
       setLeksehjelpSubjects(subjects);
     })();
-  }, [leksehjelpSubjectsUpdated]);
+  }, [updatedSubjects]);
 
   useEffect(() => {
     (async () => {
       const mestringsSubjects = await getMestringSubjectList<ISubject[]>();
       setMestringSubjects(mestringsSubjects);
     })();
-  }, [mestringSubjectsUpdated]);
-
-  const handleTryToUpdate = (isMestring: number) => {
-    isMestring === 0
-      ? setLeksehjelpSubjectsUpdated(false)
-      : setMestringSubjectsUpdated(false);
-  };
-
-  const handleUpdated = (isMestring: number) => {
-    isMestring === 0
-      ? setLeksehjelpSubjectsUpdated(true)
-      : setMestringSubjectsUpdated(true);
-  };
+  }, [updatedMestringSubjects]);
 
   const handleAddSubject = async (subjectTitle: string, isMestring: number) => {
-    handleTryToUpdate(isMestring);
-
     const success = await postSubject(subjectTitle, isMestring);
     if (success) {
-      handleUpdated(isMestring);
+      if (isMestring) {
+        setMestringSubjects(await getMestringSubjectList());
+        setUpdatedMestringSubjects(true);
+      } else {
+        setLeksehjelpSubjects(await getSubjectList());
+        setUpdatedSubjects(true);
+      }
     }
   };
 
@@ -59,29 +49,41 @@ const AdminSubjectsContainer = () => {
     subjectId: number,
     isMestring: number,
   ) => {
-    handleTryToUpdate(isMestring);
-
     const success = await postTheme(title, subjectId);
     if (success) {
-      handleUpdated(isMestring);
+      if (isMestring) {
+        setMestringSubjects(await getMestringSubjectList());
+        setUpdatedMestringSubjects(true);
+      } else {
+        setLeksehjelpSubjects(await getSubjectList());
+        setUpdatedSubjects(true);
+      }
     }
   };
 
   const handleRemoveSubject = async (id: number, isMestring: number) => {
-    handleTryToUpdate(isMestring);
-
     const success = await deleteSubject(id);
     if (success) {
-      handleUpdated(isMestring);
+      if (isMestring) {
+        setMestringSubjects(await getMestringSubjectList());
+        setUpdatedMestringSubjects(true);
+      } else {
+        setLeksehjelpSubjects(await getSubjectList());
+        setUpdatedSubjects(true);
+      }
     }
   };
 
   const handleRemoveTheme = async (id: string, isMestring: number) => {
-    handleTryToUpdate(isMestring);
-
     const success = await deleteTheme(id);
     if (success) {
-      handleUpdated(isMestring);
+      if (isMestring) {
+        setMestringSubjects(await getMestringSubjectList());
+        setUpdatedMestringSubjects(true);
+      } else {
+        setLeksehjelpSubjects(await getSubjectList());
+        setUpdatedSubjects(true);
+      }
     }
   };
 
