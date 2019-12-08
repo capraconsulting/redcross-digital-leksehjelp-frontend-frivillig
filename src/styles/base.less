@@ -164,7 +164,7 @@ button {
         border-bottom: 1px solid @warning-color;
         padding: 0;
         color: @danger-color;
-        max-width: 30px;
+        max-width: 40px;
       }
     }
     &-success {
@@ -177,6 +177,12 @@ button {
         color: @link-hover-color;
       }
     }
+  }
+
+  &-disabled {
+    background-color: @disabled-color;
+    color: @white;
+    cursor: default;
   }
 }
 

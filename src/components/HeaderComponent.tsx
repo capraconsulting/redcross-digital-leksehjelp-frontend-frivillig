@@ -209,7 +209,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
                 setSubPath('questions');
               }}
             >
-              <Link to="/admin/questions">Administrer spøsmål</Link>
+              <Link to="/admin/questions">Administrer spørsmål</Link>
             </li>
           </ul>
         </div>

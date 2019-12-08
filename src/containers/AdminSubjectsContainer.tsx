@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getMestringSubjectList, getSubjectList } from '../services';
+import {
+  deleteSubject,
+  deleteTheme,
+  getMestringSubjectList,
+  getSubjectList,
+  postSubject,
+  postTheme,
+} from '../services';
 import { ISubject } from '../interfaces';
 import AdminSubjectsComponent from '../components/AdminSubjectsComponent';
 import '../styles/admin-subjects.less';
@@ -7,30 +14,75 @@ import '../styles/admin-subjects.less';
 const AdminSubjectsContainer = () => {
   const [leksehjelpSubjects, setLeksehjelpSubjects] = useState<ISubject[]>([]);
   const [mestringSubjects, setMestringSubjects] = useState<ISubject[]>([]);
+  const [leksehjelpSubjectsUpdated, setLeksehjelpSubjectsUpdated] = useState(
+    false,
+  );
+  const [mestringSubjectsUpdated, setMestringSubjectsUpdated] = useState(false);
 
   useEffect(() => {
     (async () => {
       const subjects = await getSubjectList<ISubject[]>();
       setLeksehjelpSubjects(subjects);
+    })();
+  }, [leksehjelpSubjectsUpdated]);
+
+  useEffect(() => {
+    (async () => {
       const mestringsSubjects = await getMestringSubjectList<ISubject[]>();
       setMestringSubjects(mestringsSubjects);
     })();
-  }, []);
+  }, [mestringSubjectsUpdated]);
 
-  const handleAddSubject = (subject: ISubject) => {
-    console.log('Add subject');
+  const handleTryToUpdate = (isMestring: number) => {
+    isMestring === 0
+      ? setLeksehjelpSubjectsUpdated(false)
+      : setMestringSubjectsUpdated(false);
   };
 
-  const handleAddTheme = (title: string, subjectId: number) => {
-    console.log('Add theme');
+  const handleUpdated = (isMestring: number) => {
+    isMestring === 0
+      ? setLeksehjelpSubjectsUpdated(true)
+      : setMestringSubjectsUpdated(true);
   };
 
-  const handleRemoveSubject = (id: number) => {
-    console.log('Remove subject');
+  const handleAddSubject = async (subjectTitle: string, isMestring: number) => {
+    handleTryToUpdate(isMestring);
+
+    const success = await postSubject(subjectTitle, isMestring);
+    if (success) {
+      handleUpdated(isMestring);
+    }
   };
 
-  const handleRemoveTheme = (id: string, subjet: ISubject) => {
-    console.log('Remove theme');
+  const handleAddTheme = async (
+    title: string,
+    subjectId: number,
+    isMestring: number,
+  ) => {
+    handleTryToUpdate(isMestring);
+
+    const success = await postTheme(title, subjectId);
+    if (success) {
+      handleUpdated(isMestring);
+    }
+  };
+
+  const handleRemoveSubject = async (id: number, isMestring: number) => {
+    handleTryToUpdate(isMestring);
+
+    const success = await deleteSubject(id);
+    if (success) {
+      handleUpdated(isMestring);
+    }
+  };
+
+  const handleRemoveTheme = async (id: string, isMestring: number) => {
+    handleTryToUpdate(isMestring);
+
+    const success = await deleteTheme(id);
+    if (success) {
+      handleUpdated(isMestring);
+    }
   };
 
   return (
