@@ -19,20 +19,33 @@ const EditSubjectComponent = ({
   onAddTheme,
 }: IProps) => {
   const [newTheme, setNewTheme] = useState('');
+  const [visible, setVisible] = useState(false);
 
   return (
-    <div className="edit-subject-container">
+    <div
+      className="edit-subject-container"
+      onClick={() => setVisible(!visible)}
+    >
       <div className="editable-subject">
         <p>{subject.subjectTitle}</p>
-        <button
-          className="leksehjelp--button--outline-warning-small"
-          onClick={() => onRemoveSubject(subject.id, isMestring)}
-        >
-          Slett
-        </button>
+        <div>
+          <button
+            className="leksehjelp--button--outline-warning-small"
+            onClick={() => onRemoveSubject(subject.id, isMestring)}
+          >
+            Slett
+          </button>
+          <img
+            src={
+              visible
+                ? require('../assets/images/close.svg')
+                : require('../assets/images/open.svg')
+            }
+          />
+        </div>
       </div>
-      <div className="themes-container">
-        <p>Undertema</p>
+      <div className={visible ? 'themes-container' : 'themes-container-hidden'}>
+        <p className="themes-title">Undertema</p>
         <div className="edit-themes">
           {subject.themes.map(t => (
             <div key={t.id} className="subject--list-element">
@@ -40,7 +53,6 @@ const EditSubjectComponent = ({
               <button
                 className="leksehjelp--button-close"
                 onClick={() => onRemoveTheme(t.id, isMestring)}
-                disabled={!newTheme}
               >
                 <Cross color="#8b51c6" />
               </button>
