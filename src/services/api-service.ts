@@ -7,6 +7,7 @@ import {
   IProfile,
   IOpen,
 } from '../interfaces';
+import { IInformation } from '../interfaces/IInformation';
 
 const api = axios.create({
   baseURL:
@@ -32,6 +33,35 @@ export async function getFeedbackList(
 export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
   return api
     .get('isopen')
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
+  return api
+    .get('isopen')
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function postLeksehjelpInformation<T>(
+  information: IInformation,
+): Promise<boolean> {
+  console.log('try to post information');
+  return api
+    .post('isopen/openinghours', information)
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function postSpecificLeksehjelpInformation<T>(information: IInformation, key: string): Promise<boolean> {
+  console.log('try to post information');
+  const body = {
+    ...information,
+    key,
+  };
+  return api
+    .post('isopen', body)
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
