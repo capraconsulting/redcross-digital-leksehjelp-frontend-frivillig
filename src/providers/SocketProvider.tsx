@@ -29,6 +29,7 @@ import {
   createReconnectMessage,
   createVolunteerMessage,
   getTimeStringNow,
+  createGetQueueMessage,
 } from '../services';
 import { createPingMessage } from '../services';
 import { IVolunteer } from '../interfaces';
@@ -169,6 +170,7 @@ export const SocketProvider: FunctionComponent = ({ children }: any) => {
     } else {
       setUniqueID(uniqueID);
     }
+    socketSend(createGetQueueMessage());
   };
 
   const socketHandler = (message): void => {
