@@ -8,3 +8,13 @@ export const studentGradeFormat = (studentGrade: string): string => {
   }
   return studentGrade;
 };
+
+export const openingHourDays = {
+  monday: 'Mandag',
+  tuesday: 'Tirsdag',
+  wednesday: 'Onsdag',
+  thursday: 'Torsdag',
+  friday: 'Fredag',
+  saturday: 'Lørdag',
+  sunday: 'Søndag',
+};

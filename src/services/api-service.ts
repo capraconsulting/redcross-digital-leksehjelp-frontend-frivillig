@@ -39,7 +39,7 @@ export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
 
 export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
   return api
-    .get('isopen')
+    .get('information')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
@@ -54,14 +54,22 @@ export async function postLeksehjelpInformation<T>(
     .catch(e => console.error(e.getMessage));
 }
 
-export async function postSpecificLeksehjelpInformation<T>(information: IInformation, key: string): Promise<boolean> {
-  console.log('try to post information');
+export async function updateAnnouncement<T>(
+  announcement: string,
+): Promise<boolean> {
+  console.log('try to post announcement');
   const body = {
-    ...information,
-    key,
+    announcement,
   };
   return api
-    .post('isopen', body)
+    .put('information/announcement', body)
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
+  return api
+    .put('information/openinghours', openingHours)
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
