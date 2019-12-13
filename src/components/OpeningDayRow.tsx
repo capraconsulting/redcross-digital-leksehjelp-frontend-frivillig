@@ -18,6 +18,10 @@ const OpeningDayRow = ({ id, text }: IProps) => {
         ...information[id],
         enabled: e.target.checked,
       },
+      other: {
+        ...information.other,
+        enabled: false,
+      },
     });
   };
 
@@ -33,7 +37,13 @@ const OpeningDayRow = ({ id, text }: IProps) => {
   };
 
   return (
-    <div className="opening-day-container">
+    <div
+      className={
+        information.other.enabled
+          ? 'opening-day-container closed'
+          : 'opening-day-container'
+      }
+    >
       <div>
         <input
           id={id}
@@ -45,6 +55,7 @@ const OpeningDayRow = ({ id, text }: IProps) => {
       </div>
       <div className="input-admin-time">
         <input
+          className={information.other.enabled ? 'closed' : ''}
           id={id}
           type="time"
           value={startTime}
@@ -53,6 +64,7 @@ const OpeningDayRow = ({ id, text }: IProps) => {
         />
         -
         <input
+          className={information.other.enabled ? 'closed' : ''}
           id={id}
           type="time"
           value={endTime}

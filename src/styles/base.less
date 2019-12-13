@@ -127,6 +127,10 @@ button {
     &:hover {
       background-color: @link-hover-color;
     }
+    &[disabled] {
+      background-color: @disabled-color;
+      cursor: default;
+    }
   }
 
   &-warning {

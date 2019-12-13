@@ -12,7 +12,7 @@ const AdminInformationContainer = () => {
   const { information, setInformation } = useContext(StateContext);
   const [updatedAnnouncement, setUpdatedAnnouncement] = useState('');
 
-  const handleUpdateInformation = e => {
+  const handleUpdateAnnouncement = e => {
     setUpdatedAnnouncement(e.target.value);
     setInformation({
       ...information,
@@ -21,7 +21,12 @@ const AdminInformationContainer = () => {
   };
 
   const handleUpdateInformationClick = () => {
+    setInformation({
+      ...information,
+      announcement: updatedAnnouncement,
+    });
     setUpdatedAnnouncement('');
+
     (async () => {
       const success = updateAnnouncement(information.announcement);
       if (success) {
@@ -30,7 +35,7 @@ const AdminInformationContainer = () => {
     })();
   };
 
-  const handleUpdateOtherOpeningHours = e => {
+  const handleUpdateCloseAllDays = e => {
     setInformation({
       ...information,
       other: {
@@ -52,25 +57,21 @@ const AdminInformationContainer = () => {
   return (
     <div className="side-margin">
       <div className="info-message">
-        <h4>Info</h4>
+        <h4 className="info-message--title">Info</h4>
         <p>
           Her kan du skrive en beskjed som vises på forsiden av Digital
           Leksehjelp
         </p>
 
         <textarea
-          className="announcement-input"
+          className="input-announcement"
           value={updatedAnnouncement}
           name="information"
           placeholder={information.announcement}
-          onChange={e => handleUpdateInformation(e)}
+          onChange={e => handleUpdateAnnouncement(e)}
         />
         <button
-          className={
-            updatedAnnouncement
-              ? 'leksehjelp--button-success admin-update'
-              : 'leksehjelp-button-disabled admin-update'
-          }
+          className="leksehjelp--button-success admin-update"
           onClick={handleUpdateInformationClick}
           disabled={!updatedAnnouncement}
         >
@@ -78,9 +79,9 @@ const AdminInformationContainer = () => {
         </button>
       </div>
       <div className="opening-hours">
-        <h4>Åpningstider</h4>
-        Her kan du endre åpningstidene som blir vist på forside av digital
-        leksehjelp.
+        <h4 className="opening-hours--title">Åpningstider</h4>
+        Her kan du endre åpningstidene som blir vist på forsiden av Digital
+        Leksehjelp.
         {Object.entries(openingHourDays).map(([id, text]) => (
           <OpeningDayRow key={id} id={id} text={text} />
         ))}
@@ -89,7 +90,7 @@ const AdminInformationContainer = () => {
             <input
               type="checkbox"
               checked={information.other.enabled}
-              onChange={handleUpdateOtherOpeningHours}
+              onChange={handleUpdateCloseAllDays}
             />
             Annen melding{' '}
           </div>

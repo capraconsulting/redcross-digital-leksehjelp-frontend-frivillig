@@ -32,7 +32,7 @@ export async function getFeedbackList(
 
 export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
   return api
-    .get('isopen')
+    .get('information/isopen')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
@@ -74,9 +74,10 @@ export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
     .catch(e => console.error(e.getMessage));
 }
 
-export async function toggleIsLeksehjelpOpen<T>(): Promise<IOpen> {
+export async function toggleIsLeksehjelpOpen<T>(isOpen): Promise<IOpen> {
+  const body = { isOpen };
   return api
-    .post('isopen')
+    .put('information/open', body)
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }

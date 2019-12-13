@@ -12,8 +12,6 @@ const defaultOpeningHours: IOpeningHours = {
 export const StateContext = createContext({
   activeState: false,
   setActiveState(state: boolean) {},
-  isLeksehjelpOpen: false,
-  setIsLeksehjelpOpen(bool: boolean): void {},
   information: {
     isOpen: false,
     announcement:
@@ -35,7 +33,6 @@ export const StateContext = createContext({
 
 export const StateProvider = ({ children }: any) => {
   const [activeState, setActiveState] = useState<boolean>(false);
-  const [isLeksehjelpOpen, setIsLeksehjelpOpen] = useState<boolean>(false);
   const [information, setInformation] = useState<IInformation>({
     isOpen: false,
     announcement:
@@ -53,10 +50,6 @@ export const StateProvider = ({ children }: any) => {
     },
   });
 
-  /*useEffect(() => {
-    getIsLeksehjelpOpen().then(data => setIsLeksehjelpOpen(data.isopen));
-  }, []);*/
-
   useEffect(() => {
     getLeksehjelpInformation().then(data => setInformation(data));
   }, []);
@@ -66,8 +59,6 @@ export const StateProvider = ({ children }: any) => {
       value={{
         activeState,
         setActiveState,
-        isLeksehjelpOpen,
-        setIsLeksehjelpOpen,
         information,
         setInformation,
       }}
