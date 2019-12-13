@@ -13,10 +13,11 @@ const AdminInformationContainer = () => {
   const [updatedAnnouncement, setUpdatedAnnouncement] = useState('');
 
   const handleUpdateAnnouncement = e => {
-    setUpdatedAnnouncement(e.target.value);
+    const newAnnouncement = e.target.value;
+    setUpdatedAnnouncement(newAnnouncement);
     setInformation({
       ...information,
-      announcement: updatedAnnouncement,
+      announcement: newAnnouncement,
     });
   };
 
