@@ -17,23 +17,23 @@ describe('api-service', () => {
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions?state=2", input: inbox', async () => {
     const url = await getQuestionList('inbox');
-    expect(url).toEqual('questions?state=1');
+    expect(url).toEqual('questions?includeAll=true&state=1');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions?state=2", input: started', async () => {
     const url = await getQuestionList('started');
-    expect(url).toEqual('questions?state=2');
+    expect(url).toEqual('questions?includeAll=true&state=2');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions/approve", input: approval', async () => {
     const url = await getQuestionList('approval');
-    expect(url).toEqual('questions?state=3');
+    expect(url).toEqual('questions?includeAll=true&state=3');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions", input: test', async () => {
     const url = await getQuestionList('test');
-    expect(url).toEqual('questions');
+    expect(url).toEqual('questions?includeAll=true');
   });
   it('TEST: getQuestionList \n Should create request on the form: "questions", input: ', async () => {
     const url = await getQuestionList();
-    expect(url).toEqual('questions');
+    expect(url).toEqual('questions?includeAll=true');
   });
 
   const mock = axios.create();
