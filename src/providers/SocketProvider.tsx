@@ -56,14 +56,31 @@ const getSocket = (): WebSocket => {
   return socket;
 };
 
-export const SocketContext = createContext({
+interface ISocketState {
+  uniqueID: string;
+  chats: IChat[];
+  queue: IStudent[];
+  activeChatIndex: number;
+  talky: ITalky | null;
+  availableVolunteers: IVolunteer[];
+  volunteerInfo: IVolunteer;
+
+  dispatchChats(_: IAction): void;
+  setQueue(_: IStudent[]): void;
+  socketSend(_: ISocketMessage | IGetMessage): void;
+  setActiveChatIndex(_: number): void;
+  setVolunteerInfo(_: IVolunteer): void;
+  setAvailableVolunteers(_: IVolunteer[]): void;
+}
+
+export const SocketContext = createContext<ISocketState>({
   // Values available with context
-  uniqueID: '' as string,
+  uniqueID: '',
   chats: [{}] as IChat[],
-  queue: [] as IStudent[],
-  activeChatIndex: 0 as number,
-  talky: null as null | ITalky,
-  availableVolunteers: [] as IVolunteer[],
+  queue: [],
+  activeChatIndex: 0,
+  talky: null,
+  availableVolunteers: [],
   volunteerInfo: {
     id: '',
     name: '',
@@ -82,7 +99,7 @@ export const SocketContext = createContext({
   setAvailableVolunteers(vols: IVolunteer[]): void {},
 });
 
-export const SocketProvider: FunctionComponent = ({ children }: any) => {
+export const SocketProvider: FunctionComponent = ({ children }) => {
   const [chats, dispatchChats] = useReducer(chatReducer, []);
   const [activeChatIndex, setActiveChatIndex] = useState<number>(0);
   const [uniqueID, setUniqueID] = useState<string>('');

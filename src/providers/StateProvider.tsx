@@ -8,7 +8,7 @@ export const StateContext = createContext({
   setIsLeksehjelpOpen(bool: boolean): void {},
 });
 
-export const StateProvider = ({ children }: any) => {
+export const StateProvider: React.FC = ({ children }) => {
   const [activeState, setActiveState] = useState<boolean>(false);
   const [isLeksehjelpOpen, setIsLeksehjelpOpen] = useState<boolean>(false);
 

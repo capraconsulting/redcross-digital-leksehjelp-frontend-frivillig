@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  getQuestionList,
-  getQuestion,
-  getFeedbackList,
-} from '../services/api-service';
+import { getQuestionList, getQuestion, getFeedbackList } from '../services';
 import { QuestionListComponent, FeedbackListComponent } from '../components';
 import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
 
