@@ -13,8 +13,8 @@ const AdminQuestionsContainer = () => {
   );
 
   useEffect(() => {
-    getQuestionList<IQuestion[]>('public').then(setPublicQuestionList);
-    getQuestionList<IQuestion[]>('unpublished').then(setUnpublicQuestionList);
+    getQuestionList('public').then(setPublicQuestionList);
+    getQuestionList('unpublished').then(setUnpublicQuestionList);
   }, []);
 
   return (

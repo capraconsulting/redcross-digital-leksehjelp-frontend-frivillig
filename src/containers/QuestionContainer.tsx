@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { getQuestionList, getQuestion, getFeedbackList } from '../services';
 import { QuestionListComponent, FeedbackListComponent } from '../components';
-import { IQuestionMeta, IFeedbackQuestion } from '../interfaces';
+import { IFeedbackQuestion, IQuestion } from '../interfaces';
 
 const QuestionContainer = () => {
-  const [inboxQuestions, setInboxQuestions] = useState<IQuestionMeta[]>([]);
-  const [startedQuestions, setStartedQuestions] = useState<IQuestionMeta[]>([]);
-  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestionMeta[]>(
-    [],
-  );
+  const [inboxQuestions, setInboxQuestions] = useState<IQuestion[]>([]);
+  const [startedQuestions, setStartedQuestions] = useState<IQuestion[]>([]);
+  const [approvalQuestions, setAnsweredQuestions] = useState<IQuestion[]>([]);
   const [feedbackQuestions, setFeedbackQuestions] = useState<
     IFeedbackQuestion[]
   >([]);
@@ -37,13 +35,13 @@ const QuestionContainer = () => {
   };
 
   useEffect(() => {
-    getQuestionList<IQuestionMeta[]>('inbox')
+    getQuestionList('inbox')
       .then(setInboxQuestions)
       .catch(() => setApiFail(true));
-    getQuestionList<IQuestionMeta[]>('started')
+    getQuestionList('started')
       .then(setStartedQuestions)
       .catch(() => setApiFail(true));
-    getQuestionList<IQuestionMeta[]>('approval')
+    getQuestionList('approval')
       .then(setAnsweredQuestions)
       .catch(() => setApiFail(true));
     setFeedback();

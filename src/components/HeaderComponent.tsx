@@ -5,22 +5,19 @@ import { SocketContext, StateContext } from '../providers/';
 import { Modal } from './';
 import { getIsLeksehjelpOpen, toggleIsLeksehjelpOpen } from '../services';
 import { toast } from 'react-toastify';
+import { VolunteerRole } from '../enums/VolunteerRole';
 
 interface IProps {
   onLogout(): void;
 }
 
 const HeaderComponent = (props: RouteComponentProps & IProps) => {
-  const [path, setPath] = useState('' as string);
+  const [path, setPath] = useState('');
+  const [subPath, setSubPath] = useState('');
+  const [onDropDown, setOnDropDown] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const [subPath, setSubPath] = useState('' as string);
-
-  const [onDropDown, setOnDropDown] = useState<boolean>(false);
-
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  const { queue, chats } = useContext(SocketContext);
-
+  const { queue, chats, volunteerInfo } = useContext(SocketContext);
   const {
     activeState,
     setActiveState,
@@ -128,13 +125,15 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           >
             <Link to="/profile">Min profil</Link>
           </li>
-          <li
-            className={`header--list-item ${path === 'admin' && 'active'}`}
-            onMouseOver={() => setOnDropDown(true)}
-            onClick={() => setPath('admin')}
-          >
-            Admin
-          </li>
+          {volunteerInfo.role === VolunteerRole.ADMIN && (
+            <li
+              className={`header--list-item ${path === 'admin' && 'active'}`}
+              onMouseOver={() => setOnDropDown(true)}
+              onClick={() => setPath('admin')}
+            >
+              Admin
+            </li>
+          )}
           <li
             className={`header--list-item ${path === 'logout' && 'active'}`}
             onClick={onLogout}
@@ -174,7 +173,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           </li>
         </ul>
       </div>
-      {onDropDown && (
+      {onDropDown && volunteerInfo.role === VolunteerRole.ADMIN && (
         <div
           className="header--dropdown"
           onMouseOver={() => setOnDropDown(true)}
@@ -188,8 +187,12 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             </li>
             <li
               className={`header--list-item ${subPath === 'users' && 'active'}`}
+              onClick={() => {
+                setPath('admin');
+                setSubPath('users');
+              }}
             >
-              <Link to="/questions">Administrer brukere</Link>
+              <Link to="/admin/users">Administrer brukere</Link>
             </li>
             <li
               className={`header--list-item ${subPath === 'topics' &&

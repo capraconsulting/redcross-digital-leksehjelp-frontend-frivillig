@@ -221,7 +221,7 @@ export const SocketProvider: FunctionComponent = ({ children }) => {
             opened: false,
           });
         }
-        getVolunteer().then((data: IVolunteer) => {
+        getVolunteer().then(data => {
           setVolunteerInfo(data);
           socketSend(createVolunteerMessage(data));
         });
@@ -229,7 +229,7 @@ export const SocketProvider: FunctionComponent = ({ children }) => {
       case CONNECTION:
         setUniqueID(payload['uniqueID']);
         setInterval(() => socketSend(createPingMessage()), 300000);
-        getVolunteer().then((data: IVolunteer) => {
+        getVolunteer().then(data => {
           setVolunteerInfo(data);
           socketSend(createVolunteerMessage(data));
         });
@@ -260,7 +260,7 @@ export const SocketProvider: FunctionComponent = ({ children }) => {
         toast.error('Det skjedde en feil. Du forlot ikke rommet.');
         break;
       case RECONNECT:
-        getVolunteer().then((data: IVolunteer) => {
+        getVolunteer().then(data => {
           setVolunteerInfo(data);
           socketSend(createVolunteerMessage(data));
         });

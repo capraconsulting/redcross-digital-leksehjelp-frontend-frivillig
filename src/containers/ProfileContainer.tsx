@@ -11,17 +11,11 @@ import {
   getSubjectList,
   saveSubjects,
   getMestringSubjectList,
-  getVolunteerProfile,
   updateProfile,
   getVolunteer,
   createVolunteerMessage,
 } from '../services';
-import {
-  IVolunteerSubject,
-  ISubject,
-  IProfile,
-  IVolunteer,
-} from '../interfaces';
+import { IVolunteerSubject } from '../interfaces';
 import { Picker, Modal, ProfileForm } from '../components';
 import { SocketContext } from '../providers';
 
@@ -37,30 +31,25 @@ const ProfileContainer = () => {
   const [mestringSubjectList, setMestringSubjectList] = useState<IOption[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalText, setModalText] = useState<string>('');
-  const [volunteerProfile, setVolunteerProfile] = useState<IProfile>({
-    email: '',
-    name: '',
-    id: '',
-    bioText: '',
-  });
   const [isSubjectChanged, setIsSubjectChanged] = useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState<boolean>(false);
-  const { socketSend, setVolunteerInfo } = useContext(SocketContext);
+  const { socketSend, setVolunteerInfo, volunteerInfo } = useContext(
+    SocketContext,
+  );
 
   useEffect(() => {
     (async () => {
-      const volunteerSubjectList = await getVolunteerSubjectList<
-        IVolunteerSubject[]
-      >().then(data => {
-        const themes = data.filter(e => e.isMestring);
-        const courses = data.filter(e => !e.isMestring);
-        setCourseList(courses);
-        setThemeList(themes);
-        return { courses, themes };
-      });
-      getVolunteerProfile<IProfile>().then(setVolunteerProfile);
+      const volunteerSubjectList = await getVolunteerSubjectList().then(
+        data => {
+          const themes = data.filter(e => e.isMestring);
+          const courses = data.filter(e => !e.isMestring);
+          setCourseList(courses);
+          setThemeList(themes);
+          return { courses, themes };
+        },
+      );
       volunteerSubjectList &&
-        getSubjectList<ISubject[]>().then(list => {
+        getSubjectList().then(list => {
           const filteredList = list
             .filter(e => {
               const { courses } = volunteerSubjectList;
@@ -77,7 +66,7 @@ const ProfileContainer = () => {
           setSubjectList(filteredList);
         });
       volunteerSubjectList &&
-        getMestringSubjectList<ISubject[]>().then(list => {
+        getMestringSubjectList().then(list => {
           const filteredMestringList = list
             .filter(e => {
               const { themes } = volunteerSubjectList;
@@ -143,7 +132,7 @@ const ProfileContainer = () => {
     const list = courseList.map(e => e.id).concat(themeList.map(e => e.id));
     const isProfileUpdateSuccess =
       isProfileChanged &&
-      (await updateProfile(volunteerProfile)
+      (await updateProfile(volunteerInfo)
         .then(() => true)
         .catch(() => false));
 
@@ -154,7 +143,7 @@ const ProfileContainer = () => {
         .catch(() => false));
 
     if (isProfileUpdateSuccess || isSubjectUpdateSuccess) {
-      const volunteerInfo = await getVolunteer<IVolunteer>();
+      const volunteerInfo = await getVolunteer();
       setVolunteerInfo(volunteerInfo);
       socketSend(createVolunteerMessage(volunteerInfo));
     }
@@ -207,12 +196,7 @@ const ProfileContainer = () => {
             selectedList={themeList}
             removeSubject={removeSubject}
           />
-          <ProfileForm
-            profile={volunteerProfile}
-            setProfile={setVolunteerProfile}
-            isChanged={setIsProfileChanged}
-            title="Personlig info"
-          />
+          <ProfileForm isChanged={setIsProfileChanged} title="Personlig info" />
           <div className="profile--footer">
             <button className="leksehjelp--button-success" onClick={onSave}>
               Lagre

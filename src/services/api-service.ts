@@ -4,9 +4,12 @@ import {
   IQuestion,
   IAnswer,
   IFeedbackQuestion,
-  IProfile,
   IOpen,
+  ISubject,
+  IVolunteer,
+  IVolunteerSubject,
 } from '../interfaces';
+import { INewUser } from '../interfaces/INewUser';
 
 const api = axios.create({
   baseURL:
@@ -21,29 +24,27 @@ export function getQuestion(id: string): Promise<IQuestion> {
     .catch(err => err);
 }
 
-export async function getFeedbackList(
-  id?: string,
-): Promise<IFeedbackQuestion[]> {
-  return await api
+export function getFeedbackList(id?: string): Promise<IFeedbackQuestion[]> {
+  return api
     .get(id ? `feedback/question/${id}` : 'feedback')
     .then(res => res.data);
 }
 
-export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
+export function getIsLeksehjelpOpen(): Promise<IOpen> {
   return api
     .get('isopen')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
 
-export async function toggleIsLeksehjelpOpen<T>(): Promise<IOpen> {
+export function toggleIsLeksehjelpOpen(): Promise<IOpen> {
   return api
     .post('isopen')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
 
-export async function getQuestionList<T>(parameter?: string): Promise<T> {
+export function getQuestionList(parameter?: string): Promise<IQuestion[]> {
   let state = '';
   switch (parameter) {
     case 'inbox':
@@ -65,38 +66,32 @@ export async function getQuestionList<T>(parameter?: string): Promise<T> {
       state = '';
       break;
   }
-  const response = await api.get(
-    parameter !== undefined
-      ? `questions?includeAll=true${state}`
-      : 'questions?includeAll=true',
-  );
 
-  return response.data;
+  return api
+    .get(
+      parameter !== undefined
+        ? `questions?includeAll=true${state}`
+        : 'questions?includeAll=true',
+    )
+    .then(res => res.data);
 }
 
-export async function getVolunteerSubjectList<T>(): Promise<T> {
-  return await api.get('volunteers/subjects').then(res => res.data);
+export function getVolunteerSubjectList(): Promise<IVolunteerSubject[]> {
+  return api.get('volunteers/subjects').then(res => res.data);
 }
 
-export async function getVolunteerProfile<T>(): Promise<T> {
-  return await api.get('volunteers/self').then(res => res.data);
+export function getSubjectList(): Promise<ISubject[]> {
+  return api.get<ISubject[]>('subjects').then(res => res.data);
 }
 
-export async function getSubjectList<T>(): Promise<T> {
-  return await api.get('subjects').then(res => res.data);
+export function getMestringSubjectList(): Promise<ISubject[]> {
+  return api.get('subjects?isMestring=1').then(res => res.data);
 }
 
-export async function getMestringSubjectList<T>(): Promise<T> {
-  return await api.get('subjects?isMestring=1').then(res => res.data);
+export function getVolunteer(): Promise<IVolunteer> {
+  return api.get('volunteers/self').then(res => res.data);
 }
-
-export async function getVolunteer<T>(): Promise<T> {
-  return await api.get('volunteers/self').then(res => res.data);
-}
-export async function postAnswer(
-  data: IAnswer,
-  type?: string,
-): Promise<IQuestion> {
+export function postAnswer(data: IAnswer, type?: string): Promise<IQuestion> {
   const { questionId } = data;
   let body = {};
   switch (type) {
@@ -122,19 +117,38 @@ export async function postAnswer(
       body = { ...data, state: 2 };
       break;
   }
-  return await api.post(`questions/${questionId}`, body).then(res => res.data);
+  return api.post(`questions/${questionId}`, body).then(res => res.data);
 }
 
-export async function deleteFeedback(id: string): Promise<{}> {
-  return await api.post(`feedback/${id}/delete`).then(res => res.data);
+export function deleteFeedback(id: string): Promise<void> {
+  return api.post(`feedback/${id}/delete`);
 }
 
-export async function saveSubjects(list: number[]): Promise<{}> {
-  return await api
-    .post('volunteers/subjects', { subjects: list })
+export function saveSubjects(list: number[]): Promise<void> {
+  return api.post('volunteers/subjects', { subjects: list });
+}
+
+export function updateProfile(profile?: IVolunteer): Promise<void> {
+  return api.post('volunteers', profile);
+}
+
+export function getUserList(): Promise<IVolunteer[]> {
+  return api.get('volunteers').then(res => res.data);
+}
+
+export function updateUserRole(
+  userId: string,
+  role: string,
+): Promise<[{ role: string }]> {
+  return api
+    .post(`admin/volunteerrole/${userId}`, { role })
     .then(res => res.data);
 }
 
-export async function updateProfile(profil: IProfile): Promise<{}> {
-  return await api.post('volunteers', profil).then(res => res.data);
+export function addUser(user: INewUser): Promise<void> {
+  return api.post('admin/volunteer', user);
+}
+
+export function deleteUser(id: string): Promise<void> {
+  return api.delete(`admin/volunteer/${id}`);
 }
