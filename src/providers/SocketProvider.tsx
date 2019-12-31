@@ -36,7 +36,7 @@ import { IVolunteer } from '../interfaces';
 
 // Toast notification config (for entire App)
 toast.configure({
-  autoClose: 1500,
+  autoClose: 2000,
   draggable: false,
   position: 'top-center',
   closeButton: false,
