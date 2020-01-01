@@ -89,16 +89,14 @@ const AdminSubjectsContainer = () => {
 
   return (
     <div className="admin-subjects">
-      {leksehjelpSubjects && leksehjelpSubjects.length > 0 && (
-        <AdminSubjectsComponent
-          isLeksehjelp={true}
-          subjects={leksehjelpSubjects}
-          onAddSubject={handleAddSubject}
-          onRemoveSubject={handleRemoveSubject}
-          onAddTheme={handleAddTheme}
-          onRemoveTheme={handleRemoveTheme}
-        />
-      )}
+      <AdminSubjectsComponent
+        isLeksehjelp={true}
+        subjects={leksehjelpSubjects}
+        onAddSubject={handleAddSubject}
+        onRemoveSubject={handleRemoveSubject}
+        onAddTheme={handleAddTheme}
+        onRemoveTheme={handleRemoveTheme}
+      />
       <AdminSubjectsComponent
         isLeksehjelp={false}
         subjects={mestringSubjects}

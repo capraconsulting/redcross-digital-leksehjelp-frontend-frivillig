@@ -22,11 +22,8 @@ const EditSubjectComponent = ({
   const [visible, setVisible] = useState(false);
 
   return (
-    <div
-      className="edit-subject-container"
-      onClick={() => setVisible(!visible)}
-    >
-      <div className="editable-subject">
+    <div className="edit-subject-container">
+      <div className="editable-subject" onClick={() => setVisible(!visible)}>
         <p>{subject.subjectTitle}</p>
         <div>
           <button

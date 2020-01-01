@@ -87,7 +87,7 @@ export async function postSubject(
     isMestring,
   };
   try {
-    await api.post('subjects', body);
+    await api.post('admin/subjects', body);
     return true;
   } catch (err) {
     return false;
@@ -96,7 +96,7 @@ export async function postSubject(
 
 export async function deleteSubject(id: number): Promise<boolean> {
   try {
-    await api.delete(`subjects/${id}`);
+    await api.delete(`admin/subjects/${id}`);
     return true;
   } catch (err) {
     return false;
@@ -121,7 +121,7 @@ export async function postTheme(
   };
 
   try {
-    await api.post('themes', body);
+    await api.post('admin/themes', body);
     return true;
   } catch (err) {
     return false;
@@ -130,7 +130,7 @@ export async function postTheme(
 
 export async function deleteTheme(id: string): Promise<boolean> {
   try {
-    await api.delete(`themes/${id}`);
+    await api.delete(`admin/themes/${id}`);
     return true;
   } catch (err) {
     return false;
@@ -140,6 +140,7 @@ export async function deleteTheme(id: string): Promise<boolean> {
 export async function getVolunteer<T>(): Promise<T> {
   return await api.get('volunteers/self').then(res => res.data);
 }
+
 export async function postAnswer(
   data: IAnswer,
   type?: string,
