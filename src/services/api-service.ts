@@ -30,13 +30,6 @@ export async function getFeedbackList(
     .then(res => res.data);
 }
 
-export async function getIsLeksehjelpOpen<T>(): Promise<IOpen> {
-  return api
-    .get('information/isopen')
-    .then(res => res.data)
-    .catch(e => console.error(e.getMessage));
-}
-
 export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
   return api
     .get('information')
@@ -44,40 +37,25 @@ export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
     .catch(e => console.error(e.getMessage));
 }
 
-export async function postLeksehjelpInformation<T>(
-  information: IInformation,
-): Promise<boolean> {
-  console.log('try to post information');
-  return api
-    .post('isopen/openinghours', information)
-    .then(res => res.data)
-    .catch(e => console.error(e.getMessage));
-}
-
 export async function updateAnnouncement<T>(
   announcement: string,
 ): Promise<boolean> {
-  console.log('try to post announcement');
-  const body = {
-    announcement,
-  };
   return api
-    .put('information/announcement', body)
+    .put('admin/information/announcement', { announcement })
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
 
 export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
   return api
-    .put('information/openinghours', openingHours)
+    .put('admin/information/openinghours', openingHours)
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
 
 export async function toggleIsLeksehjelpOpen<T>(isOpen): Promise<IOpen> {
-  const body = { isOpen };
   return api
-    .put('information/open', body)
+    .put('admin/information/open', { isOpen })
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
