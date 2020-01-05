@@ -115,6 +115,7 @@ button {
 
 .leksehjelp--dropdown {
   background-color: @white;
+  cursor: pointer;
 }
 
 .leksehjelp--button {
@@ -126,6 +127,11 @@ button {
     &-small {
       width: 50px;
     }
+  }
+
+  &-disabled {
+    background-color: @disabled-color;
+    cursor: default;
   }
 
   &-warning {
