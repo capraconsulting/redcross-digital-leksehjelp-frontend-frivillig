@@ -80,7 +80,7 @@ const AnswerQuestionContainer = (props: IProps & RouteComponentProps) => {
           ),
         });
       }
-      getSubjectList<ISubject[]>().then(data => {
+      getSubjectList().then(data => {
         const list = data
           .filter(e => e.subjectTitle === resquestion.subject)
           .flatMap(e => e.themes);

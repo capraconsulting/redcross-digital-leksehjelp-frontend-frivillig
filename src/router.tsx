@@ -11,8 +11,10 @@ import {
   AnswerQuestionContainer,
   ChatContainer,
   AdminQuestionsContainer,
+  AdminUsersContainer,
   ProfileContainer,
 } from './containers';
+import AdminRoute from './components/AdminRoute';
 
 interface IProps {
   onLogout(): void;
@@ -36,8 +38,9 @@ const Routes = ({ onLogout }: IProps) => {
             />
           )}
         />
-        <Route
-          exaxt
+        <AdminRoute exact path="/admin/users" component={AdminUsersContainer} />
+        <AdminRoute
+          exact
           path="/admin/questions"
           component={AdminQuestionsContainer}
         />

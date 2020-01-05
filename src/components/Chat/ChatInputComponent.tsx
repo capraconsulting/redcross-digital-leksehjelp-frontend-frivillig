@@ -2,14 +2,12 @@ import React, { useContext, useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   createGetAvailableQueueMessage,
-  createVolunteerMessage,
   getTimeStringNow,
-  getVolunteer,
   JoinChatMessageBuilder,
   TextMessageBuilder,
   uploadFileToAzureBlobStorage,
 } from '../../services';
-import { IFile, ITempFile, IVolunteer } from '../../interfaces';
+import { IFile, IVolunteer } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
 import { IconButton, Modal } from '../';
@@ -30,7 +28,6 @@ const ChatInputComponent = (props: IProps) => {
     activeChatIndex,
     chats,
     uniqueID,
-    setAvailableVolunteers,
   } = useContext(SocketContext);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { roomID } = props;
