@@ -84,63 +84,12 @@ export function getSubjectList(): Promise<ISubject[]> {
   return api.get<ISubject[]>('subjects').then(res => res.data);
 }
 
-export async function postSubject(
-  subjectTitle: string,
-  isMestring: number,
-): Promise<boolean> {
-  const body = {
-    subjectTitle,
-    isMestring,
-  };
-  try {
-    await api.post('admin/subjects', body);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-export async function deleteSubject(id: number): Promise<boolean> {
-  try {
-    await api.delete(`admin/subjects/${id}`);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
 export function getMestringSubjectList(): Promise<ISubject[]> {
   return api.get('subjects?isMestring=1').then(res => res.data);
 }
 
 export function getVolunteer(): Promise<IVolunteer> {
   return api.get('volunteers/self').then(res => res.data);
-}
-
-export async function postTheme(
-  themeTitle: string,
-  subjectId: number,
-): Promise<boolean> {
-  const body = {
-    themeTitle,
-    subjectId,
-  };
-
-  try {
-    await api.post('admin/themes', body);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-export async function deleteTheme(id: string): Promise<boolean> {
-  try {
-    await api.delete(`admin/themes/${id}`);
-    return true;
-  } catch (err) {
-    return false;
-  }
 }
 
 export function postAnswer(data: IAnswer, type?: string): Promise<IQuestion> {
@@ -192,9 +141,7 @@ export function updateUserRole(
   userId: string,
   role: string,
 ): Promise<[{ role: string }]> {
-  return api
-    .post(`admin/volunteerrole/${userId}`, { role })
-    .then(res => res.data);
+  return api.post(`admin/volunteerrole/${userId}`, { role });
 }
 
 export function addUser(user: INewUser): Promise<void> {
@@ -203,4 +150,55 @@ export function addUser(user: INewUser): Promise<void> {
 
 export function deleteUser(id: string): Promise<void> {
   return api.delete(`admin/volunteer/${id}`);
+}
+
+export async function postSubject(
+  subjectTitle: string,
+  isMestring: number,
+): Promise<boolean> {
+  const body = {
+    subjectTitle,
+    isMestring,
+  };
+  try {
+    await api.post('admin/subjects', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteSubject(id: number): Promise<boolean> {
+  try {
+    await api.delete(`admin/subjects/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function postTheme(
+  themeTitle: string,
+  subjectId: number,
+): Promise<boolean> {
+  const body = {
+    themeTitle,
+    subjectId,
+  };
+
+  try {
+    await api.post('admin/themes', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteTheme(id: string): Promise<boolean> {
+  try {
+    await api.delete(`admin/themes/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
