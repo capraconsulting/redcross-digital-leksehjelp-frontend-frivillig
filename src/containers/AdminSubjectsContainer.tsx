@@ -19,14 +19,14 @@ const AdminSubjectsContainer = () => {
 
   useEffect(() => {
     (async () => {
-      const subjects = await getSubjectList<ISubject[]>();
+      const subjects = await getSubjectList();
       setLeksehjelpSubjects(subjects);
     })();
   }, [updatedSubjects]);
 
   useEffect(() => {
     (async () => {
-      const mestringsSubjects = await getMestringSubjectList<ISubject[]>();
+      const mestringsSubjects = await getMestringSubjectList();
       setMestringSubjects(mestringsSubjects);
     })();
   }, [updatedMestringSubjects]);
