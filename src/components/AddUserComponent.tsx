@@ -8,7 +8,7 @@ interface IProps {
   onAddUser: (user: INewUser) => void;
 }
 
-const AddUserComponent = ({ onAddUser }: IProps) => {
+const AddUserComponent: React.FC<IProps> = ({ onAddUser }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<VolunteerRole | undefined>(undefined);
