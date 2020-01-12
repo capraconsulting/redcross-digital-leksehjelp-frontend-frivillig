@@ -1,10 +1,10 @@
 import React from 'react';
-import { IQuestionMeta } from '../interfaces';
+import { IQuestion } from '../interfaces';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { dateStringFormat, studentGradeFormat } from '../services';
 
 interface IProps {
-  questionList: IQuestionMeta[];
+  questionList: IQuestion[];
   type: string;
 }
 const QuestionListComponent = (props: IProps & RouteComponentProps) => {

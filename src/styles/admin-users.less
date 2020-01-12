@@ -1,0 +1,76 @@
+.admin-users-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  width: 70vw;
+  margin-left: 2rem;
+}
+
+.add-users {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  max-width: 400px;
+
+  &--title {
+    margin-bottom: 1rem;
+  }
+
+  &--fields {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5rem;
+  }
+
+  &--item {
+    margin-top: 0.5rem;
+  }
+
+  &--button {
+    max-width: 100px;
+    align-self: flex-end;
+  }
+}
+
+.edit-users {
+  margin-top: 2rem;
+  width: 100%;
+
+  &--title {
+    margin-bottom: 1rem;
+  }
+
+  &--header {
+    text-align: left;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: thin solid black;
+  }
+
+  &&--row {
+    border-bottom: thin solid black;
+    text-align: left;
+
+    &--item {
+      width: 20vw;
+    }
+  }
+}
+
+.w60 {
+  max-width: 60px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  font-weight: normal;
+  text-align: left;
+}
+
+tr {
+  border-bottom: thin solid black;
+}

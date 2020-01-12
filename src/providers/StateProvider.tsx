@@ -31,7 +31,7 @@ export const StateContext = createContext({
   setInformation(information: IInformation): void {},
 });
 
-export const StateProvider = ({ children }: any) => {
+export const StateProvider: React.FC = ({ children }) => {
   const [activeState, setActiveState] = useState<boolean>(false);
   const [information, setInformation] = useState<IInformation>({
     isOpen: false,
