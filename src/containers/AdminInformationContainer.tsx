@@ -61,7 +61,7 @@ const AdminInformationContainer = () => {
         <h4 className="info-message--title">Info</h4>
         <p>
           Her kan du skrive en beskjed som vises på forsiden av Digital
-          Leksehjelp
+          Leksehjelp.
         </p>
 
         <textarea

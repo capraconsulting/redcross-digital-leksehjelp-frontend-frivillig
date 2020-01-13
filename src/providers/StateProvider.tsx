@@ -9,49 +9,38 @@ const defaultOpeningHours: IOpeningHours = {
   enabled: true,
 };
 
+const initialInformation: IInformation = {
+  isOpen: false,
+  announcement:
+    'Hvis det tar lang tid å få videohjelp anbefaler vi å prøve vanlig chat i stedet. Det går ofte raskere!',
+  monday: defaultOpeningHours,
+  tuesday: defaultOpeningHours,
+  wednesday: defaultOpeningHours,
+  thursday: defaultOpeningHours,
+  friday: defaultOpeningHours,
+  saturday: defaultOpeningHours,
+  sunday: defaultOpeningHours,
+  other: {
+    enabled: false,
+    message: '',
+  },
+};
+
 export const StateContext = createContext({
   activeState: false,
   setActiveState(state: boolean) {},
-  information: {
-    isOpen: false,
-    announcement:
-      'Hvis det tar lang tid å få videohjelp anbefaler vi å prøve vanlig chat i stedet. Det går ofte raskere!',
-    monday: defaultOpeningHours,
-    tuesday: defaultOpeningHours,
-    wednesday: defaultOpeningHours,
-    thursday: defaultOpeningHours,
-    friday: defaultOpeningHours,
-    saturday: defaultOpeningHours,
-    sunday: defaultOpeningHours,
-    other: {
-      enabled: false,
-      message: '',
-    },
-  },
+  information: initialInformation,
   setInformation(information: IInformation): void {},
 });
 
 export const StateProvider: React.FC = ({ children }) => {
   const [activeState, setActiveState] = useState<boolean>(false);
-  const [information, setInformation] = useState<IInformation>({
-    isOpen: false,
-    announcement:
-      'Hvis det tar lang tid å få videohjelp anbefaler vi å prøve vanlig chat i stedet. Det går ofte raskere!',
-    monday: defaultOpeningHours,
-    tuesday: defaultOpeningHours,
-    wednesday: defaultOpeningHours,
-    thursday: defaultOpeningHours,
-    friday: defaultOpeningHours,
-    saturday: defaultOpeningHours,
-    sunday: defaultOpeningHours,
-    other: {
-      enabled: false,
-      message: '',
-    },
-  });
+  const [information, setInformation] = useState(initialInformation);
 
   useEffect(() => {
-    getLeksehjelpInformation().then(data => setInformation(data));
+    getLeksehjelpInformation().then(data =>
+      setInformation(data || initialInformation),
+    );
   }, []);
 
   return (
