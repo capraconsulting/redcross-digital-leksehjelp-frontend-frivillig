@@ -37,7 +37,6 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const handleOpenModal = () => {
     getLeksehjelpInformation().then(data => {
-      console.log(data);
       if (data.isOpen === information.isOpen) {
         setModalOpen(true);
       } else {

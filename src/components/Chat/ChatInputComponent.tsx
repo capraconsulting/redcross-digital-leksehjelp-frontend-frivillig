@@ -58,7 +58,6 @@ const ChatInputComponent = (props: IProps) => {
 
   const createFrivilligOptions = () => {
     return availableVolunteers.map(volunteer => {
-      console.log(volunteer.name);
       return {
         inputText: volunteer.name,
         buttonText: 'Legg til',
