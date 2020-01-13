@@ -3,7 +3,6 @@ import { ActiveChats, ChatBody, ChatHeader, ChatInput } from '../components';
 import { readMessagesAction } from '../reducers';
 import { SocketContext } from '../providers';
 
-// main component
 const ChatContainer = () => {
   const {
     chats,
@@ -34,13 +33,11 @@ const ChatContainer = () => {
         <ActiveChats showMessages={showMessages} availableChats={chats} />
         <div className="chat">
           {chats && chats[activeChatIndex] && (
-            <ChatHeader activeChat={chats[activeChatIndex]} />
-          )}
-          {chats && chats[activeChatIndex] && (
-            <ChatBody messages={chats[activeChatIndex].messages} />
-          )}
-          {chats && chats[activeChatIndex] && (
-            <ChatInput roomID={chats[activeChatIndex].roomID} />
+            <>
+              <ChatHeader activeChat={chats[activeChatIndex]} />
+              <ChatBody messages={chats[activeChatIndex].messages} />
+              <ChatInput roomID={chats[activeChatIndex].roomID} />
+            </>
           )}
         </div>
       </div>
