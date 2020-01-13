@@ -41,10 +41,6 @@ p {
   font-size: 1rem;
 }
 
-a {
-  color: @link-color;
-}
-
 textarea,
 input {
   font-size: 1rem;
@@ -125,9 +121,15 @@ button {
 .leksehjelp--button {
   &-success {
     background-color: @secondary-color;
+
     &:hover {
       background-color: @link-hover-color;
     }
+
+    &-small {
+      width: 50px;
+    }
+
     &[disabled] {
       background-color: @disabled-color;
       cursor: default;
@@ -170,6 +172,13 @@ button {
         border-color: @danger-hover-color;
         color: @danger-hover-color;
       }
+      &-small {
+        border: 0;
+        border-bottom: 1px solid @warning-color;
+        padding: 0;
+        color: @danger-color;
+        max-width: 40px;
+      }
     }
     &-success {
       border: thin solid @secondary-color;
@@ -181,6 +190,12 @@ button {
         color: @link-hover-color;
       }
     }
+  }
+
+  &-disabled {
+    background-color: @disabled-color;
+    color: @white;
+    cursor: default;
   }
 }
 
@@ -301,4 +316,8 @@ input:checked + .slider:before {
       color: @dropdown-caret-color;
     }
   }
+}
+
+#expand {
+  visibility: hidden;
 }

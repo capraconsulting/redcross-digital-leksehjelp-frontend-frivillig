@@ -37,7 +37,6 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const handleOpenModal = () => {
     getLeksehjelpInformation().then(data => {
-      console.log(data);
       if (data.isOpen === information.isOpen) {
         setModalOpen(true);
       } else {
@@ -201,8 +200,12 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             <li
               className={`header--list-item ${subPath === 'topics' &&
                 'active'}`}
+              onClick={() => {
+                setPath('admin');
+                setSubPath('subjects');
+              }}
             >
-              Administrer fag
+              <Link to="/admin/subjects">Administrer fag</Link>
             </li>
             <li
               className={`header--list-item ${subPath === 'questions' &&
@@ -212,7 +215,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
                 setSubPath('questions');
               }}
             >
-              <Link to="/admin/questions">Administrer spøsmål</Link>
+              <Link to="/admin/questions">Administrer spørsmål</Link>
             </li>
           </ul>
         </div>

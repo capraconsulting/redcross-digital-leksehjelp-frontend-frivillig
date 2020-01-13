@@ -276,7 +276,6 @@ export const SocketProvider: FunctionComponent = ({ children }) => {
         dispatchChats(action);
         break;
       case AVAILABLE_CHAT:
-        console.log(payload['queueMembers']);
         setAvailableVolunteers(payload['queueMembers']);
         break;
     }

@@ -1,0 +1,81 @@
+.admin-subjects {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: row;
+
+  &--item {
+    border: 1px solid black;
+    margin: 2rem;
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 40%;
+    height: 100%;
+  }
+
+  &--new {
+    margin-top: 4rem;
+
+    span button {
+      width: initial;
+    }
+  }
+
+  @media(max-width: 785px) {
+    flex-wrap: wrap;
+  }
+}
+
+.edit-subject-container {
+  border-top: thin solid black;
+  margin-bottom: 2rem;
+}
+
+.editable-subject {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.subject--list {
+  display: flex;
+  flex-wrap: wrap;
+
+  &-element {
+    border-bottom: thin solid #8B51C6;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: max-content;
+    color: #8B51C6;
+    padding: 0.5rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    p {
+      padding: 0 0.5rem;
+    }
+  }
+}
+
+.edit-themes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.themes-container {
+  margin-left: 1rem;
+
+  div span button {
+    width: initial;
+  }
+
+  &-hidden {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.themes-title {
+  margin-bottom: 0.5rem;
+}
+

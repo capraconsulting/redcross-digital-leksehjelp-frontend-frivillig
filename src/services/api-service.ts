@@ -85,6 +85,7 @@ export function getMestringSubjectList(): Promise<ISubject[]> {
 export function getVolunteer(): Promise<IVolunteer> {
   return api.get('volunteers/self').then(res => res.data);
 }
+
 export function postAnswer(data: IAnswer, type?: string): Promise<IQuestion> {
   const { questionId } = data;
   let body = {};
@@ -166,4 +167,55 @@ export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
     .put('admin/information/openinghours', openingHours)
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
+}
+
+export async function postSubject(
+  subjectTitle: string,
+  isMestring: number,
+): Promise<boolean> {
+  const body = {
+    subjectTitle,
+    isMestring,
+  };
+  try {
+    await api.post('admin/subjects', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteSubject(id: number): Promise<boolean> {
+  try {
+    await api.delete(`admin/subjects/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function postTheme(
+  themeTitle: string,
+  subjectId: number,
+): Promise<boolean> {
+  const body = {
+    themeTitle,
+    subjectId,
+  };
+
+  try {
+    await api.post('admin/themes', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteTheme(id: string): Promise<boolean> {
+  try {
+    await api.delete(`admin/themes/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }

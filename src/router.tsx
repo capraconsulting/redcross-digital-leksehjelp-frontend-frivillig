@@ -10,6 +10,7 @@ import {
   QuestionContainer,
   AnswerQuestionContainer,
   ChatContainer,
+  AdminSubjectsContainer,
   AdminInformationContainer,
   AdminQuestionsContainer,
   AdminUsersContainer,
@@ -49,6 +50,11 @@ const Routes = ({ onLogout }: IProps) => {
           exact
           path="/admin/questions"
           component={AdminQuestionsContainer}
+        />
+        <AdminRoute
+          exact
+          path="/admin/subjects"
+          component={AdminSubjectsContainer}
         />
         <Redirect from="/*" to="/profile" />
       </Switch>
