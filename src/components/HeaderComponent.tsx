@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { SocketContext, StateContext } from '../providers/';
 import { Modal } from './';
-import { getIsLeksehjelpOpen, toggleIsLeksehjelpOpen } from '../services';
+import { getLeksehjelpInformation, toggleIsLeksehjelpOpen } from '../services';
 import { toast } from 'react-toastify';
 import { VolunteerRole } from '../enums/VolunteerRole';
 
@@ -18,12 +18,8 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const { queue, chats, volunteerInfo } = useContext(SocketContext);
-  const {
-    activeState,
-    setActiveState,
-    isLeksehjelpOpen,
-    setIsLeksehjelpOpen,
-  } = useContext(StateContext);
+
+  const { information, setInformation } = useContext(StateContext);
 
   const setLocationPath = (): void => {
     const { pathname } = props.location;
@@ -35,25 +31,25 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
     }
   };
 
-  const onSlide = (): void => {
-    setActiveState(!activeState);
-  };
-
   const onLogout = (): void => {
     props.onLogout();
   };
 
   const handleOpenModal = () => {
-    getIsLeksehjelpOpen().then(data => {
-      if (data.isopen === isLeksehjelpOpen) {
+    getLeksehjelpInformation().then(data => {
+      console.log(data);
+      if (data.isOpen === information.isOpen) {
         setModalOpen(true);
       } else {
         toast.info(
           `En annen har allerede ${
-            data.isopen ? 'åpnet' : 'lukket'
+            data.isOpen ? 'åpnet' : 'lukket'
           } leksehjelpen.`,
         );
-        setIsLeksehjelpOpen(data.isopen);
+        setInformation({
+          ...information,
+          isOpen: data.isOpen,
+        });
       }
     });
   };
@@ -62,16 +58,20 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
     setLocationPath();
   }, []);
 
-  const handleToggleLeksehjelp = () => {
-    toggleIsLeksehjelpOpen().then(data => {
-      if (data.isopen) {
+  const handleToggleLeksehjelp = async () => {
+    const data = await toggleIsLeksehjelpOpen(!information.isOpen);
+    if (data) {
+      if (data.isOpen) {
         toast.success('Leksehjelpen er nå åpnet');
       } else {
         toast.success('Leksehjelpen er nå stengt');
       }
       setModalOpen(false);
-      setIsLeksehjelpOpen(data.isopen);
-    });
+      setInformation({
+        ...information,
+        isOpen: data.isOpen,
+      });
+    }
   };
 
   return (
@@ -147,22 +147,22 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             <button
               onClick={handleOpenModal}
               className={
-                isLeksehjelpOpen
+                information.isOpen
                   ? 'leksehjelp--button--outline-warning'
                   : 'leksehjelp--button--outline-success'
               }
             >
-              {isLeksehjelpOpen ? 'Steng leksehjelpen' : 'Åpne leksehjelpen'}
+              {information.isOpen ? 'Steng leksehjelpen' : 'Åpne leksehjelpen'}
             </button>
             {modalOpen && (
               <Modal
                 content={
-                  isLeksehjelpOpen
+                  information.isOpen
                     ? 'Er du sikker på at du vil stenge leksehjelpen?'
                     : 'Er du sikker på at du vil åpne leksehjelpen?'
                 }
                 successButtonText={
-                  isLeksehjelpOpen ? 'Steng leksehjelp' : 'Åpne leksehjelp'
+                  information.isOpen ? 'Steng leksehjelp' : 'Åpne leksehjelp'
                 }
                 warningButtonText="Avbryt"
                 successCallback={() => handleToggleLeksehjelp()}
@@ -182,8 +182,12 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
             <li
               className={`header--list-item ${subPath === 'information' &&
                 'active'}`}
+              onClick={() => {
+                setPath('admin');
+                setSubPath('information');
+              }}
             >
-              Informasjon
+              <Link to="/admin/information">Informasjon</Link>
             </li>
             <li
               className={`header--list-item ${subPath === 'users' && 'active'}`}
