@@ -11,6 +11,7 @@ import {
   AnswerQuestionContainer,
   ChatContainer,
   AdminSubjectsContainer,
+  AdminInformationContainer,
   AdminQuestionsContainer,
   AdminUsersContainer,
   ProfileContainer,
@@ -38,6 +39,11 @@ const Routes = ({ onLogout }: IProps) => {
               type={match.params.type}
             />
           )}
+        />
+        <AdminRoute
+          exact
+          path="/admin/information"
+          component={AdminInformationContainer}
         />
         <AdminRoute exact path="/admin/users" component={AdminUsersContainer} />
         <AdminRoute

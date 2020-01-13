@@ -121,11 +121,18 @@ button {
 .leksehjelp--button {
   &-success {
     background-color: @secondary-color;
+
     &:hover {
       background-color: @link-hover-color;
     }
+
     &-small {
       width: 50px;
+    }
+
+    &[disabled] {
+      background-color: @disabled-color;
+      cursor: default;
     }
   }
 

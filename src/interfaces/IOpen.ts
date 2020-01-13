@@ -1,3 +1,3 @@
 export interface IOpen {
-  isopen: boolean;
+  isOpen: boolean;
 }

@@ -9,6 +9,7 @@ import {
   IVolunteer,
   IVolunteerSubject,
 } from '../interfaces';
+import { IInformation } from '../interfaces/IInformation';
 import { INewUser } from '../interfaces/INewUser';
 
 const api = axios.create({
@@ -30,16 +31,9 @@ export function getFeedbackList(id?: string): Promise<IFeedbackQuestion[]> {
     .then(res => res.data);
 }
 
-export function getIsLeksehjelpOpen(): Promise<IOpen> {
+export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
   return api
-    .get('isopen')
-    .then(res => res.data)
-    .catch(e => console.error(e.getMessage));
-}
-
-export function toggleIsLeksehjelpOpen(): Promise<IOpen> {
-  return api
-    .post('isopen')
+    .get('information')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
@@ -81,7 +75,7 @@ export function getVolunteerSubjectList(): Promise<IVolunteerSubject[]> {
 }
 
 export function getSubjectList(): Promise<ISubject[]> {
-  return api.get<ISubject[]>('subjects').then(res => res.data);
+  return api.get('subjects').then(res => res.data);
 }
 
 export function getMestringSubjectList(): Promise<ISubject[]> {
@@ -150,6 +144,29 @@ export function addUser(user: INewUser): Promise<void> {
 
 export function deleteUser(id: string): Promise<void> {
   return api.delete(`admin/volunteer/${id}`);
+}
+
+export async function updateAnnouncement<T>(
+  announcement: string,
+): Promise<boolean> {
+  return api
+    .put('admin/information/announcement', { announcement })
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export function toggleIsLeksehjelpOpen(isOpen): Promise<IOpen> {
+  return api
+    .put('admin/information/open', { isOpen })
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
+  return api
+    .put('admin/information/openinghours', openingHours)
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
 }
 
 export async function postSubject(
