@@ -20,3 +20,13 @@ export const getRoleOptions = () =>
     label: roleMap[role],
     value: role,
   }));
+
+export const openingHourDays = {
+  monday: 'Mandag',
+  tuesday: 'Tirsdag',
+  wednesday: 'Onsdag',
+  thursday: 'Torsdag',
+  friday: 'Fredag',
+  saturday: 'Lørdag',
+  sunday: 'Søndag',
+};

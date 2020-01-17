@@ -9,6 +9,7 @@ import {
   IVolunteer,
   IVolunteerSubject,
 } from '../interfaces';
+import { IInformation } from '../interfaces/IInformation';
 import { INewUser } from '../interfaces/INewUser';
 
 const api = axios.create({
@@ -30,16 +31,9 @@ export function getFeedbackList(id?: string): Promise<IFeedbackQuestion[]> {
     .then(res => res.data);
 }
 
-export function getIsLeksehjelpOpen(): Promise<IOpen> {
+export async function getLeksehjelpInformation<T>(): Promise<IInformation> {
   return api
-    .get('isopen')
-    .then(res => res.data)
-    .catch(e => console.error(e.getMessage));
-}
-
-export function toggleIsLeksehjelpOpen(): Promise<IOpen> {
-  return api
-    .post('isopen')
+    .get('information')
     .then(res => res.data)
     .catch(e => console.error(e.getMessage));
 }
@@ -81,7 +75,7 @@ export function getVolunteerSubjectList(): Promise<IVolunteerSubject[]> {
 }
 
 export function getSubjectList(): Promise<ISubject[]> {
-  return api.get<ISubject[]>('subjects').then(res => res.data);
+  return api.get('subjects').then(res => res.data);
 }
 
 export function getMestringSubjectList(): Promise<ISubject[]> {
@@ -91,6 +85,7 @@ export function getMestringSubjectList(): Promise<ISubject[]> {
 export function getVolunteer(): Promise<IVolunteer> {
   return api.get('volunteers/self').then(res => res.data);
 }
+
 export function postAnswer(data: IAnswer, type?: string): Promise<IQuestion> {
   const { questionId } = data;
   let body = {};
@@ -140,9 +135,7 @@ export function updateUserRole(
   userId: string,
   role: string,
 ): Promise<[{ role: string }]> {
-  return api
-    .post(`admin/volunteerrole/${userId}`, { role })
-    .then(res => res.data);
+  return api.post(`admin/volunteerrole/${userId}`, { role });
 }
 
 export function addUser(user: INewUser): Promise<void> {
@@ -151,4 +144,78 @@ export function addUser(user: INewUser): Promise<void> {
 
 export function deleteUser(id: string): Promise<void> {
   return api.delete(`admin/volunteer/${id}`);
+}
+
+export async function updateAnnouncement<T>(
+  announcement: string,
+): Promise<boolean> {
+  return api
+    .put('admin/information/announcement', { announcement })
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export function toggleIsLeksehjelpOpen(isOpen): Promise<IOpen> {
+  return api
+    .put('admin/information/open', { isOpen })
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function updateOpeningHours<T>(openingHours): Promise<boolean> {
+  return api
+    .put('admin/information/openinghours', openingHours)
+    .then(res => res.data)
+    .catch(e => console.error(e.getMessage));
+}
+
+export async function postSubject(
+  subjectTitle: string,
+  isMestring: number,
+): Promise<boolean> {
+  const body = {
+    subjectTitle,
+    isMestring,
+  };
+  try {
+    await api.post('admin/subjects', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteSubject(id: number): Promise<boolean> {
+  try {
+    await api.delete(`admin/subjects/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function postTheme(
+  themeTitle: string,
+  subjectId: number,
+): Promise<boolean> {
+  const body = {
+    themeTitle,
+    subjectId,
+  };
+
+  try {
+    await api.post('admin/themes', body);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function deleteTheme(id: string): Promise<boolean> {
+  try {
+    await api.delete(`admin/themes/${id}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
