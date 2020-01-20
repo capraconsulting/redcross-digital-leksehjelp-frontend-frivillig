@@ -21,6 +21,11 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
 
   const { information, setInformation } = useContext(StateContext);
 
+  const numberOfUnreadMessages = chats.reduce(
+    (sum, chat) => sum + chat.unread,
+    0,
+  );
+
   const setLocationPath = (): void => {
     const { pathname } = props.location;
     const pathList = pathname.split('/');
@@ -86,7 +91,7 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           >
             <Link to="/queue">
               Elever i kø
-              <span className="dot">{queue.length}</span>
+              {queue.length > 0 && <span className="dot">{queue.length}</span>}
             </Link>
           </li>
           <li
@@ -98,9 +103,11 @@ const HeaderComponent = (props: RouteComponentProps & IProps) => {
           >
             <Link to="/messages">
               Chat
-              <span className="dot" onClick={() => setPath('messages')}>
-                {chats.reduce((sum, chat) => sum + chat.unread, 0)}
-              </span>
+              {numberOfUnreadMessages > 0 && (
+                <span className="dot" onClick={() => setPath('messages')}>
+                  {numberOfUnreadMessages}
+                </span>
+              )}
             </Link>
           </li>
           <li
