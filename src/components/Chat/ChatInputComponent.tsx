@@ -10,16 +10,20 @@ import {
 import { IFile, IVolunteer } from '../../interfaces';
 import { addMessageAction } from '../../reducers';
 import { SocketContext } from '../../providers';
-import { IconButton, Modal } from '../';
+import { Modal } from '../';
 import '../../styles/chat-input-component.less';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 interface IProps {
   roomID: string;
 }
 
 const ChatInputComponent = (props: IProps) => {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState('');
+  const [volunteerModalOpen, setVolunteerModalOpen] = useState(false);
+  const [sendFileModalOpen, setFileModalOpen] = useState(false);
+  const { roomID } = props;
+  const [tempFiles, setTempFiles] = useState([] as any[]);
+
   const {
     dispatchChats,
     socketSend,
@@ -29,9 +33,7 @@ const ChatInputComponent = (props: IProps) => {
     chats,
     uniqueID,
   } = useContext(SocketContext);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { roomID } = props;
-  const [tempFiles, setTempFiles] = useState([] as any[]);
+
   const { name, imgUrl } = volunteerInfo;
 
   const uploadPromises = tempFiles => {
@@ -41,7 +43,6 @@ const ChatInputComponent = (props: IProps) => {
   };
 
   const frivilligOptionsCallback = (volunteer: IVolunteer): void => {
-    //setAvailableVolunteers(availableVolunteers.filter(vol => vol !== volunteer));
     chats[activeChatIndex].volunteerCount += 1;
     socketSend(createGetAvailableQueueMessage(roomID));
     socketSend(
@@ -67,15 +68,13 @@ const ChatInputComponent = (props: IProps) => {
     });
   };
 
-  // Sends text message with message and succesfully uploaded files (IFiles)
-  const sendTextMessage = (event, files) => {
+  const sendTextMessage = event => {
     event.preventDefault();
-    if (message.length > 0 || files.length > 0) {
+    if (message.length > 0) {
       const msg = new TextMessageBuilder(uniqueID)
         .withAuthor(name)
         .withImg(imgUrl)
         .withMessage(message)
-        .withFiles(files)
         .toRoom(roomID)
         .build();
       const { textMessage, socketMessage } = msg.createMessage;
@@ -87,15 +86,31 @@ const ChatInputComponent = (props: IProps) => {
       );
       socketSend(socketMessage);
       setMessage('');
-      setTempFiles([] as any[]);
     }
   };
 
-  //Returns promises that resolves upon successfull file upload. Then sends message with messagetext and files.
-  const handleSubmit = event => {
-    event.preventDefault();
+  // Sends text message with message and succesfully uploaded files (IFiles)
+  const sendFiles = () => {
     return Promise.all<IFile>(uploadPromises(tempFiles)).then(results => {
-      sendTextMessage(event, results);
+      const msg = new TextMessageBuilder(uniqueID)
+        .withAuthor(name)
+        .withMessage(message)
+        .withImg(imgUrl)
+        .withFiles(results)
+        .toRoom(roomID)
+        .build();
+
+      const { textMessage, socketMessage } = msg.createMessage;
+      dispatchChats(
+        addMessageAction({
+          ...textMessage,
+          datetime: getTimeStringNow(),
+        }),
+      );
+      socketSend(socketMessage);
+      setFileModalOpen(false);
+      setMessage('');
+      setTempFiles([]);
     });
   };
 
@@ -104,13 +119,20 @@ const ChatInputComponent = (props: IProps) => {
     ref && ref.click();
   };
 
-  //Callback handling file drop in DropZone.
+  //Callback handling file drop in DropZone
   const onDrop = useCallback(
     acceptedFiles => {
       setTempFiles([...tempFiles, ...acceptedFiles]);
+      setFileModalOpen(true);
     },
     [tempFiles],
   );
+
+  const handleCancelSendFiles = () => {
+    setTempFiles([]);
+    setFileModalOpen(false);
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     noClick: true,
     noKeyboard: true,
@@ -137,12 +159,6 @@ const ChatInputComponent = (props: IProps) => {
                 >
                   {name}{' '}
                 </a>
-                <IconButton
-                  onClick={() => {
-                    setTempFiles(tempFiles.filter((_, i) => i !== index));
-                  }}
-                  icon={<DeleteIcon />}
-                />{' '}
               </span>
             </li>
           );
@@ -154,8 +170,8 @@ const ChatInputComponent = (props: IProps) => {
   return (
     <div {...getRootProps({ className: 'dropzone' })}>
       <input {...getInputProps()} />
-      <div className={'message-form-container'}>
-        <form className={'message-form'}>
+      <div className="message-form-container">
+        <form className="message-form">
           <input
             onChange={event => {
               let { files } = event.target;
@@ -192,6 +208,8 @@ const ChatInputComponent = (props: IProps) => {
                   newFiles.push(item);
                 }
                 files && setTempFiles([...tempFiles, ...newFiles]);
+
+                setFileModalOpen(true);
               }}
             />
             <span className="plus">+</span>
@@ -200,19 +218,22 @@ const ChatInputComponent = (props: IProps) => {
               andre ting fra dokumentet som kan identifisere deg.
             </div>
           </button>
-          <input
-            id={'message-text-input'}
-            className={'message-text'}
-            type="textarea"
+          <textarea
+            id="message-text-input"
+            className="message-text"
             value={message}
             onChange={event => setMessage(event.target.value)}
           />
           <button
-            onClick={event => handleSubmit(event)}
-            className={'send-message'}
+            disabled={message.length === 0}
+            onClick={event => sendTextMessage(event)}
+            className="send-message"
           >
             <svg width="30px" height="30px" viewBox="0 0 30 30">
-              <polygon className="arrow" points="30 15 0 30 5.5 15 0 0" />
+              <polygon
+                className={message.length === 0 ? 'arrow-disabled' : 'arrow'}
+                points="30 15 0 30 5.5 15 0 0"
+              />
             </svg>
           </button>
           <button
@@ -226,20 +247,30 @@ const ChatInputComponent = (props: IProps) => {
                * It's better to wait 500ms than to send out a list of
                * Available frivillige every time someone connects
                */
-              setTimeout(() => setModalOpen(true), 500);
+              setTimeout(() => setVolunteerModalOpen(true), 500);
             }}
           >
-            Se tilgjengelige
+            Legg til frivillig
           </button>
         </form>
-        <FileList />
       </div>
 
-      {modalOpen && (
+      {volunteerModalOpen && (
         <Modal
           content="Tilgjengelige frivillige"
           inputFields={createFrivilligOptions()}
-          closingCallback={() => setModalOpen(false)}
+          closingCallback={() => setVolunteerModalOpen(false)}
+        />
+      )}
+      {sendFileModalOpen && (
+        <Modal
+          content="Send fil(er)"
+          component={FileList}
+          successButtonText="Send"
+          warningButtonText="Avbryt"
+          successCallback={sendFiles}
+          warningCallback={handleCancelSendFiles}
+          closingCallback={handleCancelSendFiles}
         />
       )}
     </div>

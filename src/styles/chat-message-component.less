@@ -1,7 +1,7 @@
 @import 'colors';
 
 .chat-message {
-  margin: 0.5rem;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
   overflow-wrap: break-word;
@@ -24,17 +24,12 @@
     color: @black;
   }
 
-  &:hover {
-    filter: brightness(120%);
-  }
-
   &--message {
     margin: 0;
     font-size: 1.1rem;
-    padding: 0.3rem;
+    padding: 0.5rem;
     font-weight: 300;
     border: solid 0px @select-color;
-    border-radius: 0.2rem;
     overflow-wrap: break-word;
   }
 

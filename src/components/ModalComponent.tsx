@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEvent } from 'react';
+import React, { ComponentType, FunctionComponent, MouseEvent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Cross from '../assets/Cross';
 
@@ -16,10 +16,12 @@ interface IProps {
     isDisabled?: boolean;
   }[];
   closingCallback(): void;
+  component?: ComponentType;
 }
 
 const ModalComponent: FunctionComponent<IProps & RouteComponentProps> = ({
   content,
+  component: Component,
   successButtonText,
   warningButtonText,
   successCallback,
@@ -65,6 +67,7 @@ const ModalComponent: FunctionComponent<IProps & RouteComponentProps> = ({
           <Cross color="black" />
         </button>
         <p className="content-text">{content}</p>
+        {Component && <Component />}
         <div className="input-field-container">{createInputFields()}</div>
         <div className="button-container">
           {!hideButtons && (

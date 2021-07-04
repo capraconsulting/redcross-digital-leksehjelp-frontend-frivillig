@@ -6,7 +6,7 @@
     display: grid;
     grid-template-columns: 80% 20%;
     > .dot {
-      margin-top: 65%;
+      margin-top: 2rem;
       position: relative;
       border-radius: 50%;
       width: 1rem;
@@ -27,8 +27,7 @@
       }
     }
     &:hover {
-      background-color: @secondary-color;
-      filter: brightness(80%);
+      background-color: @other-chat-message-color;
     }
     &:not(:last-of-type) {
       border-bottom: 1px solid gray;
@@ -37,7 +36,7 @@
 }
 
 .active-chat-active {
-  background-color: @secondary-color;
+  background-color: @other-chat-message-color;
 }
 .active-chat-inactive {
 

@@ -28,11 +28,11 @@ const ChatMessageComponent = (props: IProps) => {
       files.length > 0 &&
       files.map((file, index) => {
         return (
-          <div className={'chat-message'} key={index}>
+          <div className="chat-message" key={index}>
             <div
               className={`chat-message--download chat-message--${authorType} chat-message--${authorType}--file`}
             >
-              <p className={`chat-message--message`}>
+              <p className="chat-message--message">
                 <span className="chat-message--file-name">
                   {file.fileName}{' '}
                 </span>
@@ -82,7 +82,6 @@ const ChatMessageComponent = (props: IProps) => {
   } else {
     return (
       <div className="chat-message">
-        <img height={10} width={10} src={imgUrl} />
         <p className={`chat-message--author-${authorType}`}>
           <span>{authorType === 'self' ? 'Deg' : author}</span>, kl.{' '}
           <span>{datetime && datetime}</span>
